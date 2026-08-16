@@ -1,0 +1,89 @@
+# KAAI project dependencies
+# Verified working on macOS arm64 (Apple Silicon), Python 3.12.13, env name: KAAI
+#
+# ############################################################################
+# THIS IS A MANIFEST, NOT A PIP-INSTALLABLE FILE.
+# `pip install -r KAAI_requirements.txt` will NOT reproduce a working env and
+# will produce one that hard-crashes on `import torch` next to Corrfunc.
+# Entries tagged [conda-forge] MUST come from conda; reasons are inline.
+#
+#   conda create -n KAAI python=3.12 -y && conda activate KAAI
+#   conda install -c conda-forge <every [conda-forge] entry below>
+#   pip install <every [pip] entry below>
+# ############################################################################
+
+# Core Machine Learning & Data Science
+torch                 # [conda-forge] as `pytorch`. The pip wheel bundles its own
+                      # libomp.dylib, which collides with the one Corrfunc/FFTW
+                      # load -> "OMP Error #15" and a hard interpreter abort.
+                      # Do NOT paper over it with KMP_DUPLICATE_LIB_OK=TRUE;
+                      # LLVM documents that as able to SILENTLY produce
+                      # incorrect numerical results.
+torchvision           # [conda-forge] same OpenMP reason as torch
+torchaudio            # [conda-forge] same OpenMP reason as torch
+torch-geometric       # [pip] pure Python, safe
+huggingface-hub       # [pip]
+openai                # [pip]
+python-dotenv         # [pip]
+numpy                 # [conda-forge] keep conda-managed so every compiled
+                      # extension below shares one numpy ABI
+pandas                # [conda-forge]
+scikit-learn          # [conda-forge]
+
+# Hyperparameter Optimization
+optuna                # [conda-forge]
+
+# Notebook Environment
+jupyter               # [conda-forge]
+                      # Register the kernel device-wide after installing:
+                      #   python -m ipykernel install --user --name KAAI \
+                      #          --display-name "Python (KAAI)"
+
+# Data I/O & Plotting   (imported by data_load.py; were missing from this file)
+h5py                  # [conda-forge]
+matplotlib            # [conda-forge]
+hdf5plugin            # [conda-forge] also a build requirement of Pylians
+hdf5 ==2.1.0          # [conda-forge] PIN REQUIRED. h5py 3.16.0 is compiled
+                      # against HDF5 2.1.0, but its run-export allows <3.0a0, so
+                      # conda installs 2.2.0 and h5py then warns at every import
+                      # that it may misbehave. Pin for an exact match.
+
+# Astrophysics & Cosmology Specifics
+Corrfunc              # [conda-forge] prebuilt for osx-arm64; the pip sdist
+                      # compiles from source and needs a GSL toolchain
+yt                    # [conda-forge]
+Pylians               # [pip] from PATCHED source -- see build notes below.
+                      # The name is `Pylians`, NOT `Pylians3`; no `Pylians3`
+                      # package has ever existed on PyPI (it 404s).
+pyfftw                # [conda-forge] undeclared runtime dep of Pylians'
+                      # Pk_library -- without it `import Pk_library` dies with
+                      # ModuleNotFoundError
+gsl                   # [conda-forge] native lib for Corrfunc and Pylians
+fftw                  # [conda-forge] native lib for Pylians
+llvm-openmp           # [conda-forge] the single OpenMP runtime all of the above
+                      # must share
+
+# ---------------------------------------------------------------------------
+# Pylians build notes -- v0.12 does NOT build unmodified on this stack
+# ---------------------------------------------------------------------------
+# Pylians 0.12 pins Cython<3.0.0, which is unsatisfiable against numpy 2.x:
+# numpy ships a deliberate trap in its Cython headers that aborts any build
+# using Cython < 3. So build with Cython 3, plus three edits to setup.py:
+#
+#   1. cythonize(..., compiler_directives={..., "legacy_implicit_noexcept": True})
+#      Restores Cython 0.x semantics where `cdef void f()` was implicitly
+#      noexcept. Cython 3 defaults it to `except *`, which breaks the C
+#      function-pointer assignments in integration_library.pyx (6 errors).
+#   2. extra_compile_args_omp.append(omp_flag) -> .extend(omp_flag.split())
+#      On Apple Silicon omp_flag is "-Xpreprocessor -fopenmp", passed as ONE
+#      argv token; clang requires two.
+#   3. extra_link_args = [omp_flag] -> omp_flag.split() + ["-lomp"]
+#      The OpenMP runtime was otherwise never actually linked.
+#
+# Then, with the env active:
+#   export CFLAGS="-I$CONDA_PREFIX/include" CPPFLAGS="-I$CONDA_PREFIX/include"
+#   export LDFLAGS="-L$CONDA_PREFIX/lib -lomp"
+#   pip install --no-build-isolation .
+#
+# Pylians then downgrades Cython to 0.29.37 as a declared runtime dep. Harmless
+# (the extensions are already compiled), but bump it if anything needs Cython 3.

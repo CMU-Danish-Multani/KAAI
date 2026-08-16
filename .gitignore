@@ -1,0 +1,18 @@
+# Downloaded datasets -- 1.5 GB, re-fetchable from the Flatiron Institute URLs
+# recorded in notes/understanding_data.md. Never commit these.
+data/
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Environments
+.env
+*.egg-info/
+
+# Per-machine tool permissions, not shared
+.claude/settings.local.json
+
+# macOS
+.DS_Store
