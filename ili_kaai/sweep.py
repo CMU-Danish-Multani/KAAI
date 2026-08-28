@@ -19,7 +19,6 @@ Recorded per cell, and this set is the zoo's standardised evaluation:
 import argparse
 import json
 import platform
-import random
 import time
 import warnings
 from pathlib import Path
@@ -33,6 +32,7 @@ import ili
 from ili.dataloaders import NumpyLoader
 from ili.inference import InferenceRunner
 
+from common.metrics import credible_coverage, seed_all
 from ili_kaai.architectures import TRAIN_ARGS, ZOO, Architecture
 from ili_kaai.tasks import TASKS, Task, load, prior_bounds
 
@@ -40,12 +40,6 @@ warnings.filterwarnings("ignore")
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "ili_kaai" / "results"
 
-
-def seed_all(seed: int) -> None:
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)
 
 
 def build(arch: Architecture, task: Task, device: str, out_dir: Path):
@@ -86,10 +80,8 @@ def score(samples: np.ndarray, truth: np.ndarray) -> Dict:
     ss_res = ((truth - mean) ** 2).sum(0)
     ss_tot = ((truth - truth.mean(0)) ** 2).sum(0)
 
-    lo68, hi68 = np.percentile(samples, [16, 84], axis=0)
-    lo95, hi95 = np.percentile(samples, [2.5, 97.5], axis=0)
-    cov68 = ((truth >= lo68) & (truth <= hi68)).mean(0)
-    cov95 = ((truth >= lo95) & (truth <= hi95)).mean(0)
+    cov68 = credible_coverage(samples, truth, 0.68)
+    cov95 = credible_coverage(samples, truth, 0.95)
 
     logp = []
     for i in range(truth.shape[0]):

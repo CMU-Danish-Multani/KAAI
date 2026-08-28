@@ -112,7 +112,7 @@
       ],
       "calibrationVerdict": "overconfident",
       "calibrationSigma": -7.8,
-      "admitted": true
+      "admitted": false
     },
     {
       "key": "npeNsf",
@@ -205,7 +205,7 @@
       ],
       "calibrationVerdict": "overconfident",
       "calibrationSigma": -3.2,
-      "admitted": true
+      "admitted": false
     },
     {
       "key": "npeMdn",
@@ -298,7 +298,7 @@
       ],
       "calibrationVerdict": "overconfident",
       "calibrationSigma": -6.7,
-      "admitted": true
+      "admitted": false
     },
     {
       "key": "npeMafEnsemble4",
@@ -391,7 +391,7 @@
       ],
       "calibrationVerdict": "overconfident",
       "calibrationSigma": -7.0,
-      "admitted": true
+      "admitted": false
     },
     {
       "key": "nleMaf",
@@ -484,7 +484,7 @@
       ],
       "calibrationVerdict": "overconfident",
       "calibrationSigma": -9.5,
-      "admitted": true
+      "admitted": false
     },
     {
       "key": "nleMdn",
@@ -577,7 +577,7 @@
       ],
       "calibrationVerdict": "overconfident",
       "calibrationSigma": -11.6,
-      "admitted": true
+      "admitted": false
     },
     {
       "key": "nreMlp",
@@ -668,7 +668,7 @@
       ],
       "calibrationVerdict": "calibrated",
       "calibrationSigma": -1.1,
-      "admitted": true
+      "admitted": false
     },
     {
       "key": "nreResnet",
@@ -761,7 +761,7 @@
       ],
       "calibrationVerdict": "overconfident",
       "calibrationSigma": -9.1,
-      "admitted": true
+      "admitted": false
     }
   ]
 }

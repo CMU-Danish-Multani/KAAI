@@ -1,95 +1,72 @@
 # KAAI
 
-Neural architecture search for cosmology: predict a universe's settings from
-simulation data, and search for the best model design automatically instead of
-guessing it.
+**Project 2.6: a model zoo for astrophysical simulation-based inference, plus a Claude
+skill that searches it.** Built on LtU-ILI (Ho et al. 2024, arXiv 2402.05137).
 
-Plain-language summary of the whole project:
-<https://claude.ai/code/artifact/4059d55a-a709-4bef-a834-bf2139cb3d27>
+The problem: every group starting a new astrophysical inference problem repeats the same
+architecture search. What works is not written down, so it gets rediscovered each time.
+The zoo records it, measured the same way for every entry, and the skill reads it.
 
-## Layout
+## Start here
 
-The two datasets are kept **completely separate** — separate loading,
-exploration, plots and notes. Understand one at a time.
+**[projectGuide.md](projectGuide.md)** explains the whole project end to end for someone
+with no astrophysics background. Physics, statistics, what was built, what was measured,
+what is left, and a glossary. If you read one file, read that one.
 
-```
-merger_trees/          family histories of dark matter blobs
-    load.py                reading + summarising
-    dataset.py             normalising + batching for training
-    explore.py             the analysis (7 sections)
-    notes.md               what we found
-    plots/                 01-06
-    training/              step checks
-    validate/              (empty)
+## The one-line result
 
-point_clouds/          cubes of space full of galaxies
-    load.py                reading + summarising
-    explore.py             the analysis (5 sections)
-    notes.md               what we found
-    plots/                 07-10
-    training/              (empty)
-    validate/              (empty)
+Eight architectures scored within 0.064 of each other on accuracy, and seven of the
+eight report error bars that are too small. An accuracy leaderboard calls them
+interchangeable and would never show you that.
 
-common/viz.py          chart style + correlation helpers, shared by both
-notes/                 project-level: this file, plans.md, cheatsheet.md
-data/                  downloaded datasets (gitignored, 1.5 GB)
-resources/             the two papers
-```
+## Map
 
-## Run it
-
-```bash
-conda activate kaai
-
-python merger_trees/explore.py                          # trees: 7 sections
-python merger_trees/training/step1_check_dataloader.py  # verify batching
-python point_clouds/explore.py                          # clouds: 5 sections
-python point_clouds/load.py                             # print one cloud
-```
-
-## Where to start reading
-
-| If you want | Read |
+| file | what it is |
 |---|---|
-| What any term means | [cheatsheet.md](cheatsheet.md) |
-| What's in the trees | [../merger_trees/notes.md](../merger_trees/notes.md) |
-| What's in the clouds | [../point_clouds/notes.md](../point_clouds/notes.md) |
-| The research plan | [plans.md](plans.md) |
-| Related papers, and where the novelty is | [literature.md](literature.md) |
-| What has actually been measured | [results.md](results.md) |
-| Papers read, and what to take from each | [related_papers.md](related_papers.md) |
+| [projectGuide.md](projectGuide.md) | the handover document, read this first |
+| [plans.md](plans.md) | the build order, non-goals, and where each stage stands |
+| [../runLog.md](../runLog.md) | append-only log of every run, correction and retraction |
+| [zooCandidates.md](zooCandidates.md) | what the field actually uses, and what the zoo is missing |
+| [related_papers.md](related_papers.md) | technical paper index with arXiv numbers |
+| [understanding_data.md](understanding_data.md) | the datasets |
+| [comms/](comms/) | drafts: supervisor update, compute request |
 
-## The two papers
+## Code
 
-**resources/KAAI_Dataset.pdf → CosmoBench** (NeurIPS 2025, arXiv 2507.03707).
-The data: 34k point clouds and 25k merger trees from simulations costing 41
-million core-hours, with baselines for four tasks. Headline finding: on Quijote
-a **49-parameter least-squares fit beats a 671,000-parameter GNN**.
+    ili_kaai/          the live project
+      tasks.py           the inference tasks and their data
+      architectures.py   the zoo entries, as LtU-ILI configs
+      sweep.py           trains and scores every entry on every task
+      zoo.py             turns results into the catalogue
+      paramCount.py      parameter counts, measured separately
+      checks/            four checks, each against a case with a known answer
+    point_clouds/      data production: loading, correlation function
+      load.py, tpcf.py   produce data/tpcf_cache/*.npz, which ili_kaai reads
+      gnn.py, pointnet.py, blocks/   for the point cloud phase, not yet wired in
+    common/metrics.py  seeding, R2, coverage. Shared by both.
+    merger_trees/      committed Phase 0. Not in the brief, not extended.
+    archive/           superseded work, with a README saying what each piece produced
 
-- Data portal: <https://cosmobench.streamlit.app/>
-- Reference code: <https://github.com/nhuang37/cosmology_benchmark>
+## Running things
 
-**resources/Biological_FM.pdf → BioArc** (ICML 2026, arXiv 2512.00283). The
-method, not data. Searches a heterogeneous space of network designs with a
-weight-sharing supernet, then adds an LLM agent that learns from past searches.
-Built for DNA and protein models — whether it transfers to cosmology is part of
-the question.
+Two environments, deliberately. `ltu-ili` pins `sbi<=0.22.0` and the data pipeline needs
+newer packages, so they do not share.
 
-## Environment
+    conda run -n ltuili python -m ili_kaai.sweep          # the benchmark
+    conda run -n ltuili python -m ili_kaai.zoo            # build the catalogue
+    conda run -n ltuili python -m ili_kaai.checks.toyModel        # is the pipeline right
+    conda run -n ltuili python -m ili_kaai.checks.tarpCalibration # are the metrics right
+    python -m point_clouds.tpcf                           # rebuild the correlation functions
 
-Env `KAAI` at `~/miniconda3/envs/KAAI`, Python 3.12, torch on Mac GPU (MPS).
+`env/buildLtuIli.sh` creates the `ltuili` environment. `env/patchLtuIli.sh` applies a
+one-line NumPy 2 fix that ltu-ili 0.1.5 needs.
 
-Rebuilding it is **not** `pip install -r`. Read
-[../KAAI_requirements.txt](../KAAI_requirements.txt) first — it is a manifest,
-and four things must be done a specific way:
+## Conventions
 
-1. torch from conda-forge, not pip (OpenMP clash → hard crash)
-2. Pylians needs three patches to its `setup.py`
-3. HDF5 pinned to 2.1.0 to match h5py
-4. The package is `Pylians`, not `Pylians3`
+Recorded in full in the global CLAUDE.md. The ones that bite:
 
-## Status
-
-Done: environment, data downloaded, both datasets explored, tree batching
-verified. **No model exists yet** — the next step is the first code that learns
-anything.
+- Predictions go in `runLog.md` **before** the run that tests them.
+- Three seeds minimum for any comparative claim. Single-run uncertainty is `null`,
+  never `0`.
+- Every number in a document is derived from a JSON by path. Nothing is retyped.
+- Retractions go in a new log entry, never by editing the old one.

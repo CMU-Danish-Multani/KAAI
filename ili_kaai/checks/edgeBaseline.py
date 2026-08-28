@@ -25,6 +25,7 @@ from typing import Dict, List
 import numpy as np
 from scipy.stats import truncnorm
 
+from common.metrics import credible_coverage
 from ili_kaai.checks.edgeCoverage import near_wall, split_coverage
 
 warnings.filterwarnings("ignore")
@@ -86,8 +87,7 @@ def main() -> None:
     for seed in args.seeds:
         theta, samples, names = exact_posterior(args.n_points, args.n_draws, seed)
         r = split_coverage(samples, theta, near_wall(theta, lo, hi, args.edge_fraction))
-        overall = float(((theta >= np.percentile(samples, 16, axis=0))
-                         & (theta <= np.percentile(samples, 84, axis=0))).mean())
+        overall = float(credible_coverage(samples, theta, 0.68).mean())
         r.update({"seed": seed, "labels": names, "overall": round(overall, 4)})
         rows.append(r)
 

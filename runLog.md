@@ -824,3 +824,53 @@ retractions go in as new entries.
 - FINAL STATE: nothing running. Sweep complete, zoo built, four checks run, literature
   swept, Quijote wired, three documents drafted.
 - NEXT: run the 8 existing entries on Quijote, then build the skill.
+
+## 2026-08-28 Codebase and notes audit. Duplication removed, superseded material archived.
+
+- USER DIRECTIVE audit the codebase for boilerplate and dead code, and simplify the
+  notes so a handover does not confuse.
+- MEASURED coverage, the metric this project turns on, was implemented five separate
+  times: `sweep.py`, `toyModel.py`, `tarpCalibration.py`, `edgeCoverage.py`,
+  `edgeBaseline.py`. `seed_all` was defined three times. R2 twice.
+- VERIFIED before merging, all five coverage implementations were checked and are
+  mathematically identical. All take the central interval by percentile and count how
+  often the truth falls inside. The three `seed_all` differ only in a CUDA guard that is
+  a no-op on this machine.
+- DECISION consolidated into `common/metrics.py` as `credible_coverage`, `seed_all` and
+  `r2_score`. `ili_kaai` previously imported nothing from `common` and had reinvented
+  all three.
+- VERIFIED the refactor changed no number. `credible_coverage` returns bitwise identical
+  results to the old inline arithmetic, the calibration noise band still reads twoSigma
+  0.022, and rebuilding the zoo reproduces all eight verdicts and sigma values exactly.
+- MEASURED live python went from 25 files to 24, and `seed_all` from three definitions
+  to one.
+- ARCHIVED `point_clouds/lls.py`. Its driver was archived earlier, nothing imports it,
+  it has no entry point. Its measurements survive in
+  `point_clouds/results/lls_baseline.json`.
+- FLAG five files remain orphaned and are kept deliberately, not by oversight.
+  `point_clouds/gnn.py`, `pointnet.py` and `blocks/count_screen.py` are named in
+  `notes/plans.md` for the point cloud phase. `point_clouds/explore.py`,
+  `merger_trees/explore.py` and `merger_trees/training/step1_check_dataloader.py` are
+  committed Phase 0 exploration, tracked in the initial commit.
+- BUG CAUGHT `notes/readme.md`, the first file anyone opens, described the project as
+  "Neural architecture search for cosmology" and linked a stale artifact. That has not
+  been the project since it was re-grounded on LtU-ILI. Rewritten as a real entry point
+  that names the deliverable, states the one line result, maps every file, and lists the
+  commands to run each piece.
+- ARCHIVED four superseded notes. `results.md` (point cloud track stages 0 to 3,
+  superseded by projectGuide Section 5 and the JSONs), `findings.md` and `literature.md`
+  (the 2026-08-17 sweep, written when the goal was architecture search over CosmoBench
+  point clouds), and `cheatsheet.md` (five terms, subsumed by the twenty-eight term
+  glossary in projectGuide Section 9).
+- MEASURED notes went from 11 files and 2,845 lines to 7 files and 1,726 lines.
+- BUG CAUGHT + FIXED `notes/comms/mattUpdate1.md` was missing from disk and had never
+  been committed. I do not know when it was lost. Restored from the drafting history,
+  then found to carry numbers from the superseded 100 evaluation point run. Updated to
+  the final values: accuracy spread 0.806 to 0.870, NPE minus NLE on sigma_8 +0.179,
+  coverage 0.603 with zero of 24 pairs reaching nominal, ensemble deltas +0.010, +0.013
+  and +0.003, compute spread 4,797x once inference is counted.
+- LESSON the lost file was untracked for its whole life. Anything worth restoring should
+  be committed the same day it is written, not at the end of a session.
+- FINAL STATE: nothing running. Live code 24 files, notes 7 files, all imports verified,
+  zoo rebuilt identical.
+- NEXT: run the 8 entries on Quijote, then build the skill.

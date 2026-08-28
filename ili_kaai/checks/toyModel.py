@@ -16,7 +16,6 @@ Predictions were written into runLog.md before this was first run.
 import argparse
 import json
 import platform
-import random
 from pathlib import Path
 from typing import Dict, Tuple
 
@@ -24,6 +23,7 @@ import numpy as np
 import torch
 
 import ili
+from common.metrics import credible_coverage, r2_score, seed_all
 from ili.dataloaders import NumpyLoader
 from ili.inference import InferenceRunner
 from ili.validation.metrics import PosteriorCoverage
@@ -36,12 +36,6 @@ N_DATA = 10
 # Equation 14: k_i = (2i/3) - 3 for i in 0..9
 K = (2.0 * np.arange(N_DATA) / 3.0) - 3.0
 
-
-def seed_all(seed: int) -> None:
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)
 
 
 def simulate(theta: np.ndarray, rng: np.random.Generator) -> np.ndarray:
@@ -77,26 +71,22 @@ def build_runner(device: str, out_dir: Path, epochs: int):
 def posterior_stats(posterior, x: np.ndarray, theta: np.ndarray,
                     n_draws: int, device: str) -> Dict:
     """Recovery R2 per parameter, plus the two degeneracies the equations imply."""
-    means, corrs, in68, in95 = [], [], [], []
+    means, corrs, draws = [], [], []
     for i in range(len(x)):
         s = posterior.sample((n_draws,),
                              x=torch.tensor(x[i], dtype=torch.float32, device=device),
                              show_progress_bars=False).cpu().numpy()
         means.append(s.mean(0))
         corrs.append(np.corrcoef(s[:, 0], s[:, 1])[0, 1])
-        lo68, hi68 = np.percentile(s, [16, 84], axis=0)
-        lo95, hi95 = np.percentile(s, [2.5, 97.5], axis=0)
-        in68.append((theta[i] >= lo68) & (theta[i] <= hi68))
-        in95.append((theta[i] >= lo95) & (theta[i] <= hi95))
+        draws.append(s)
 
     means = np.stack(means)
-    ss_res = ((theta - means) ** 2).sum(0)
-    ss_tot = ((theta - theta.mean(0)) ** 2).sum(0)
+    samples = np.stack(draws, axis=1)          # (n_draws, n_points, n_params)
     return {
-        "r2_per_parameter": [float(v) for v in 1.0 - ss_res / ss_tot],
+        "r2_per_parameter": [float(v) for v in r2_score(means, theta)],
         "t0_t1_posterior_correlation_mean": float(np.mean(corrs)),
-        "empirical_coverage_68": [float(v) for v in np.stack(in68).mean(0)],
-        "empirical_coverage_95": [float(v) for v in np.stack(in95).mean(0)],
+        "empirical_coverage_68": [float(v) for v in credible_coverage(samples, theta, 0.68)],
+        "empirical_coverage_95": [float(v) for v in credible_coverage(samples, theta, 0.95)],
         "n_test_points": int(len(x)),
         "n_posterior_draws": n_draws,
     }

@@ -61,3 +61,22 @@ def bootstrap_r2(pred: np.ndarray, true: np.ndarray, n_boot: int = 1000,
     scores = np.stack([r2_score(pred[i], true[i])
                        for i in (rng.integers(0, n, n) for _ in range(n_boot))])
     return scores.mean(axis=0), scores.std(axis=0)
+
+
+def credible_coverage(samples: np.ndarray, truth: np.ndarray,
+                      level: float = 0.68) -> np.ndarray:
+    """Fraction of cases whose truth falls inside the central credible interval.
+
+    This is the honesty test for a posterior. A model claiming `level` confidence
+    should be right about `level` of the time. Reading below nominal means the error
+    bars are too small, which is the dangerous direction.
+
+    samples is (n_draws, n_points, n_params), truth is (n_points, n_params).
+    Returns coverage per parameter.
+
+    Defined once, here, because it was previously implemented five separate times
+    across the sweep and the checks. They were verified equivalent before merging.
+    """
+    q = [50.0 * (1.0 - level), 50.0 * (1.0 + level)]
+    lo, hi = np.percentile(samples, q, axis=0)
+    return ((truth >= lo) & (truth <= hi)).mean(axis=0)

@@ -23,6 +23,7 @@ from typing import Dict, List
 
 import numpy as np
 
+from common.metrics import credible_coverage
 from ili_kaai.architectures import ZOO
 from ili_kaai.sweep import build, draw, seed_all
 from ili_kaai.tasks import TASKS, load, prior_bounds
@@ -43,7 +44,7 @@ def near_wall(truth: np.ndarray, lo: List[float], hi: List[float],
 def split_coverage(samples: np.ndarray, truth: np.ndarray, edge: np.ndarray,
                    level: float = 0.68) -> Dict:
     """Coverage at edge points and interior points, computed per parameter."""
-    q = [50 * (1 - level), 50 * (1 + level)]
+    q = [50.0 * (1.0 - level), 50.0 * (1.0 + level)]
     lo, hi = np.percentile(samples, q, axis=0)
     inside = (truth >= lo) & (truth <= hi)
 

@@ -40,3 +40,24 @@ covers NPE, NLE and NRE across two backends rather than NPE and NRE in one.
 - `plansPreLtuIli.md` the 876 line plan aimed at beating CosmoBench with a weight
   sharing supernet. Superseded in full by the rewritten `notes/plans.md`.
 - `spec_stage1_gate.md` the spec for the reproduction gate, which passed.
+
+## notes/ (added 2026-08-28)
+
+Four documents superseded when the project was re-grounded on LtU-ILI. Archived rather
+than deleted because they record what was believed at the time.
+
+- `resultsPreLtuIli.md` results of the point cloud track, stages 0 to 3. Superseded by
+  `notes/projectGuide.md` Section 5 and by `ili_kaai/results/*.json`, which are derived
+  from data rather than typed.
+- `findingsNasEra.md` and `literatureNasEra.md` the literature sweep from 2026-08-17,
+  written when the goal was neural architecture search over CosmoBench point clouds.
+  That is not the goal. The current sweep is `notes/zooCandidates.md`, and the technical
+  paper index that survives is `notes/related_papers.md`.
+- `cheatsheet.md` a glossary of five terms, subsumed by the twenty-eight term glossary
+  in `notes/projectGuide.md` Section 9.
+
+## pointClouds/ (added 2026-08-28)
+
+- `lls.py` linear least squares on pairwise distance statistics, the CosmoBench baseline
+  we beat in Stage 1. Its driver was archived earlier, nothing imports it, and it has no
+  entry point. Its measurements survive in `point_clouds/results/lls_baseline.json`.

@@ -20,6 +20,7 @@ from pathlib import Path
 from typing import Dict
 
 import numpy as np
+from common.metrics import credible_coverage
 from tarp import get_tarp_coverage
 
 warnings.filterwarnings("ignore")
@@ -55,8 +56,8 @@ def make(f: float, n_points: int, n_draws: int, seed: int):
 
 
 def marginal_coverage(samples: np.ndarray, theta: np.ndarray, level: float) -> float:
-    lo, hi = np.percentile(samples, [50 * (1 - level), 50 * (1 + level)], axis=0)
-    return float(((theta >= lo) & (theta <= hi)).mean())
+    """Averaged over parameters, which is what this check compares against."""
+    return float(credible_coverage(samples, theta, level).mean())
 
 
 def tarp_at(samples: np.ndarray, theta: np.ndarray, level: float, norm: bool) -> float:
