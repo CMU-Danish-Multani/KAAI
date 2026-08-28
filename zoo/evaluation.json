@@ -1,0 +1,181 @@
+{
+  "held_out": {
+    "cases": [
+      {
+        "expected": "tpcf_mlp",
+        "got": [
+          "nre",
+          "tpcf_mlp",
+          "npe_nsf"
+        ],
+        "top1_correct": false,
+        "in_top3": true,
+        "because": "strongest measured score, cheap, and unaffected by the count artefact"
+      },
+      {
+        "expected": "pool_fishnets",
+        "got": [
+          "pool_fishnets",
+          "pool_mean",
+          "pool_sum"
+        ],
+        "top1_correct": true,
+        "in_top3": true,
+        "because": "best measured count-blind aggregation, 0.6895 against 0.6654 for mean"
+      },
+      {
+        "expected": "lls_pairwise",
+        "got": [
+          "lls_pairwise",
+          "nre",
+          "tpcf_mlp"
+        ],
+        "top1_correct": true,
+        "in_top3": true,
+        "because": "49 parameters, and still competitive"
+      },
+      {
+        "expected": "pool_sum",
+        "got": [
+          "pool_sum",
+          "pool_fishnets",
+          "pool_mean"
+        ],
+        "top1_correct": true,
+        "in_top3": true,
+        "because": "highest measured aggregation score, and its leak cannot bite when the count is constant"
+      },
+      {
+        "expected": "radius_gnn",
+        "got": [
+          "radius_gnn"
+        ],
+        "top1_correct": true,
+        "in_top3": true,
+        "because": "the only entry whose role is encoder producing an embedding"
+      },
+      {
+        "expected": "nre",
+        "got": [
+          "nre",
+          "npe_nsf",
+          "pool_fishnets"
+        ],
+        "top1_correct": true,
+        "in_top3": true,
+        "because": "highest posterior-mean R2 among the calibrated heads; the more accurate MAF flow is overconfident and is demoted"
+      },
+      {
+        "expected": "nre",
+        "got": [
+          "nre",
+          "npe_nsf",
+          "pool_fishnets"
+        ],
+        "top1_correct": true,
+        "in_top3": true,
+        "because": "best calibrated head, though every head degrades on the joint task and the recommendation must say so"
+      },
+      {
+        "expected": "nre",
+        "got": [
+          "nre",
+          "npe_nsf",
+          "npe_mdn"
+        ],
+        "top1_correct": true,
+        "in_top3": true,
+        "because": "lowest calibration error on the single-parameter tasks"
+      }
+    ],
+    "top1": 7,
+    "total": 8,
+    "in_top3": 8
+  },
+  "leak_ablation": {
+    "queries": 8,
+    "advice_changed": 3,
+    "detail": [
+      {
+        "query": "I need a pooling operation for a set mod",
+        "with_screen": [
+          "pool_fishnets",
+          "pool_mean",
+          "pool_sum"
+        ],
+        "without_screen": [
+          "pool_sum",
+          "pool_fishnets",
+          "pool_mean"
+        ],
+        "leaking_entries_promoted": [
+          "pool_sum"
+        ]
+      },
+      {
+        "query": "I need a posterior on Omega_m from CAMEL",
+        "with_screen": [
+          "nre",
+          "npe_nsf",
+          "pool_fishnets"
+        ],
+        "without_screen": [
+          "nre",
+          "npe_nsf",
+          "pool_sum"
+        ],
+        "leaking_entries_promoted": [
+          "pool_sum"
+        ]
+      },
+      {
+        "query": "I want to infer both cosmological parame",
+        "with_screen": [
+          "nre",
+          "npe_nsf",
+          "pool_fishnets"
+        ],
+        "without_screen": [
+          "nre",
+          "npe_nsf",
+          "pool_sum"
+        ],
+        "leaking_entries_promoted": [
+          "pool_sum"
+        ]
+      }
+    ]
+  },
+  "calibration_ablation": {
+    "queries": 3,
+    "advice_changed": 2,
+    "detail": [
+      {
+        "query": "I need a posterior on Omega_m from CAMEL",
+        "with_check": [
+          "nre",
+          "npe_nsf",
+          "pool_fishnets"
+        ],
+        "without_check": [
+          "nre",
+          "npe_maf",
+          "npe_mdn"
+        ]
+      },
+      {
+        "query": "I want to infer both cosmological parame",
+        "with_check": [
+          "nre",
+          "npe_nsf",
+          "pool_fishnets"
+        ],
+        "without_check": [
+          "nre",
+          "npe_maf",
+          "npe_mdn"
+        ]
+      }
+    ]
+  }
+}

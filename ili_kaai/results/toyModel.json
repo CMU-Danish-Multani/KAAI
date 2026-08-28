@@ -1,0 +1,49 @@
+{
+  "stage": "A3 toy model, LtU-ILI Section 4.1",
+  "deviation_from_paper": "amortized NPE, not SNPE; same 20k budget",
+  "args": {
+    "n_sims": 20000,
+    "n_test": 200,
+    "n_draws": 2000,
+    "epochs": 200,
+    "seed": 0,
+    "device": "cpu"
+  },
+  "stats": {
+    "r2_per_parameter": [
+      0.4276785982026252,
+      0.38190393714485593,
+      -0.008236365759464626
+    ],
+    "t0_t1_posterior_correlation_mean": -0.7600017443813482,
+    "empirical_coverage_68": [
+      0.72,
+      0.745,
+      0.675
+    ],
+    "empirical_coverage_95": [
+      0.96,
+      0.96,
+      0.955
+    ],
+    "n_test_points": 200,
+    "n_posterior_draws": 2000
+  },
+  "predictions": {
+    "P1_t2_unidentifiable_r2_below_0.1": true,
+    "P2_t0_t1_anticorrelated_below_-0.7": true,
+    "P3_coverage68_in_0.60_0.75": true,
+    "P3_coverage95_in_0.90_0.98": true,
+    "P4_t0_and_t1_r2_above_0.5": false
+  },
+  "all_predictions_held": false,
+  "final_validation_loss": [
+    0.761559267838796,
+    1.0390050888061524
+  ],
+  "versions": {
+    "torch": "2.13.0",
+    "numpy": "2.4.6",
+    "python": "3.11.16"
+  }
+}

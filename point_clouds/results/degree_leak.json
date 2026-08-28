@@ -1,0 +1,26 @@
+{
+  "full (N varies 588-4451)|mean": {
+    "omega_m": 0.6599,
+    "omega_m_std": 0.001,
+    "sigma_8": 0.1958,
+    "embedding_leaks_N_r2": -3.5179
+  },
+  "full (N varies 588-4451)|sum": {
+    "omega_m": 0.8093,
+    "omega_m_std": 0.0064,
+    "sigma_8": 0.3651,
+    "embedding_leaks_N_r2": 0.8634
+  },
+  "fixed N=588|mean": {
+    "omega_m": 0.6709,
+    "omega_m_std": 0.0062,
+    "sigma_8": 0.2106,
+    "embedding_leaks_N_r2": null
+  },
+  "fixed N=588|sum": {
+    "omega_m": 0.6712,
+    "omega_m_std": 0.0041,
+    "sigma_8": 0.196,
+    "embedding_leaks_N_r2": null
+  }
+}

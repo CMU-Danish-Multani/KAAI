@@ -1,0 +1,15 @@
+SCREENED ARM WINNER, retrained on 3 seeds
+  {'family': 'gnn', 'pooling': 'mean', 'hidden': 128, 'layers': 1, 'cutoff': 0.03, 'angular': True, 'n_basis': 16, 'lr': 0.00028}
+  seed 0: Omega_m +0.6869  sigma_8 +0.2412  [245s]
+  seed 1: Omega_m +0.6716  sigma_8 +0.2707  [253s]
+  seed 2: Omega_m +0.6783  sigma_8 +0.2863  [235s]
+
+  TEST Omega_m   +0.6790 +/- 0.0063
+  TEST sigma_8   +0.2661 +/- 0.0187
+
+  against our benchmarks on Omega_m:
+    2PCF + MLP             0.8597   not beaten
+    LLS 49 params          0.8034   not beaten
+    our GNN mean pooling   0.6600   BEATEN
+    counting alone         0.5058   BEATEN
+  wrote point_clouds/results/screened_winner.json

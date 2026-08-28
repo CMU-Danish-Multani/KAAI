@@ -1,0 +1,42 @@
+{
+  "npeMaf": {
+    "camelsJoint": 33770,
+    "camelsOmega": 33010,
+    "camelsSamJoint": 33770
+  },
+  "npeNsf": {
+    "camelsJoint": 78175,
+    "camelsOmega": 26645,
+    "camelsSamJoint": 78175
+  },
+  "npeMdn": {
+    "camelsJoint": 7930,
+    "camelsOmega": 7165,
+    "camelsSamJoint": 7930
+  },
+  "npeMafEnsemble4": {
+    "camelsJoint": 135080,
+    "camelsOmega": 132040,
+    "camelsSamJoint": 135080
+  },
+  "nleMaf": {
+    "camelsJoint": 45500,
+    "camelsOmega": 45250,
+    "camelsSamJoint": 45500
+  },
+  "nleMdn": {
+    "camelsJoint": 94755,
+    "camelsOmega": 94705,
+    "camelsSamJoint": 94755
+  },
+  "nreMlp": {
+    "camelsJoint": 4201,
+    "camelsOmega": 4151,
+    "camelsSamJoint": 4201
+  },
+  "nreResnet": {
+    "camelsJoint": 16751,
+    "camelsOmega": 16701,
+    "camelsSamJoint": 16751
+  }
+}

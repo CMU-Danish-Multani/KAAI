@@ -1,0 +1,33 @@
+==============================================================================
+STAGE 4 -- ARCHITECTURE SEARCH, TWO ARMS
+==============================================================================
+  suite CAMELS   device mps   20 trials per arm   60 epochs   seeds [0, 1, 2]
+  our baselines on CAMELS Omega_m: 2PCF + MLP 0.8597, LLS 49 params 0.8034, GNN mean pooling 0.6600, GNN sum pooling 0.8020, counting galaxies alone 0.5058
+  train 600 clouds, mean size 2377
+
+==============================================================================
+ARM: SCREENED   pooling options: mean, quasi, attention, fishnets, pna_blind
+==============================================================================
+    trial   0  +0.4442  [119.9s]  gnn pool=fishnets h=64 L=3 Rc=0.015 ang=on basis=16 lr=2.2e-03
+    trial   1  -0.0012  [  8.2s]  deepsets pool=quasi h=32 lr=2.8e-04
+/Users/danishmultani/KAAI/point_clouds/blocks/attention_readout.py:116: UserWarning: index_reduce() is in beta and the API may change at any time. (Triggered internally at /Users/runner/miniforge3/conda-bld/libtorch_1781830596731/work/aten/src/ATen/native/TensorAdvancedIndexing.cpp:1515.)
+  largest = largest.index_reduce_(0, index, logits, "amax",
+/Users/danishmultani/KAAI/point_clouds/blocks/attention_readout.py:116: UserWarning: index_reduce() is in beta and the API may change at any time. (Triggered internally at /Users/runner/miniforge3/conda-bld/libtorch_1781830596731/work/aten/src/ATen/native/mps/operations/Indexing.mm:760.)
+  largest = largest.index_reduce_(0, index, logits, "amax",
+    trial   2  +0.0018  [ 13.0s]  deepsets pool=attention h=32 lr=5.5e-04
+    trial   3  +0.0044  [ 12.3s]  deepsets pool=quasi h=64 lr=4.8e-03
+    trial   4  +0.4494  [262.4s]  gnn pool=quasi h=128 L=1 Rc=0.03 ang=on basis=16 lr=1.7e-04
+    trial   5  +0.4434  [306.1s]  gnn pool=fishnets h=64 L=3 Rc=0.03 ang=off basis=8 lr=1.5e-03
+    trial   6  -0.0013  [ 10.0s]  deepsets pool=fishnets h=128 lr=4.3e-03
+    trial   7  +0.4290  [ 64.3s]  gnn pool=fishnets h=32 L=2 Rc=0.02 ang=off basis=8 lr=2.4e-03
+    trial   8  +0.4438  [ 70.6s]  gnn pool=attention h=32 L=3 Rc=0.015 ang=off basis=16 lr=9.3e-04
+    trial   9  -0.0013  [  5.2s]  deepsets pool=fishnets h=32 lr=1.6e-04
+    trial  10  +0.4175  [233.6s]  gnn pool=pna_blind h=128 L=5 Rc=0.01 ang=on basis=16 lr=1.1e-04
+    trial  11  +0.4647  [122.7s]  gnn pool=mean h=64 L=1 Rc=0.03 ang=on basis=16 lr=4.5e-04
+    trial  12  +0.4360  [1860.8s]  gnn pool=mean h=128 L=1 Rc=0.03 ang=on basis=16 lr=3.3e-04
+    trial  13  +0.4653  [239.3s]  gnn pool=mean h=128 L=1 Rc=0.03 ang=on basis=16 lr=2.8e-04
+    trial  14  +0.4635  [123.3s]  gnn pool=mean h=64 L=1 Rc=0.03 ang=on basis=16 lr=5.2e-04
+    trial  15  +0.3680  [1349.6s]  gnn pool=mean h=128 L=2 Rc=0.03 ang=on basis=16 lr=5.1e-04
+    trial  16  +0.4349  [116.2s]  gnn pool=mean h=64 L=2 Rc=0.02 ang=on basis=8 lr=2.8e-04
+    trial  17  +0.4376  [ 52.1s]  gnn pool=mean h=128 L=1 Rc=0.01 ang=on basis=16 lr=8.2e-04
+    trial  18  +0.4223  [220.6s]  gnn pool=pna_blind h=64 L=2 Rc=0.03 ang=on basis=16 lr=1.6e-04

@@ -16,3 +16,11 @@ __pycache__/
 
 # macOS
 .DS_Store
+
+# TensorBoard event files. sbi writes one per training run whether asked to or not.
+# 269 of them appeared during the sweep. They hold only loss curves and regenerate.
+sbi-logs/
+
+# Saved posteriors and per-epoch summaries that ltu-ili writes to out_dir. Nothing
+# reads them; every number we quote lives in ili_kaai/results/*.json.
+ili_kaai/results/runs/

@@ -55,6 +55,9 @@ python point_clouds/load.py                             # print one cloud
 | What's in the trees | [../merger_trees/notes.md](../merger_trees/notes.md) |
 | What's in the clouds | [../point_clouds/notes.md](../point_clouds/notes.md) |
 | The research plan | [plans.md](plans.md) |
+| Related papers, and where the novelty is | [literature.md](literature.md) |
+| What has actually been measured | [results.md](results.md) |
+| Papers read, and what to take from each | [related_papers.md](related_papers.md) |
 
 ## The two papers
 

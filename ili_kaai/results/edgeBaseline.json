@@ -1,0 +1,109 @@
+{
+  "edgeFraction": 0.1,
+  "nPoints": 200,
+  "nDraws": 1000,
+  "box": {
+    "Omega_m": [
+      0.1,
+      0.5
+    ],
+    "sigma_8": [
+      0.6,
+      1.0
+    ]
+  },
+  "matchedR2": {
+    "Omega_m": 0.865,
+    "sigma_8": 0.365
+  },
+  "perSeed": [
+    {
+      "edge": [
+        0.451,
+        0.4167
+      ],
+      "interior": [
+        0.6846,
+        0.6705
+      ],
+      "nEdge": [
+        51,
+        24
+      ],
+      "nInterior": [
+        149,
+        176
+      ],
+      "seed": 0,
+      "labels": [
+        "Omega_m",
+        "sigma_8"
+      ],
+      "overall": 0.6325
+    },
+    {
+      "edge": [
+        0.4516,
+        0.4054
+      ],
+      "interior": [
+        0.7574,
+        0.681
+      ],
+      "nEdge": [
+        31,
+        37
+      ],
+      "nInterior": [
+        169,
+        163
+      ],
+      "seed": 1,
+      "labels": [
+        "Omega_m",
+        "sigma_8"
+      ],
+      "overall": 0.67
+    },
+    {
+      "edge": [
+        0.6818,
+        0.45
+      ],
+      "interior": [
+        0.6154,
+        0.7562
+      ],
+      "nEdge": [
+        44,
+        40
+      ],
+      "nInterior": [
+        156,
+        160
+      ],
+      "seed": 2,
+      "labels": [
+        "Omega_m",
+        "sigma_8"
+      ],
+      "overall": 0.6625
+    }
+  ],
+  "summary": {
+    "Omega_m": {
+      "edge": 0.5281,
+      "interior": 0.6858,
+      "correctDeficit": -0.1577,
+      "ourDeficit": -0.178,
+      "excess": -0.0203
+    },
+    "sigma_8": {
+      "edge": 0.424,
+      "interior": 0.7026,
+      "correctDeficit": -0.2785,
+      "ourDeficit": -0.581,
+      "excess": -0.3025
+    }
+  }
+}

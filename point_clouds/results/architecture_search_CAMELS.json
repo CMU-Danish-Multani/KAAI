@@ -1,0 +1,381 @@
+{
+  "stage": "4: architecture search",
+  "complete": true,
+  "config": {
+    "suite": "CAMELS",
+    "trials": 20,
+    "epochs": 60,
+    "batch_size": 32,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "limit": 0,
+    "arms": [
+      "open"
+    ],
+    "device": "mps"
+  },
+  "device": "mps",
+  "our_baselines_camels_omega_m": {
+    "2PCF + MLP": 0.8597,
+    "LLS 49 params": 0.8034,
+    "GNN mean pooling": 0.66,
+    "GNN sum pooling": 0.802,
+    "counting galaxies alone": 0.5058
+  },
+  "test_set_evaluations": 3,
+  "versions": {
+    "torch": "2.12.1",
+    "optuna": "4.9.0",
+    "numpy": "2.5.2",
+    "python": "3.12.13"
+  },
+  "results": [
+    {
+      "arm": "open",
+      "winner": {
+        "family": "gnn",
+        "pooling": "fishnets",
+        "hidden": 128,
+        "lr": 0.0019521409536322274,
+        "layers": 3,
+        "cutoff": 0.01,
+        "angular": false,
+        "n_basis": 8
+      },
+      "winner_pooling_count_blind": true,
+      "test_r2_mean": [
+        0.6871656260644666,
+        0.17343192475252966
+      ],
+      "test_r2_seed_std": [
+        0.018034851260127886,
+        0.003992383044521437
+      ],
+      "history": [
+        {
+          "config": {
+            "family": "gnn",
+            "pooling": "max",
+            "hidden": 32,
+            "lr": 0.0037373255040743145,
+            "layers": 1,
+            "cutoff": 0.02,
+            "angular": true,
+            "n_basis": 8
+          },
+          "val_r2": [
+            0.5294906804877082,
+            0.062199856554941535
+          ],
+          "mean": 0.29584526852132487
+        },
+        {
+          "config": {
+            "family": "deepsets",
+            "pooling": "attention",
+            "hidden": 128,
+            "lr": 0.0010963072160039631
+          },
+          "val_r2": [
+            -0.0016982959385700713,
+            -0.0005504885290272821
+          ],
+          "mean": -0.0011243922337986767
+        },
+        {
+          "config": {
+            "family": "gnn",
+            "pooling": "fishnets",
+            "hidden": 128,
+            "lr": 0.0009305660617049126,
+            "layers": 3,
+            "cutoff": 0.01,
+            "angular": false,
+            "n_basis": 8
+          },
+          "val_r2": [
+            0.717548628426865,
+            0.187378290191896
+          ],
+          "mean": 0.4524634593093805
+        },
+        {
+          "config": {
+            "family": "deepsets",
+            "pooling": "max",
+            "hidden": 128,
+            "lr": 0.0010656495240313783
+          },
+          "val_r2": [
+            0.1871010897103763,
+            -0.0017549482832088792
+          ],
+          "mean": 0.09267307071358372
+        },
+        {
+          "config": {
+            "family": "deepsets",
+            "pooling": "pna_scaled",
+            "hidden": 32,
+            "lr": 0.00014441161004737443
+          },
+          "val_r2": [
+            0.5669720589777962,
+            0.01695649933018284
+          ],
+          "mean": 0.29196427915398954
+        },
+        {
+          "config": {
+            "family": "gnn",
+            "pooling": "fishnets",
+            "hidden": 32,
+            "lr": 0.0002875646167119827,
+            "layers": 4,
+            "cutoff": 0.01,
+            "angular": false,
+            "n_basis": 8
+          },
+          "val_r2": [
+            0.7004989769602902,
+            0.15823973788084533
+          ],
+          "mean": 0.42936935742056775
+        },
+        {
+          "config": {
+            "family": "deepsets",
+            "pooling": "sum",
+            "hidden": 64,
+            "lr": 0.000524948880258489
+          },
+          "val_r2": [
+            0.5746744533000776,
+            0.017136501352746913
+          ],
+          "mean": 0.29590547732641226
+        },
+        {
+          "config": {
+            "family": "deepsets",
+            "pooling": "quasi",
+            "hidden": 128,
+            "lr": 0.0012820468485576447
+          },
+          "val_r2": [
+            -0.004026004093848012,
+            0.05504834077620746
+          ],
+          "mean": 0.025511168341179724
+        },
+        {
+          "config": {
+            "family": "gnn",
+            "pooling": "max",
+            "hidden": 32,
+            "lr": 0.00018882983860104733,
+            "layers": 4,
+            "cutoff": 0.015,
+            "angular": false,
+            "n_basis": 8
+          },
+          "val_r2": [
+            0.0010230500223222805,
+            -0.0006049658343671993
+          ],
+          "mean": 0.0002090420939775406
+        },
+        {
+          "config": {
+            "family": "gnn",
+            "pooling": "mean",
+            "hidden": 128,
+            "lr": 0.000240127184204919,
+            "layers": 2,
+            "cutoff": 0.01,
+            "angular": false,
+            "n_basis": 16
+          },
+          "val_r2": [
+            0.7021076128112331,
+            0.16177639486466222
+          ],
+          "mean": 0.4319420038379477
+        },
+        {
+          "config": {
+            "family": "gnn",
+            "pooling": "pna_blind",
+            "hidden": 64,
+            "lr": 0.0037969167759861816,
+            "layers": 5,
+            "cutoff": 0.03,
+            "angular": true,
+            "n_basis": 16
+          },
+          "val_r2": [
+            0.7130965673779783,
+            0.04684413978221447
+          ],
+          "mean": 0.3799703535800964
+        },
+        {
+          "config": {
+            "family": "gnn",
+            "pooling": "mean",
+            "hidden": 128,
+            "lr": 0.00046219370650626464,
+            "layers": 2,
+            "cutoff": 0.01,
+            "angular": false,
+            "n_basis": 16
+          },
+          "val_r2": [
+            0.7060730010253295,
+            0.18269119650172294
+          ],
+          "mean": 0.44438209876352625
+        },
+        {
+          "config": {
+            "family": "gnn",
+            "pooling": "fishnets",
+            "hidden": 128,
+            "lr": 0.0005360635258658641,
+            "layers": 2,
+            "cutoff": 0.01,
+            "angular": false,
+            "n_basis": 16
+          },
+          "val_r2": [
+            0.7077380416468058,
+            0.18358303069962123
+          ],
+          "mean": 0.4456605361732135
+        },
+        {
+          "config": {
+            "family": "gnn",
+            "pooling": "fishnets",
+            "hidden": 128,
+            "lr": 0.0006132150011606026,
+            "layers": 3,
+            "cutoff": 0.01,
+            "angular": false,
+            "n_basis": 16
+          },
+          "val_r2": [
+            0.7150221006792095,
+            0.1830748563440433
+          ],
+          "mean": 0.4490484785116264
+        },
+        {
+          "config": {
+            "family": "gnn",
+            "pooling": "fishnets",
+            "hidden": 128,
+            "lr": 0.0019521409536322274,
+            "layers": 3,
+            "cutoff": 0.01,
+            "angular": false,
+            "n_basis": 8
+          },
+          "val_r2": [
+            0.718975678180662,
+            0.18614715641119595
+          ],
+          "mean": 0.45256141729592897
+        },
+        {
+          "config": {
+            "family": "gnn",
+            "pooling": "fishnets",
+            "hidden": 128,
+            "lr": 0.002122058118760848,
+            "layers": 3,
+            "cutoff": 0.02,
+            "angular": false,
+            "n_basis": 8
+          },
+          "val_r2": [
+            0.7109274485409152,
+            0.18161058200834135
+          ],
+          "mean": 0.44626901527462826
+        },
+        {
+          "config": {
+            "family": "gnn",
+            "pooling": "fishnets",
+            "hidden": 64,
+            "lr": 0.0020304272613133672,
+            "layers": 3,
+            "cutoff": 0.015,
+            "angular": true,
+            "n_basis": 8
+          },
+          "val_r2": [
+            0.7205646441177649,
+            0.16791601563836822
+          ],
+          "mean": 0.44424032987806655
+        },
+        {
+          "config": {
+            "family": "gnn",
+            "pooling": "quasi",
+            "hidden": 128,
+            "lr": 0.002061416531665174,
+            "layers": 4,
+            "cutoff": 0.03,
+            "angular": false,
+            "n_basis": 8
+          },
+          "val_r2": [
+            0.7319189411134707,
+            0.17239189841031533
+          ],
+          "mean": 0.452155419761893
+        },
+        {
+          "config": {
+            "family": "gnn",
+            "pooling": "pna_scaled",
+            "hidden": 128,
+            "lr": 0.004733550050125218,
+            "layers": 3,
+            "cutoff": 0.01,
+            "angular": false,
+            "n_basis": 8
+          },
+          "val_r2": [
+            0.8068947794547252,
+            0.08351641729600345
+          ],
+          "mean": 0.44520559837536433
+        },
+        {
+          "config": {
+            "family": "gnn",
+            "pooling": "attention",
+            "hidden": 64,
+            "lr": 0.0008128620881190894,
+            "layers": 1,
+            "cutoff": 0.01,
+            "angular": true,
+            "n_basis": 8
+          },
+          "val_r2": [
+            0.7049694153031202,
+            0.16434557048552223
+          ],
+          "mean": 0.4346574928943212
+        }
+      ]
+    }
+  ]
+}

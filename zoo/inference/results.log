@@ -1,0 +1,23 @@
+MATCHED-COMPUTE COMPARISON: 4 heads x 3 tasks x 3 seeds, 200 epochs each
+ Neural network successfully converged after 107 epochs. Neural network successfully converged after 113 epochs. Neural network successfully converged after 81 epochs.  camels_omega_m_posterior     npe_maf  R2 [0.8639]  cov90 0.812  calib_err 0.076  [0.0 min]
+ Neural network successfully converged after 117 epochs. Neural network successfully converged after 99 epochs. Neural network successfully converged after 92 epochs.  camels_omega_m_posterior     npe_nsf  R2 [0.8369]  cov90 0.852  calib_err 0.040  [0.0 min]
+ Neural network successfully converged after 122 epochs. Neural network successfully converged after 112 epochs. Neural network successfully converged after 149 epochs.  camels_omega_m_posterior     npe_mdn  R2 [0.8635]  cov90 0.835  calib_err 0.060  [0.0 min]
+ Neural network successfully converged after 94 epochs. Neural network successfully converged after 118 epochs. Neural network successfully converged after 108 epochs.  camels_omega_m_posterior     nre      R2 [0.868]  cov90 0.832  calib_err 0.067  [0.0 min]
+ Neural network successfully converged after 83 epochs. Neural network successfully converged after 33 epochs. Neural network successfully converged after 92 epochs.  camels_sigma_8_posterior     npe_maf  R2 [0.3276]  cov90 0.792  calib_err 0.100  [0.0 min]
+ Neural network successfully converged after 96 epochs. Neural network successfully converged after 114 epochs. Neural network successfully converged after 105 epochs.  camels_sigma_8_posterior     npe_nsf  R2 [0.3649]  cov90 0.870  calib_err 0.023  [0.0 min]
+ Neural network successfully converged after 136 epochs. Neural network successfully converged after 162 epochs. Neural network successfully converged after 84 epochs.  camels_sigma_8_posterior     npe_mdn  R2 [0.3514]  cov90 0.793  calib_err 0.086  [0.0 min]
+ Neural network successfully converged after 49 epochs. Neural network successfully converged after 77 epochs. Neural network successfully converged after 72 epochs.  camels_sigma_8_posterior     nre      R2 [0.3689]  cov90 0.902  calib_err 0.023  [0.0 min]
+ Neural network successfully converged after 94 epochs. Neural network successfully converged after 86 epochs. Neural network successfully converged after 98 epochs.  camels_joint_posterior       npe_maf  R2 [0.8632, 0.3487]  cov90 0.695  calib_err 0.240  [0.0 min]
+ Neural network successfully converged after 96 epochs. Neural network successfully converged after 83 epochs. Neural network successfully converged after 77 epochs.  camels_joint_posterior       npe_nsf  R2 [0.8459, 0.3591]  cov90 0.758  calib_err 0.172  [0.0 min]
+ Neural network successfully converged after 108 epochs.WARNING:root:Only 0.790% proposal samples are
+                    accepted. It may take a long time to collect the remaining
+                    417 samples. You can prevent very long runtimes by
+                    setting `max_sampling_time` to limit runtime, or disabling
+                    rejection sampling (e.g. via `reject_outside_prior=False` in
+                    `posterior.sample()` when available).Alternatively, consider interrupting (Ctrl-C)
+                    and switching to `build_posterior(..., sample_with='mcmc')`.
+ Neural network successfully converged after 98 epochs. Neural network successfully converged after 87 epochs.  camels_joint_posterior       npe_mdn  R2 [0.8418, 0.3408]  cov90 0.712  calib_err 0.213  [0.0 min]
+ Neural network successfully converged after 88 epochs. Neural network successfully converged after 95 epochs. Neural network successfully converged after 91 epochs.  camels_joint_posterior       nre      R2 [0.8546, 0.3623]  cov90 0.793  calib_err 0.162  [0.0 min]
+
+  12 configurations completed
+  wrote zoo/inference/results.json

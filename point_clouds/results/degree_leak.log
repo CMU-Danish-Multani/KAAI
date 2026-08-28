@@ -1,0 +1,10 @@
+DECIDING EXPERIMENT: is the mean-pool GNN reading geometry or routed count?
+
+  --- CAMELS full (N varies 588-4451) ---
+  mean  pooling  Omega_m +0.6599 +/- 0.0010   sigma_8 +0.1958   embedding leaks N at R2 -3.5179
+  sum   pooling  Omega_m +0.8093 +/- 0.0064   sigma_8 +0.3651   embedding leaks N at R2 +0.8634
+  --- CAMELS fixed N=588 ---
+  mean  pooling  Omega_m +0.6709 +/- 0.0062   sigma_8 +0.2106
+  sum   pooling  Omega_m +0.6712 +/- 0.0041   sigma_8 +0.1960
+
+  wrote point_clouds/results/degree_leak.json

@@ -1,0 +1,59 @@
+==========================================================================
+STAGE 3 -- LLS baseline (49 parameters, no neural network)
+==========================================================================
+
+==========================================================================
+CAMELS-SAM
+==========================================================================
+    CAMELS-SAM/train: 100/600
+    CAMELS-SAM/train: 200/600
+    CAMELS-SAM/train: 300/600
+    CAMELS-SAM/train: 400/600
+    CAMELS-SAM/train: 500/600
+    CAMELS-SAM/train: 600/600
+    wrote /Users/danishmultani/KAAI/data/pairstat_cache/CAMELS-SAM_train_20radii.npz
+    CAMELS-SAM/val: 100/204
+    CAMELS-SAM/val: 200/204
+    wrote /Users/danishmultani/KAAI/data/pairstat_cache/CAMELS-SAM_val_20radii.npz
+    CAMELS-SAM/test: 100/196
+    wrote /Users/danishmultani/KAAI/data/pairstat_cache/CAMELS-SAM_test_20radii.npz
+  train   600 clouds x 80 candidate features
+  val     204 clouds x 80 candidate features
+  test    196 clouds x 80 candidate features
+
+  target           ours      bootstrap      published           band  verdict
+  Omega_m        0.7517   0.7494+/-0.0283     0.77+/-0.03  [0.71, 0.83]  PASS
+  sigma_8        0.8291   0.8292+/-0.0242     0.82+/-0.02  [0.78, 0.86]  PASS
+
+  parameters per target: 49   (paper reports 49)
+
+==========================================================================
+CAMELS
+==========================================================================
+    CAMELS/train: 100/600
+    CAMELS/train: 200/600
+    CAMELS/train: 300/600
+    CAMELS/train: 400/600
+    CAMELS/train: 500/600
+    CAMELS/train: 600/600
+    wrote /Users/danishmultani/KAAI/data/pairstat_cache/CAMELS_train_20radii.npz
+    CAMELS/val: 100/200
+    CAMELS/val: 200/200
+    wrote /Users/danishmultani/KAAI/data/pairstat_cache/CAMELS_val_20radii.npz
+    CAMELS/test: 100/200
+    CAMELS/test: 200/200
+    wrote /Users/danishmultani/KAAI/data/pairstat_cache/CAMELS_test_20radii.npz
+  train   600 clouds x 80 candidate features
+  val     200 clouds x 80 candidate features
+  test    200 clouds x 80 candidate features
+
+  target           ours      bootstrap      published           band  verdict
+  Omega_m        0.8034   0.8019+/-0.0238     0.78+/-0.03  [0.72, 0.84]  PASS
+  sigma_8        0.2786   0.2737+/-0.0619     0.28+/-0.06  [0.16, 0.40]  PASS
+
+  parameters per target: 49   (paper reports 49)
+
+==========================================================================
+  LLS BASELINE: PASS
+  wrote /Users/danishmultani/KAAI/point_clouds/results/lls_baseline.json
+==========================================================================

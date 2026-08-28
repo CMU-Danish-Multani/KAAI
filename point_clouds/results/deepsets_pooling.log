@@ -1,0 +1,26 @@
+============================================================================
+STAGE 3 -- DeepSets on raw positions: does pooling decide the leak?
+============================================================================
+  device cpu   seeds [0, 1, 2]   120 epochs   hidden 64
+
+============================================================================
+CAMELS
+============================================================================
+  train 600 clouds, 588-4451 galaxies each, 1,426,400 points total
+  count-only linear reference: Omega_m +0.5058   sigma_8 +0.0145
+  sum   pooling   Omega_m +0.5233   sigma_8 +0.0045   +/- 0.0049 / 0.0038
+  mean  pooling   Omega_m -0.0006   sigma_8 +0.0005   +/- 0.0074 / 0.0117
+/Users/danishmultani/KAAI/point_clouds/pointnet.py:118: UserWarning: index_reduce() is in beta and the API may change at any time. (Triggered internally at /Users/runner/miniforge3/conda-bld/libtorch_1781830596731/work/aten/src/ATen/native/TensorAdvancedIndexing.cpp:1515.)
+  return out.fill_(-torch.inf).index_reduce_(0, index, values, "amax",
+  max   pooling   Omega_m +0.2463   sigma_8 -0.0080   +/- 0.0523 / 0.0040
+
+============================================================================
+CAMELS-SAM
+============================================================================
+  train 600 clouds, 5000-5000 galaxies each, 3,000,000 points total
+  count-only linear reference: Omega_m -0.0089   sigma_8 -0.0466
+  sum   pooling   Omega_m +0.0792   sigma_8 -0.0485   +/- 0.0387 / 0.0044
+  mean  pooling   Omega_m +0.0792   sigma_8 -0.0485   +/- 0.0387 / 0.0044
+  max   pooling   Omega_m +0.0100   sigma_8 -0.0506   +/- 0.0080 / 0.0023
+
+  wrote /Users/danishmultani/KAAI/point_clouds/results/deepsets_pooling.json

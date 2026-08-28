@@ -1,0 +1,767 @@
+{
+  "nominal68": 0.68,
+  "nominal95": 0.95,
+  "calibrationTolerance": 0.022,
+  "calibrationNoiseBand": {
+    "nPoints": 200,
+    "nDraws": 1000,
+    "nSeeds": 3,
+    "level": 0.68,
+    "repeats": 30,
+    "singleSeedMean": 0.676,
+    "singleSeedStd": 0.0217,
+    "bias": -0.004,
+    "seedMeanStd": 0.011,
+    "twoSigma": 0.022
+  },
+  "admissionRule": "Admitted when calibration has been measured on every task. Passing is not required. The verdict travels with the entry and every recommendation must carry it.",
+  "source": {
+    "sweep": "ili_kaai/results/sweep.json",
+    "parameters": "ili_kaai/results/paramCount.json",
+    "noiseBand": "ili_kaai/results/calibrationNoiseBand.json"
+  },
+  "entries": [
+    {
+      "key": "npeMaf",
+      "family": "normalising_flow",
+      "engine": "NPE",
+      "backend": "sbi",
+      "amortized": true,
+      "summary": "Neural posterior estimation with a masked autoregressive flow. The default choice in most simulation based inference pipelines.",
+      "config": {
+        "backend": "sbi",
+        "engine": "NPE",
+        "model": "maf",
+        "repeats": 1,
+        "model_args": {
+          "hidden_features": 50,
+          "num_transforms": 5
+        },
+        "train_args": {
+          "training_batch_size": 32,
+          "learning_rate": 0.001,
+          "max_num_epochs": 300,
+          "stop_after_epochs": 20,
+          "validation_fraction": 0.2
+        },
+        "sample_method": "direct"
+      },
+      "nParameters": {
+        "camelsJoint": 33770,
+        "camelsOmega": 33010,
+        "camelsSamJoint": 33770
+      },
+      "measurements": [
+        {
+          "task": "camelsJoint",
+          "r2": [
+            0.8644,
+            0.3631
+          ],
+          "r2Std": [
+            0.0164,
+            0.0069
+          ],
+          "coverage68": 0.5692,
+          "coverage95": 0.8958,
+          "tarp68": 0.5753,
+          "trainSeconds": 2.3,
+          "inferenceSeconds": 1.3,
+          "nSeeds": 3,
+          "why": "Accuracy on this task spans only 0.064 R2 across all eight entries, so accuracy alone does not distinguish this one. NPE is amortized: it learns the posterior directly, so inference is a single forward pass and costs almost nothing per observation. CAMELS uses a 25 Mpc/h box, only about three times the 8 Mpc/h scale sigma_8 is defined on, so sample variance on that scale is large and sigma_8 recovers poorly. Coverage at 68 per cent is 0.569 against a nominal 0.680, so the posterior is too narrow. Single density estimators are known to be overconfident (Hermans et al. 2022)."
+        },
+        {
+          "task": "camelsOmega",
+          "r2": [
+            0.8637
+          ],
+          "r2Std": [
+            0.0037
+          ],
+          "coverage68": 0.5783,
+          "coverage95": 0.8867,
+          "tarp68": null,
+          "trainSeconds": 2.2,
+          "inferenceSeconds": 0.6,
+          "nSeeds": 3,
+          "why": "Accuracy on this task spans only 0.064 R2 across all eight entries, so accuracy alone does not distinguish this one. NPE is amortized: it learns the posterior directly, so inference is a single forward pass and costs almost nothing per observation. This task infers one parameter, so no joint degeneracy is tested and TARP is not measurable. Coverage at 68 per cent is 0.578 against a nominal 0.680, so the posterior is too narrow. Single density estimators are known to be overconfident (Hermans et al. 2022)."
+        },
+        {
+          "task": "camelsSamJoint",
+          "r2": [
+            0.7618,
+            0.8317
+          ],
+          "r2Std": [
+            0.0199,
+            0.0033
+          ],
+          "coverage68": 0.6361,
+          "coverage95": 0.8895,
+          "tarp68": 0.5946,
+          "trainSeconds": 2.2,
+          "inferenceSeconds": 1.3,
+          "nSeeds": 3,
+          "why": "Accuracy on this task spans only 0.139 R2 across all eight entries, so accuracy alone does not distinguish this one. NPE is amortized: it learns the posterior directly, so inference is a single forward pass and costs almost nothing per observation. CAMELS-SAM uses a 100 Mpc/h box, about twelve times the 8 Mpc/h scale sigma_8 describes, so sigma_8 is far better sampled here than in the 25 Mpc/h CAMELS box. Coverage at 68 per cent is 0.636 against a nominal 0.680, so the posterior is too narrow. Single density estimators are known to be overconfident (Hermans et al. 2022)."
+        }
+      ],
+      "failureModes": [
+        "MEASURED overconfident on all three CAMELS tasks: mean coverage at the 68 per cent level is 0.595 against a nominal 0.680, which is 7.8 sigma low. Error bars from this entry are too small.",
+        "Single density estimators tend to be overconfident (Hermans et al. 2022), which is the dangerous direction because error bars come out too small.",
+        "Autoregressive structure imposes a parameter ordering, so strongly degenerate parameters can be harder to capture than with a spline flow."
+      ],
+      "calibrationVerdict": "overconfident",
+      "calibrationSigma": -7.8,
+      "admitted": true
+    },
+    {
+      "key": "npeNsf",
+      "family": "normalising_flow",
+      "engine": "NPE",
+      "backend": "sbi",
+      "amortized": true,
+      "summary": "Neural posterior estimation with a neural spline flow. More flexible per transform than a MAF, at higher cost per epoch.",
+      "config": {
+        "backend": "sbi",
+        "engine": "NPE",
+        "model": "nsf",
+        "repeats": 1,
+        "model_args": {
+          "hidden_features": 50,
+          "num_transforms": 5
+        },
+        "train_args": {
+          "training_batch_size": 32,
+          "learning_rate": 0.001,
+          "max_num_epochs": 300,
+          "stop_after_epochs": 20,
+          "validation_fraction": 0.2
+        },
+        "sample_method": "direct"
+      },
+      "nParameters": {
+        "camelsJoint": 78175,
+        "camelsOmega": 26645,
+        "camelsSamJoint": 78175
+      },
+      "measurements": [
+        {
+          "task": "camelsJoint",
+          "r2": [
+            0.8666,
+            0.3715
+          ],
+          "r2Std": [
+            0.0053,
+            0.0081
+          ],
+          "coverage68": 0.6492,
+          "coverage95": 0.9042,
+          "tarp68": 0.6307,
+          "trainSeconds": 5.9,
+          "inferenceSeconds": 1.7,
+          "nSeeds": 3,
+          "why": "Accuracy on this task spans only 0.064 R2 across all eight entries, so accuracy alone does not distinguish this one. NPE is amortized: it learns the posterior directly, so inference is a single forward pass and costs almost nothing per observation. CAMELS uses a 25 Mpc/h box, only about three times the 8 Mpc/h scale sigma_8 is defined on, so sample variance on that scale is large and sigma_8 recovers poorly. Coverage at 68 per cent is 0.649 against a nominal 0.680, so the posterior is too narrow. Single density estimators are known to be overconfident (Hermans et al. 2022)."
+        },
+        {
+          "task": "camelsOmega",
+          "r2": [
+            0.8528
+          ],
+          "r2Std": [
+            0.0081
+          ],
+          "coverage68": 0.6333,
+          "coverage95": 0.8917,
+          "tarp68": null,
+          "trainSeconds": 3.4,
+          "inferenceSeconds": 0.9,
+          "nSeeds": 3,
+          "why": "Accuracy on this task spans only 0.064 R2 across all eight entries, so accuracy alone does not distinguish this one. NPE is amortized: it learns the posterior directly, so inference is a single forward pass and costs almost nothing per observation. This task infers one parameter, so no joint degeneracy is tested and TARP is not measurable. Coverage at 68 per cent is 0.633 against a nominal 0.680, so the posterior is too narrow. Single density estimators are known to be overconfident (Hermans et al. 2022)."
+        },
+        {
+          "task": "camelsSamJoint",
+          "r2": [
+            0.7911,
+            0.8366
+          ],
+          "r2Std": [
+            0.003,
+            0.009
+          ],
+          "coverage68": 0.6531,
+          "coverage95": 0.9235,
+          "tarp68": 0.6431,
+          "trainSeconds": 5.8,
+          "inferenceSeconds": 2.0,
+          "nSeeds": 3,
+          "why": "Accuracy on this task spans only 0.139 R2 across all eight entries, so accuracy alone does not distinguish this one. NPE is amortized: it learns the posterior directly, so inference is a single forward pass and costs almost nothing per observation. CAMELS-SAM uses a 100 Mpc/h box, about twelve times the 8 Mpc/h scale sigma_8 describes, so sigma_8 is far better sampled here than in the 25 Mpc/h CAMELS box. Coverage at 68 per cent is 0.653 against a nominal 0.680, so the posterior is too narrow. Single density estimators are known to be overconfident (Hermans et al. 2022)."
+        }
+      ],
+      "failureModes": [
+        "MEASURED overconfident on all three CAMELS tasks: mean coverage at the 68 per cent level is 0.645 against a nominal 0.680, which is 3.2 sigma low. Error bars from this entry are too small.",
+        "More parameters per transform, so it overfits sooner on small training sets, and CAMELS gives only 600 training simulations.",
+        "Spline tail behaviour can be poorly constrained where the prior is wide and the data are uninformative."
+      ],
+      "calibrationVerdict": "overconfident",
+      "calibrationSigma": -3.2,
+      "admitted": true
+    },
+    {
+      "key": "npeMdn",
+      "family": "mixture_density",
+      "engine": "NPE",
+      "backend": "sbi",
+      "amortized": true,
+      "summary": "Mixture density network posterior. Outputs Gaussian mixture parameters directly, so it is cheap and stable.",
+      "config": {
+        "backend": "sbi",
+        "engine": "NPE",
+        "model": "mdn",
+        "repeats": 1,
+        "model_args": {
+          "hidden_features": 50,
+          "num_components": 5
+        },
+        "train_args": {
+          "training_batch_size": 32,
+          "learning_rate": 0.001,
+          "max_num_epochs": 300,
+          "stop_after_epochs": 20,
+          "validation_fraction": 0.2
+        },
+        "sample_method": "direct"
+      },
+      "nParameters": {
+        "camelsJoint": 7930,
+        "camelsOmega": 7165,
+        "camelsSamJoint": 7930
+      },
+      "measurements": [
+        {
+          "task": "camelsJoint",
+          "r2": [
+            0.8655,
+            0.3603
+          ],
+          "r2Std": [
+            0.0102,
+            0.0111
+          ],
+          "coverage68": 0.585,
+          "coverage95": 0.8759,
+          "tarp68": 0.5743,
+          "trainSeconds": 0.8,
+          "inferenceSeconds": 0.1,
+          "nSeeds": 3,
+          "why": "Accuracy on this task spans only 0.064 R2 across all eight entries, so accuracy alone does not distinguish this one. NPE is amortized: it learns the posterior directly, so inference is a single forward pass and costs almost nothing per observation. CAMELS uses a 25 Mpc/h box, only about three times the 8 Mpc/h scale sigma_8 is defined on, so sample variance on that scale is large and sigma_8 recovers poorly. Coverage at 68 per cent is 0.585 against a nominal 0.680, so the posterior is too narrow. Single density estimators are known to be overconfident (Hermans et al. 2022)."
+        },
+        {
+          "task": "camelsOmega",
+          "r2": [
+            0.864
+          ],
+          "r2Std": [
+            0.0062
+          ],
+          "coverage68": 0.595,
+          "coverage95": 0.8767,
+          "tarp68": null,
+          "trainSeconds": 0.6,
+          "inferenceSeconds": 0.0,
+          "nSeeds": 3,
+          "why": "Accuracy on this task spans only 0.064 R2 across all eight entries, so accuracy alone does not distinguish this one. NPE is amortized: it learns the posterior directly, so inference is a single forward pass and costs almost nothing per observation. This task infers one parameter, so no joint degeneracy is tested and TARP is not measurable. Coverage at 68 per cent is 0.595 against a nominal 0.680, so the posterior is too narrow. Single density estimators are known to be overconfident (Hermans et al. 2022)."
+        },
+        {
+          "task": "camelsSamJoint",
+          "r2": [
+            0.7847,
+            0.8318
+          ],
+          "r2Std": [
+            0.0019,
+            0.0009
+          ],
+          "coverage68": 0.6378,
+          "coverage95": 0.9031,
+          "tarp68": 0.5969,
+          "trainSeconds": 0.7,
+          "inferenceSeconds": 0.1,
+          "nSeeds": 3,
+          "why": "Accuracy on this task spans only 0.139 R2 across all eight entries, so accuracy alone does not distinguish this one. NPE is amortized: it learns the posterior directly, so inference is a single forward pass and costs almost nothing per observation. CAMELS-SAM uses a 100 Mpc/h box, about twelve times the 8 Mpc/h scale sigma_8 describes, so sigma_8 is far better sampled here than in the 25 Mpc/h CAMELS box. Coverage at 68 per cent is 0.638 against a nominal 0.680, so the posterior is too narrow. Single density estimators are known to be overconfident (Hermans et al. 2022)."
+        }
+      ],
+      "failureModes": [
+        "MEASURED overconfident on all three CAMELS tasks: mean coverage at the 68 per cent level is 0.606 against a nominal 0.680, which is 6.7 sigma low. Error bars from this entry are too small.",
+        "A finite Gaussian mixture cannot represent sharply non Gaussian or hard edged posteriors, so it can look calibrated while being biased.",
+        "Component collapse when the number of components exceeds what the data supports."
+      ],
+      "calibrationVerdict": "overconfident",
+      "calibrationSigma": -6.7,
+      "admitted": true
+    },
+    {
+      "key": "npeMafEnsemble4",
+      "family": "normalising_flow",
+      "engine": "NPE",
+      "backend": "sbi",
+      "amortized": true,
+      "summary": "An ensemble of four masked autoregressive flows. This is the fix LtU-ILI Sections 3.2 and 6 recommend for single model overconfidence.",
+      "config": {
+        "backend": "sbi",
+        "engine": "NPE",
+        "model": "maf",
+        "repeats": 4,
+        "model_args": {
+          "hidden_features": 50,
+          "num_transforms": 5
+        },
+        "train_args": {
+          "training_batch_size": 32,
+          "learning_rate": 0.001,
+          "max_num_epochs": 300,
+          "stop_after_epochs": 20,
+          "validation_fraction": 0.2
+        },
+        "sample_method": "direct"
+      },
+      "nParameters": {
+        "camelsJoint": 135080,
+        "camelsOmega": 132040,
+        "camelsSamJoint": 135080
+      },
+      "measurements": [
+        {
+          "task": "camelsJoint",
+          "r2": [
+            0.8702,
+            0.3629
+          ],
+          "r2Std": [
+            0.0044,
+            0.0074
+          ],
+          "coverage68": 0.5792,
+          "coverage95": 0.9142,
+          "tarp68": 0.579,
+          "trainSeconds": 8.8,
+          "inferenceSeconds": 2.8,
+          "nSeeds": 3,
+          "why": "Accuracy on this task spans only 0.064 R2 across all eight entries, so accuracy alone does not distinguish this one. NPE is amortized: it learns the posterior directly, so inference is a single forward pass and costs almost nothing per observation. CAMELS uses a 25 Mpc/h box, only about three times the 8 Mpc/h scale sigma_8 is defined on, so sample variance on that scale is large and sigma_8 recovers poorly. Coverage at 68 per cent is 0.579 against a nominal 0.680, so the posterior is too narrow. Single density estimators are known to be overconfident (Hermans et al. 2022)."
+        },
+        {
+          "task": "camelsOmega",
+          "r2": [
+            0.8681
+          ],
+          "r2Std": [
+            0.0048
+          ],
+          "coverage68": 0.5917,
+          "coverage95": 0.9017,
+          "tarp68": null,
+          "trainSeconds": 8.4,
+          "inferenceSeconds": 1.2,
+          "nSeeds": 3,
+          "why": "Accuracy on this task spans only 0.064 R2 across all eight entries, so accuracy alone does not distinguish this one. NPE is amortized: it learns the posterior directly, so inference is a single forward pass and costs almost nothing per observation. This task infers one parameter, so no joint degeneracy is tested and TARP is not measurable. Coverage at 68 per cent is 0.592 against a nominal 0.680, so the posterior is too narrow. Single density estimators are known to be overconfident (Hermans et al. 2022)."
+        },
+        {
+          "task": "camelsSamJoint",
+          "r2": [
+            0.7789,
+            0.8387
+          ],
+          "r2Std": [
+            0.0107,
+            0.0026
+          ],
+          "coverage68": 0.6394,
+          "coverage95": 0.8955,
+          "tarp68": 0.5917,
+          "trainSeconds": 9.1,
+          "inferenceSeconds": 2.8,
+          "nSeeds": 3,
+          "why": "Accuracy on this task spans only 0.139 R2 across all eight entries, so accuracy alone does not distinguish this one. NPE is amortized: it learns the posterior directly, so inference is a single forward pass and costs almost nothing per observation. CAMELS-SAM uses a 100 Mpc/h box, about twelve times the 8 Mpc/h scale sigma_8 describes, so sigma_8 is far better sampled here than in the 25 Mpc/h CAMELS box. Coverage at 68 per cent is 0.639 against a nominal 0.680, so the posterior is too narrow. Single density estimators are known to be overconfident (Hermans et al. 2022)."
+        }
+      ],
+      "failureModes": [
+        "MEASURED overconfident on all three CAMELS tasks: mean coverage at the 68 per cent level is 0.603 against a nominal 0.680, which is 7.0 sigma low. Error bars from this entry are too small.",
+        "Four times the training cost for the same data.",
+        "Averaging inflates uncertainty, which corrects overconfidence but can overshoot into under-confidence when the members already agree."
+      ],
+      "calibrationVerdict": "overconfident",
+      "calibrationSigma": -7.0,
+      "admitted": true
+    },
+    {
+      "key": "nleMaf",
+      "family": "normalising_flow",
+      "engine": "NLE",
+      "backend": "sbi",
+      "amortized": false,
+      "summary": "Neural likelihood estimation with a MAF. Learns p(x|theta), so the prior can be changed after training without retraining.",
+      "config": {
+        "backend": "sbi",
+        "engine": "NLE",
+        "model": "maf",
+        "repeats": 1,
+        "model_args": {
+          "hidden_features": 50,
+          "num_transforms": 5
+        },
+        "train_args": {
+          "training_batch_size": 32,
+          "learning_rate": 0.001,
+          "max_num_epochs": 300,
+          "stop_after_epochs": 20,
+          "validation_fraction": 0.2
+        },
+        "sample_method": "emcee"
+      },
+      "nParameters": {
+        "camelsJoint": 45500,
+        "camelsOmega": 45250,
+        "camelsSamJoint": 45500
+      },
+      "measurements": [
+        {
+          "task": "camelsJoint",
+          "r2": [
+            0.8361,
+            0.0984
+          ],
+          "r2Std": [
+            0.014,
+            0.0892
+          ],
+          "coverage68": 0.54,
+          "coverage95": 0.8517,
+          "tarp68": 0.6107,
+          "trainSeconds": 4.7,
+          "inferenceSeconds": 3289.3,
+          "nSeeds": 3,
+          "why": "Accuracy on this task spans only 0.064 R2 across all eight entries, so accuracy alone does not distinguish this one. NLE learns a proxy rather than the posterior, so every observation needs its own MCMC run. That is why inference takes 3289 s here against under 3 s for NPE. CAMELS uses a 25 Mpc/h box, only about three times the 8 Mpc/h scale sigma_8 is defined on, so sample variance on that scale is large and sigma_8 recovers poorly. Coverage at 68 per cent is 0.540 against a nominal 0.680, so the posterior is too narrow. Single density estimators are known to be overconfident (Hermans et al. 2022)."
+        },
+        {
+          "task": "camelsOmega",
+          "r2": [
+            0.8329
+          ],
+          "r2Std": [
+            0.0193
+          ],
+          "coverage68": 0.5783,
+          "coverage95": 0.8483,
+          "tarp68": null,
+          "trainSeconds": 4.3,
+          "inferenceSeconds": 817.3,
+          "nSeeds": 3,
+          "why": "Accuracy on this task spans only 0.064 R2 across all eight entries, so accuracy alone does not distinguish this one. NLE learns a proxy rather than the posterior, so every observation needs its own MCMC run. That is why inference takes 817 s here against under 3 s for NPE. This task infers one parameter, so no joint degeneracy is tested and TARP is not measurable. Coverage at 68 per cent is 0.578 against a nominal 0.680, so the posterior is too narrow. Single density estimators are known to be overconfident (Hermans et al. 2022)."
+        },
+        {
+          "task": "camelsSamJoint",
+          "r2": [
+            0.7497,
+            0.8322
+          ],
+          "r2Std": [
+            0.014,
+            0.0034
+          ],
+          "coverage68": 0.608,
+          "coverage95": 0.8776,
+          "tarp68": 0.6663,
+          "trainSeconds": 3.6,
+          "inferenceSeconds": 1549.9,
+          "nSeeds": 3,
+          "why": "Accuracy on this task spans only 0.139 R2 across all eight entries, so accuracy alone does not distinguish this one. NLE learns a proxy rather than the posterior, so every observation needs its own MCMC run. That is why inference takes 1550 s here against under 3 s for NPE. CAMELS-SAM uses a 100 Mpc/h box, about twelve times the 8 Mpc/h scale sigma_8 describes, so sigma_8 is far better sampled here than in the 25 Mpc/h CAMELS box. Coverage at 68 per cent is 0.608 against a nominal 0.680, so the posterior is too narrow. Single density estimators are known to be overconfident (Hermans et al. 2022)."
+        }
+      ],
+      "failureModes": [
+        "MEASURED overconfident on all three CAMELS tasks: mean coverage at the 68 per cent level is 0.575 against a nominal 0.680, which is 9.5 sigma low. Error bars from this entry are too small.",
+        "Not amortised. Every new observation needs its own MCMC run, which is expensive when inference must be repeated over many observations.",
+        "Learns a distribution over the data vector, so cost grows with dim(x) rather than dim(theta)."
+      ],
+      "calibrationVerdict": "overconfident",
+      "calibrationSigma": -9.5,
+      "admitted": true
+    },
+    {
+      "key": "nleMdn",
+      "family": "mixture_density",
+      "engine": "NLE",
+      "backend": "sbi",
+      "amortized": false,
+      "summary": "Neural likelihood estimation with a Gaussian mixture likelihood.",
+      "config": {
+        "backend": "sbi",
+        "engine": "NLE",
+        "model": "mdn",
+        "repeats": 1,
+        "model_args": {
+          "hidden_features": 50,
+          "num_components": 5
+        },
+        "train_args": {
+          "training_batch_size": 32,
+          "learning_rate": 0.001,
+          "max_num_epochs": 300,
+          "stop_after_epochs": 20,
+          "validation_fraction": 0.2
+        },
+        "sample_method": "emcee"
+      },
+      "nParameters": {
+        "camelsJoint": 94755,
+        "camelsOmega": 94705,
+        "camelsSamJoint": 94755
+      },
+      "measurements": [
+        {
+          "task": "camelsJoint",
+          "r2": [
+            0.8064,
+            0.1925
+          ],
+          "r2Std": [
+            0.0182,
+            0.0521
+          ],
+          "coverage68": 0.5833,
+          "coverage95": 0.87,
+          "tarp68": 0.6393,
+          "trainSeconds": 4.4,
+          "inferenceSeconds": 1376.5,
+          "nSeeds": 3,
+          "why": "Accuracy on this task spans only 0.064 R2 across all eight entries, so accuracy alone does not distinguish this one. NLE learns a proxy rather than the posterior, so every observation needs its own MCMC run. That is why inference takes 1376 s here against under 3 s for NPE. CAMELS uses a 25 Mpc/h box, only about three times the 8 Mpc/h scale sigma_8 is defined on, so sample variance on that scale is large and sigma_8 recovers poorly. Coverage at 68 per cent is 0.583 against a nominal 0.680, so the posterior is too narrow. Single density estimators are known to be overconfident (Hermans et al. 2022)."
+        },
+        {
+          "task": "camelsOmega",
+          "r2": [
+            0.8092
+          ],
+          "r2Std": [
+            0.0285
+          ],
+          "coverage68": 0.52,
+          "coverage95": 0.8283,
+          "tarp68": null,
+          "trainSeconds": 4.9,
+          "inferenceSeconds": 837.9,
+          "nSeeds": 3,
+          "why": "Accuracy on this task spans only 0.064 R2 across all eight entries, so accuracy alone does not distinguish this one. NLE learns a proxy rather than the posterior, so every observation needs its own MCMC run. That is why inference takes 838 s here against under 3 s for NPE. This task infers one parameter, so no joint degeneracy is tested and TARP is not measurable. Coverage at 68 per cent is 0.520 against a nominal 0.680, so the posterior is too narrow. Single density estimators are known to be overconfident (Hermans et al. 2022)."
+        },
+        {
+          "task": "camelsSamJoint",
+          "r2": [
+            0.6525,
+            0.7365
+          ],
+          "r2Std": [
+            0.0593,
+            0.0209
+          ],
+          "coverage68": 0.5527,
+          "coverage95": 0.8172,
+          "tarp68": 0.5798,
+          "trainSeconds": 4.2,
+          "inferenceSeconds": 8484.4,
+          "nSeeds": 3,
+          "why": "Accuracy on this task spans only 0.139 R2 across all eight entries, so accuracy alone does not distinguish this one. NLE learns a proxy rather than the posterior, so every observation needs its own MCMC run. That is why inference takes 8484 s here against under 3 s for NPE. CAMELS-SAM uses a 100 Mpc/h box, about twelve times the 8 Mpc/h scale sigma_8 describes, so sigma_8 is far better sampled here than in the 25 Mpc/h CAMELS box. Coverage at 68 per cent is 0.553 against a nominal 0.680, so the posterior is too narrow. Single density estimators are known to be overconfident (Hermans et al. 2022)."
+        }
+      ],
+      "failureModes": [
+        "MEASURED overconfident on all three CAMELS tasks: mean coverage at the 68 per cent level is 0.552 against a nominal 0.680, which is 11.6 sigma low. Error bars from this entry are too small.",
+        "Same sampling cost as any likelihood estimator.",
+        "A mixture likelihood over a 25 dimensional data vector is a harder fit than a mixture posterior over two parameters."
+      ],
+      "calibrationVerdict": "overconfident",
+      "calibrationSigma": -11.6,
+      "admitted": true
+    },
+    {
+      "key": "nreMlp",
+      "family": "ratio_estimator",
+      "engine": "NRE",
+      "backend": "sbi",
+      "amortized": false,
+      "summary": "Neural ratio estimation with a multilayer perceptron classifier. No density estimator is chosen at all, so no flow family assumption.",
+      "config": {
+        "backend": "sbi",
+        "engine": "NRE",
+        "model": "mlp",
+        "repeats": 1,
+        "model_args": {
+          "hidden_features": 50
+        },
+        "train_args": {
+          "training_batch_size": 32,
+          "learning_rate": 0.001,
+          "max_num_epochs": 300,
+          "stop_after_epochs": 20,
+          "validation_fraction": 0.2
+        },
+        "sample_method": "emcee"
+      },
+      "nParameters": {
+        "camelsJoint": 4201,
+        "camelsOmega": 4151,
+        "camelsSamJoint": 4201
+      },
+      "measurements": [
+        {
+          "task": "camelsJoint",
+          "r2": [
+            0.8649,
+            0.3586
+          ],
+          "r2Std": [
+            0.0084,
+            0.0175
+          ],
+          "coverage68": 0.6725,
+          "coverage95": 0.9417,
+          "tarp68": 0.6543,
+          "trainSeconds": 1.2,
+          "inferenceSeconds": 493.0,
+          "nSeeds": 3,
+          "why": "Accuracy on this task spans only 0.064 R2 across all eight entries, so accuracy alone does not distinguish this one. NRE learns a proxy rather than the posterior, so every observation needs its own MCMC run. That is why inference takes 493 s here against under 3 s for NPE. CAMELS uses a 25 Mpc/h box, only about three times the 8 Mpc/h scale sigma_8 is defined on, so sample variance on that scale is large and sigma_8 recovers poorly."
+        },
+        {
+          "task": "camelsOmega",
+          "r2": [
+            0.8732
+          ],
+          "r2Std": [
+            0.0085
+          ],
+          "coverage68": 0.6683,
+          "coverage95": 0.9383,
+          "tarp68": null,
+          "trainSeconds": 1.2,
+          "inferenceSeconds": 242.3,
+          "nSeeds": 3,
+          "why": "Accuracy on this task spans only 0.064 R2 across all eight entries, so accuracy alone does not distinguish this one. NRE learns a proxy rather than the posterior, so every observation needs its own MCMC run. That is why inference takes 242 s here against under 3 s for NPE. This task infers one parameter, so no joint degeneracy is tested and TARP is not measurable."
+        },
+        {
+          "task": "camelsSamJoint",
+          "r2": [
+            0.7849,
+            0.8438
+          ],
+          "r2Std": [
+            0.008,
+            0.003
+          ],
+          "coverage68": 0.6624,
+          "coverage95": 0.9278,
+          "tarp68": 0.6601,
+          "trainSeconds": 1.2,
+          "inferenceSeconds": 461.7,
+          "nSeeds": 3,
+          "why": "Accuracy on this task spans only 0.139 R2 across all eight entries, so accuracy alone does not distinguish this one. NRE learns a proxy rather than the posterior, so every observation needs its own MCMC run. That is why inference takes 462 s here against under 3 s for NPE. CAMELS-SAM uses a 100 Mpc/h box, about twelve times the 8 Mpc/h scale sigma_8 describes, so sigma_8 is far better sampled here than in the 25 Mpc/h CAMELS box."
+        }
+      ],
+      "failureModes": [
+        "Known to degrade at high parameter dimensionality without truncation (Miller et al. 2021), and LtU-ILI Section 2.3 says so explicitly.",
+        "Ranked worst of the three engines on the SLCP benchmark in LtU-ILI Figure 4."
+      ],
+      "calibrationVerdict": "calibrated",
+      "calibrationSigma": -1.1,
+      "admitted": true
+    },
+    {
+      "key": "nreResnet",
+      "family": "ratio_estimator",
+      "engine": "NRE",
+      "backend": "sbi",
+      "amortized": false,
+      "summary": "Neural ratio estimation with a residual classifier. Deeper than the MLP variant at the same width.",
+      "config": {
+        "backend": "sbi",
+        "engine": "NRE",
+        "model": "resnet",
+        "repeats": 1,
+        "model_args": {
+          "hidden_features": 50,
+          "num_blocks": 3
+        },
+        "train_args": {
+          "training_batch_size": 32,
+          "learning_rate": 0.001,
+          "max_num_epochs": 300,
+          "stop_after_epochs": 20,
+          "validation_fraction": 0.2
+        },
+        "sample_method": "emcee"
+      },
+      "nParameters": {
+        "camelsJoint": 16751,
+        "camelsOmega": 16701,
+        "camelsSamJoint": 16751
+      },
+      "measurements": [
+        {
+          "task": "camelsJoint",
+          "r2": [
+            0.8566,
+            0.2673
+          ],
+          "r2Std": [
+            0.0049,
+            0.0584
+          ],
+          "coverage68": 0.5825,
+          "coverage95": 0.8741,
+          "tarp68": 0.6407,
+          "trainSeconds": 1.1,
+          "inferenceSeconds": 567.0,
+          "nSeeds": 3,
+          "why": "Accuracy on this task spans only 0.064 R2 across all eight entries, so accuracy alone does not distinguish this one. NRE learns a proxy rather than the posterior, so every observation needs its own MCMC run. That is why inference takes 567 s here against under 3 s for NPE. CAMELS uses a 25 Mpc/h box, only about three times the 8 Mpc/h scale sigma_8 is defined on, so sample variance on that scale is large and sigma_8 recovers poorly. Coverage at 68 per cent is 0.583 against a nominal 0.680, so the posterior is too narrow. Single density estimators are known to be overconfident (Hermans et al. 2022)."
+        },
+        {
+          "task": "camelsOmega",
+          "r2": [
+            0.8684
+          ],
+          "r2Std": [
+            0.0045
+          ],
+          "coverage68": 0.5583,
+          "coverage95": 0.875,
+          "tarp68": null,
+          "trainSeconds": 1.1,
+          "inferenceSeconds": 285.9,
+          "nSeeds": 3,
+          "why": "Accuracy on this task spans only 0.064 R2 across all eight entries, so accuracy alone does not distinguish this one. NRE learns a proxy rather than the posterior, so every observation needs its own MCMC run. That is why inference takes 286 s here against under 3 s for NPE. This task infers one parameter, so no joint degeneracy is tested and TARP is not measurable. Coverage at 68 per cent is 0.558 against a nominal 0.680, so the posterior is too narrow. Single density estimators are known to be overconfident (Hermans et al. 2022)."
+        },
+        {
+          "task": "camelsSamJoint",
+          "r2": [
+            0.7663,
+            0.837
+          ],
+          "r2Std": [
+            0.0034,
+            0.0036
+          ],
+          "coverage68": 0.5986,
+          "coverage95": 0.8835,
+          "tarp68": 0.6403,
+          "trainSeconds": 1.0,
+          "inferenceSeconds": 1401.3,
+          "nSeeds": 3,
+          "why": "Accuracy on this task spans only 0.139 R2 across all eight entries, so accuracy alone does not distinguish this one. NRE learns a proxy rather than the posterior, so every observation needs its own MCMC run. That is why inference takes 1401 s here against under 3 s for NPE. CAMELS-SAM uses a 100 Mpc/h box, about twelve times the 8 Mpc/h scale sigma_8 describes, so sigma_8 is far better sampled here than in the 25 Mpc/h CAMELS box. Coverage at 68 per cent is 0.599 against a nominal 0.680, so the posterior is too narrow. Single density estimators are known to be overconfident (Hermans et al. 2022)."
+        }
+      ],
+      "failureModes": [
+        "MEASURED overconfident on all three CAMELS tasks: mean coverage at the 68 per cent level is 0.580 against a nominal 0.680, which is 9.1 sigma low. Error bars from this entry are too small.",
+        "Same high dimensional degradation as the MLP variant.",
+        "More capacity on 600 training simulations means more overfitting risk."
+      ],
+      "calibrationVerdict": "overconfident",
+      "calibrationSigma": -9.1,
+      "admitted": true
+    }
+  ]
+}

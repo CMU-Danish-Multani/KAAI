@@ -1,0 +1,82 @@
+==========================================================================
+STAGE 2 DIAGNOSTICS -- point cloud track
+==========================================================================
+  device cpu   20 trials per search   search seeds [0, 1, 2, 3, 4]   train seeds [0, 1, 2]
+
+==========================================================================
+A. SEARCH VARIANCE -- is the Stage 1 offset real, or search noise?
+==========================================================================
+    trial   10/20  best mean val R2 so far 0.7947
+    trial   20/20  best mean val R2 so far 0.7947
+  CAMELS-SAM  search seed 0: Omega_m 0.7735   sigma_8 0.8186   (batch 4)
+    trial   10/20  best mean val R2 so far 0.7857
+    trial   20/20  best mean val R2 so far 0.7897
+  CAMELS-SAM  search seed 1: Omega_m 0.7785   sigma_8 0.8223   (batch 64)
+    trial   10/20  best mean val R2 so far 0.7966
+    trial   20/20  best mean val R2 so far 0.7984
+  CAMELS-SAM  search seed 2: Omega_m 0.7792   sigma_8 0.8185   (batch 16)
+    trial   10/20  best mean val R2 so far 0.7937
+    trial   20/20  best mean val R2 so far 0.7937
+  CAMELS-SAM  search seed 3: Omega_m 0.7734   sigma_8 0.8181   (batch 4)
+    trial   10/20  best mean val R2 so far 0.7879
+    trial   20/20  best mean val R2 so far 0.7899
+  CAMELS-SAM  search seed 4: Omega_m 0.7788   sigma_8 0.8246   (batch 16)
+    CAMELS-SAM Omega_m: mean 0.7767  std across searches 0.0026  range [0.7734, 0.7792]
+    CAMELS-SAM sigma_8: mean 0.8204  std across searches 0.0026  range [0.8181, 0.8246]
+    trial   10/20  best mean val R2 so far 0.6002
+    trial   20/20  best mean val R2 so far 0.6067
+  CAMELS      search seed 0: Omega_m 0.8597   sigma_8 0.3772   (batch 16)
+    trial   10/20  best mean val R2 so far 0.6007
+    trial   20/20  best mean val R2 so far 0.6007
+  CAMELS      search seed 1: Omega_m 0.8715   sigma_8 0.3543   (batch 64)
+    trial   10/20  best mean val R2 so far 0.6053
+    trial   20/20  best mean val R2 so far 0.6097
+  CAMELS      search seed 2: Omega_m 0.8659   sigma_8 0.3802   (batch 16)
+    trial   10/20  best mean val R2 so far 0.6079
+    trial   20/20  best mean val R2 so far 0.6079
+  CAMELS      search seed 3: Omega_m 0.8658   sigma_8 0.3677   (batch 4)
+    trial   10/20  best mean val R2 so far 0.6028
+    trial   20/20  best mean val R2 so far 0.6075
+  CAMELS      search seed 4: Omega_m 0.8659   sigma_8 0.3684   (batch 16)
+    CAMELS Omega_m: mean 0.8658  std across searches 0.0037  range [0.8597, 0.8715]
+    CAMELS sigma_8: mean 0.3695  std across searches 0.0090  range [0.3543, 0.3802]
+
+==========================================================================
+B. LEAK EXPLOITABILITY -- what does explicit access to the count buy?
+==========================================================================
+    trial   10/20  best mean val R2 so far 0.7947
+    trial   20/20  best mean val R2 so far 0.7947
+  CAMELS-SAM  xi_only       Omega_m 0.7735   sigma_8 0.8186
+    CAMELS-SAM+ngal: dropped 1 of 26 features as constant in train
+    trial   10/20  best mean val R2 so far 0.7947
+    trial   20/20  best mean val R2 so far 0.7947
+  CAMELS-SAM  xi_plus_ngal  Omega_m 0.7735   sigma_8 0.8186
+  CAMELS-SAM  DELTA         Omega_m +0.0000   sigma_8 +0.0000
+    trial   10/20  best mean val R2 so far 0.6002
+    trial   20/20  best mean val R2 so far 0.6067
+  CAMELS      xi_only       Omega_m 0.8597   sigma_8 0.3772
+    trial   10/20  best mean val R2 so far 0.6052
+    trial   20/20  best mean val R2 so far 0.6052
+  CAMELS      xi_plus_ngal  Omega_m 0.8482   sigma_8 0.3663
+  CAMELS      DELTA         Omega_m -0.0114   sigma_8 -0.0109
+
+==========================================================================
+C. FIXED-COUNT CONTROL -- trim every cloud to 588 most massive
+==========================================================================
+    trial   10/20  best mean val R2 so far 0.7947
+    trial   20/20  best mean val R2 so far 0.7947
+  CAMELS-SAM  full       ngal  5000- 5000   Omega_m 0.7735   sigma_8 0.8186
+    CAMELS-SAM/top588: dropped 1 of 25 features as constant in train
+    trial   10/20  best mean val R2 so far 0.4611
+    trial   20/20  best mean val R2 so far 0.4744
+  CAMELS-SAM  top588     ngal   588-  588   Omega_m 0.7142   sigma_8 0.2051
+  CAMELS-SAM  DELTA                        Omega_m -0.0593   sigma_8 -0.6135
+    trial   10/20  best mean val R2 so far 0.6002
+    trial   20/20  best mean val R2 so far 0.6067
+  CAMELS      full       ngal   588- 4451   Omega_m 0.8597   sigma_8 0.3772
+    trial   10/20  best mean val R2 so far 0.4550
+    trial   20/20  best mean val R2 so far 0.4550
+  CAMELS      top588     ngal   588-  588   Omega_m 0.6009   sigma_8 0.2185
+  CAMELS      DELTA                        Omega_m -0.2588   sigma_8 -0.1587
+
+  wrote /Users/danishmultani/KAAI/point_clouds/results/step2_diagnostics.json
