@@ -1,0 +1,132 @@
+==============================================================================
+STAGE 3 -- graph neural network on raw positions
+==============================================================================
+  device mps   seeds [0, 1, 2]   200 epochs   batch 32   hidden 64   layers 3
+
+==============================================================================
+CAMELS
+==============================================================================
+  train 600 clouds, 1,426,400 galaxies, cutoff 0.015 x box
+      epoch    0/200     1.9s elapsed  swap  4.59 GB
+      epoch   25/200    78.1s elapsed  swap  4.54 GB
+      epoch   50/200   154.4s elapsed  swap  4.50 GB
+      epoch   75/200   230.5s elapsed  swap  4.49 GB
+      epoch  100/200   306.5s elapsed  swap  4.48 GB
+      epoch  125/200   381.0s elapsed  swap  4.48 GB
+      epoch  150/200   430.7s elapsed  swap  4.46 GB
+      epoch  175/200   469.2s elapsed  swap  4.46 GB
+      epoch  199/200   506.5s elapsed  swap  4.43 GB
+      epoch    0/200     1.2s elapsed  swap  4.43 GB
+      epoch   25/200    39.8s elapsed  swap  4.43 GB
+      epoch   50/200    78.4s elapsed  swap  4.43 GB
+      epoch   75/200   118.3s elapsed  swap  4.41 GB
+      epoch  100/200   158.7s elapsed  swap  4.40 GB
+      epoch  125/200   199.1s elapsed  swap  4.36 GB
+      epoch  150/200   239.2s elapsed  swap  4.36 GB
+      epoch  175/200   278.9s elapsed  swap  4.35 GB
+      epoch  199/200   316.6s elapsed  swap  4.32 GB
+      epoch    0/200     1.2s elapsed  swap  4.32 GB
+      epoch   25/200    40.0s elapsed  swap  4.32 GB
+      epoch   50/200    78.7s elapsed  swap  4.32 GB
+      epoch   75/200   117.3s elapsed  swap  4.32 GB
+      epoch  100/200   155.8s elapsed  swap  4.32 GB
+      epoch  125/200   194.1s elapsed  swap  4.32 GB
+      epoch  150/200   232.5s elapsed  swap  4.32 GB
+      epoch  175/200  1419.5s elapsed  swap  4.14 GB
+      epoch  199/200  5721.5s elapsed  swap  4.10 GB
+  mean  pooling   Omega_m +0.6600 +/- 0.0057   sigma_8 +0.1931 +/- 0.0139   [109.1 min]
+      epoch    0/200     1.2s elapsed  swap  4.10 GB
+      epoch   25/200  1780.3s elapsed  swap  4.08 GB
+      epoch   50/200  5441.0s elapsed  swap  4.06 GB
+      epoch   75/200  9617.2s elapsed  swap  3.93 GB
+      epoch  100/200  9695.5s elapsed  swap  3.92 GB
+      epoch  125/200  9733.8s elapsed  swap  3.92 GB
+      epoch  150/200  9772.4s elapsed  swap  3.92 GB
+      epoch  175/200  11678.4s elapsed  swap  3.91 GB
+      epoch  199/200  11715.2s elapsed  swap  3.89 GB
+      epoch    0/200     1.2s elapsed  swap  3.89 GB
+      epoch   25/200   277.5s elapsed  swap  3.89 GB
+      epoch   50/200  2156.4s elapsed  swap  3.89 GB
+      epoch   75/200  2195.1s elapsed  swap  3.84 GB
+      epoch  100/200  2233.7s elapsed  swap  3.84 GB
+      epoch  125/200  2272.2s elapsed  swap  3.84 GB
+      epoch  150/200  2315.0s elapsed  swap  3.84 GB
+      epoch  175/200  2393.4s elapsed  swap  3.84 GB
+      epoch  199/200  2467.0s elapsed  swap  3.84 GB
+      epoch    0/200     2.3s elapsed  swap  3.84 GB
+      epoch   25/200    81.2s elapsed  swap  3.84 GB
+      epoch   50/200   156.7s elapsed  swap  3.83 GB
+      epoch   75/200   235.2s elapsed  swap  3.83 GB
+      epoch  100/200   315.5s elapsed  swap  3.81 GB
+      epoch  125/200   362.6s elapsed  swap  3.80 GB
+      epoch  150/200   401.5s elapsed  swap  3.80 GB
+      epoch  175/200   440.5s elapsed  swap  3.80 GB
+      epoch  199/200   477.6s elapsed  swap  3.78 GB
+  sum   pooling   Omega_m +0.8020 +/- 0.0088   sigma_8 +0.3572 +/- 0.0368   [244.4 min]
+    reference, published GNN Omega_m: 0.78 +/- 0.03
+    reference, published GNN sigma_8: 0.24 +/- 0.06
+
+==============================================================================
+CAMELS-SAM
+==============================================================================
+  train 600 clouds, 3,000,000 galaxies, cutoff 0.015 x box
+      epoch    0/200     1.4s elapsed  swap  3.78 GB
+      epoch   25/200    44.3s elapsed  swap  3.78 GB
+      epoch   50/200    88.7s elapsed  swap  3.69 GB
+      epoch   75/200   133.0s elapsed  swap  3.69 GB
+      epoch  100/200   177.6s elapsed  swap  3.69 GB
+      epoch  125/200   221.4s elapsed  swap  3.69 GB
+      epoch  150/200   264.9s elapsed  swap  3.69 GB
+      epoch  175/200   308.2s elapsed  swap  3.57 GB
+      epoch  199/200   349.2s elapsed  swap  3.57 GB
+      epoch    0/200     1.3s elapsed  swap  3.57 GB
+      epoch   25/200    43.8s elapsed  swap  3.56 GB
+      epoch   50/200    86.1s elapsed  swap  3.56 GB
+      epoch   75/200   129.7s elapsed  swap  3.56 GB
+      epoch  100/200   175.3s elapsed  swap  3.53 GB
+      epoch  125/200   219.8s elapsed  swap  3.52 GB
+      epoch  150/200   262.6s elapsed  swap  3.52 GB
+      epoch  175/200   304.8s elapsed  swap  3.52 GB
+      epoch  199/200   347.0s elapsed  swap  3.52 GB
+      epoch    0/200     1.4s elapsed  swap  3.52 GB
+      epoch   25/200    44.5s elapsed  swap  3.52 GB
+      epoch   50/200    88.5s elapsed  swap  3.52 GB
+      epoch   75/200   133.4s elapsed  swap  3.52 GB
+      epoch  100/200   179.0s elapsed  swap  3.52 GB
+      epoch  125/200   223.0s elapsed  swap  3.52 GB
+      epoch  150/200   269.2s elapsed  swap  3.52 GB
+      epoch  175/200   359.4s elapsed  swap  3.52 GB
+      epoch  199/200   449.1s elapsed  swap  3.52 GB
+  mean  pooling   Omega_m +0.5196 +/- 0.0077   sigma_8 +0.2845 +/- 0.0125   [19.1 min]
+      epoch    0/200     2.5s elapsed  swap  3.52 GB
+      epoch   25/200    82.9s elapsed  swap  3.52 GB
+      epoch   50/200   176.7s elapsed  swap  3.52 GB
+      epoch   75/200   274.8s elapsed  swap  3.52 GB
+      epoch  100/200   329.8s elapsed  swap  3.51 GB
+      epoch  125/200   371.5s elapsed  swap  3.51 GB
+      epoch  150/200   412.3s elapsed  swap  3.51 GB
+      epoch  175/200   457.5s elapsed  swap  3.51 GB
+      epoch  199/200   508.5s elapsed  swap  3.51 GB
+      epoch    0/200     1.6s elapsed  swap  3.51 GB
+      epoch   25/200    51.2s elapsed  swap  3.51 GB
+      epoch   50/200    99.2s elapsed  swap  3.51 GB
+      epoch   75/200   145.9s elapsed  swap  3.51 GB
+      epoch  100/200   192.6s elapsed  swap  3.51 GB
+      epoch  125/200   240.6s elapsed  swap  3.50 GB
+      epoch  150/200   287.5s elapsed  swap  3.50 GB
+      epoch  175/200   333.7s elapsed  swap  3.50 GB
+      epoch  199/200   377.8s elapsed  swap  3.50 GB
+      epoch    0/200     1.4s elapsed  swap  3.50 GB
+      epoch   25/200    48.5s elapsed  swap  3.50 GB
+      epoch   50/200    93.9s elapsed  swap  3.50 GB
+      epoch   75/200   137.8s elapsed  swap  3.50 GB
+      epoch  100/200   181.2s elapsed  swap  3.50 GB
+      epoch  125/200   225.6s elapsed  swap  3.50 GB
+      epoch  150/200   269.9s elapsed  swap  3.49 GB
+      epoch  175/200   315.3s elapsed  swap  3.48 GB
+      epoch  199/200   357.4s elapsed  swap  3.48 GB
+  sum   pooling   Omega_m +0.5170 +/- 0.0039   sigma_8 +0.2861 +/- 0.0134   [20.8 min]
+    reference, published GNN Omega_m: 0.75 +/- 0.03
+    reference, published GNN sigma_8: 0.83 +/- 0.02
+
+  wrote /Users/danishmultani/KAAI/point_clouds/results/gnn_experiment.json

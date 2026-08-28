@@ -1,0 +1,64 @@
+==========================================================================
+STAGE 1 GATE -- 2PCF baseline reproduction
+==========================================================================
+  device cpu   torch 2.12.1   optuna 4.9.0
+  100 trials, seeds [0, 1, 2], 300 epochs per model
+
+==========================================================================
+CAMELS-SAM
+==========================================================================
+  train   600 clouds x 25 features
+  val     204 clouds x 25 features
+  test    196 clouds x 25 features
+    trial   10/100  best mean val R2 so far 0.7947
+    trial   20/100  best mean val R2 so far 0.7947
+    trial   30/100  best mean val R2 so far 0.7947
+    trial   40/100  best mean val R2 so far 0.7947
+    trial   50/100  best mean val R2 so far 0.7947
+    trial   60/100  best mean val R2 so far 0.7947
+    trial   70/100  best mean val R2 so far 0.7968
+    trial   80/100  best mean val R2 so far 0.7968
+    trial   90/100  best mean val R2 so far 0.7968
+    trial  100/100  best mean val R2 so far 0.7974
+
+  best config after 100 trials (37.2 min): {'h1': 64, 'h2': 124, 'h3': 51, 'lr': 1.1847973440973801e-05, 'dropout': 0.12144245210246973, 'batch_size': 4}
+    seed 0: test R2  Omega_m 0.7751   sigma_8 0.8311
+    seed 1: test R2  Omega_m 0.7797   sigma_8 0.8186
+    seed 2: test R2  Omega_m 0.7804   sigma_8 0.8195
+
+  target          ours (seed mean+/-sd)        published             band  verdict
+  Omega_m            0.7784 +/- 0.0024         0.73+/-0.03 [0.67, 0.79]  PASS
+  sigma_8            0.8231 +/- 0.0057         0.82+/-0.02 [0.78, 0.86]  PASS
+  checkpointed CAMELS-SAM to step1_gate_2pcf.json
+
+==========================================================================
+CAMELS
+==========================================================================
+  train   600 clouds x 25 features
+  val     200 clouds x 25 features
+  test    200 clouds x 25 features
+    trial   10/100  best mean val R2 so far 0.6002
+    trial   20/100  best mean val R2 so far 0.6067
+    trial   30/100  best mean val R2 so far 0.6067
+    trial   40/100  best mean val R2 so far 0.6067
+    trial   50/100  best mean val R2 so far 0.6067
+    trial   60/100  best mean val R2 so far 0.6067
+    trial   70/100  best mean val R2 so far 0.6067
+    trial   80/100  best mean val R2 so far 0.6067
+    trial   90/100  best mean val R2 so far 0.6067
+    trial  100/100  best mean val R2 so far 0.6067
+
+  best config after 100 trials (9.5 min): {'h1': 119, 'h2': 77, 'h3': 64, 'lr': 1.1125631479956926e-05, 'dropout': 0.13530447004525756, 'batch_size': 16}
+    seed 0: test R2  Omega_m 0.8582   sigma_8 0.3823
+    seed 1: test R2  Omega_m 0.8601   sigma_8 0.3667
+    seed 2: test R2  Omega_m 0.8608   sigma_8 0.3825
+
+  target          ours (seed mean+/-sd)        published             band  verdict
+  Omega_m            0.8597 +/- 0.0011         0.84+/-0.02 [0.80, 0.88]  PASS
+  sigma_8            0.3772 +/- 0.0074         0.30+/-0.06 [0.18, 0.42]  PASS
+  checkpointed CAMELS to step1_gate_2pcf.json
+
+==========================================================================
+  STAGE 1 GATE: PASS
+  wrote /Users/danishmultani/KAAI/point_clouds/results/step1_gate_2pcf.json
+==========================================================================

@@ -1,0 +1,12 @@
+{
+  "nPoints": 200,
+  "nDraws": 1000,
+  "nSeeds": 3,
+  "level": 0.68,
+  "repeats": 30,
+  "singleSeedMean": 0.676,
+  "singleSeedStd": 0.0217,
+  "bias": -0.004,
+  "seedMeanStd": 0.011,
+  "twoSigma": 0.022
+}

@@ -1,0 +1,15 @@
+MISSING CELL: does sum pooling help the SEARCHED architecture?
+  base {'family': 'gnn', 'hidden': 128, 'layers': 3, 'cutoff': 0.01, 'angular': False, 'n_basis': 8, 'lr': 0.002}
+
+  fishnets  Omega_m +0.6895 +/- 0.0170   sigma_8 +0.1722 +/- 0.0084
+  mean      Omega_m +0.6654 +/- 0.0302   sigma_8 +0.1616 +/- 0.0051
+  sum       Omega_m +0.8002 +/- 0.0289   sigma_8 +0.2182 +/- 0.0388
+/Users/danishmultani/KAAI/point_clouds/pointnet.py:118: UserWarning: index_reduce() is in beta and the API may change at any time. (Triggered internally at /Users/runner/miniforge3/conda-bld/libtorch_1781830596731/work/aten/src/ATen/native/TensorAdvancedIndexing.cpp:1515.)
+  return out.fill_(-torch.inf).index_reduce_(0, index, values, "amax",
+/Users/danishmultani/KAAI/point_clouds/pointnet.py:118: UserWarning: index_reduce() is in beta and the API may change at any time. (Triggered internally at /Users/runner/miniforge3/conda-bld/libtorch_1781830596731/work/aten/src/ATen/native/mps/operations/Indexing.mm:760.)
+  return out.fill_(-torch.inf).index_reduce_(0, index, values, "amax",
+  max       Omega_m +0.2494 +/- 0.1813   sigma_8 -0.0277 +/- 0.0253
+
+  sum minus mean on Omega_m: +0.1348
+  for reference, the hand-built GNN with a scalar edge feature gave +0.1420
+  wrote point_clouds/results/missing_cell.json

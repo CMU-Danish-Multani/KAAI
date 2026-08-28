@@ -1,0 +1,83 @@
+{
+  "level": 0.68,
+  "nDraws": 1000,
+  "rows": [
+    {
+      "widthFactor": 1.0,
+      "truth": "calibrated",
+      "nPoints": 100,
+      "marginal": 0.605,
+      "tarpNormTrue": 0.65,
+      "tarpNormFalse": 0.61
+    },
+    {
+      "widthFactor": 1.0,
+      "truth": "calibrated",
+      "nPoints": 500,
+      "marginal": 0.672,
+      "tarpNormTrue": 0.676,
+      "tarpNormFalse": 0.706
+    },
+    {
+      "widthFactor": 1.0,
+      "truth": "calibrated",
+      "nPoints": 2000,
+      "marginal": 0.6775,
+      "tarpNormTrue": 0.678,
+      "tarpNormFalse": 0.683
+    },
+    {
+      "widthFactor": 0.7,
+      "truth": "overconfident",
+      "nPoints": 100,
+      "marginal": 0.445,
+      "tarpNormTrue": 0.554,
+      "tarpNormFalse": 0.532
+    },
+    {
+      "widthFactor": 0.7,
+      "truth": "overconfident",
+      "nPoints": 500,
+      "marginal": 0.508,
+      "tarpNormTrue": 0.634,
+      "tarpNormFalse": 0.632
+    },
+    {
+      "widthFactor": 0.7,
+      "truth": "overconfident",
+      "nPoints": 2000,
+      "marginal": 0.512,
+      "tarpNormTrue": 0.5995,
+      "tarpNormFalse": 0.572
+    },
+    {
+      "widthFactor": 1.4,
+      "truth": "underconfident",
+      "nPoints": 100,
+      "marginal": 0.805,
+      "tarpNormTrue": 0.76,
+      "tarpNormFalse": 0.74
+    },
+    {
+      "widthFactor": 1.4,
+      "truth": "underconfident",
+      "nPoints": 500,
+      "marginal": 0.829,
+      "tarpNormTrue": 0.78,
+      "tarpNormFalse": 0.812
+    },
+    {
+      "widthFactor": 1.4,
+      "truth": "underconfident",
+      "nPoints": 2000,
+      "marginal": 0.833,
+      "tarpNormTrue": 0.7715,
+      "tarpNormFalse": 0.807
+    }
+  ],
+  "biasAtCalibrated": {
+    "marginal": -0.0285,
+    "tarpNormTrue": -0.012,
+    "tarpNormFalse": -0.0137
+  }
+}

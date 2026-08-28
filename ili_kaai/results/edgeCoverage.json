@@ -1,0 +1,257 @@
+{
+  "edgeFraction": 0.1,
+  "task": "camelsJoint",
+  "nDraws": 1000,
+  "rows": [
+    {
+      "edge": [
+        0.381,
+        0.15
+      ],
+      "interior": [
+        0.538,
+        0.775
+      ],
+      "nEdge": [
+        42,
+        40
+      ],
+      "nInterior": [
+        158,
+        160
+      ],
+      "architecture": "npeMaf",
+      "task": "camelsJoint",
+      "seed": 0,
+      "labels": [
+        "Omega_m",
+        "sigma_8"
+      ]
+    },
+    {
+      "edge": [
+        0.4762,
+        0.1
+      ],
+      "interior": [
+        0.6013,
+        0.6875
+      ],
+      "nEdge": [
+        42,
+        40
+      ],
+      "nInterior": [
+        158,
+        160
+      ],
+      "architecture": "npeMaf",
+      "task": "camelsJoint",
+      "seed": 1,
+      "labels": [
+        "Omega_m",
+        "sigma_8"
+      ]
+    },
+    {
+      "edge": [
+        0.381,
+        0.025
+      ],
+      "interior": [
+        0.6013,
+        0.6937
+      ],
+      "nEdge": [
+        42,
+        40
+      ],
+      "nInterior": [
+        158,
+        160
+      ],
+      "architecture": "npeMaf",
+      "task": "camelsJoint",
+      "seed": 2,
+      "labels": [
+        "Omega_m",
+        "sigma_8"
+      ]
+    },
+    {
+      "edge": [
+        0.3333,
+        0.125
+      ],
+      "interior": [
+        0.5759,
+        0.7188
+      ],
+      "nEdge": [
+        42,
+        40
+      ],
+      "nInterior": [
+        158,
+        160
+      ],
+      "architecture": "npeMdn",
+      "task": "camelsJoint",
+      "seed": 0,
+      "labels": [
+        "Omega_m",
+        "sigma_8"
+      ]
+    },
+    {
+      "edge": [
+        0.5238,
+        0.125
+      ],
+      "interior": [
+        0.6456,
+        0.7125
+      ],
+      "nEdge": [
+        42,
+        40
+      ],
+      "nInterior": [
+        158,
+        160
+      ],
+      "architecture": "npeMdn",
+      "task": "camelsJoint",
+      "seed": 1,
+      "labels": [
+        "Omega_m",
+        "sigma_8"
+      ]
+    },
+    {
+      "edge": [
+        0.4286,
+        0.1
+      ],
+      "interior": [
+        0.6203,
+        0.7125
+      ],
+      "nEdge": [
+        42,
+        40
+      ],
+      "nInterior": [
+        158,
+        160
+      ],
+      "architecture": "npeMdn",
+      "task": "camelsJoint",
+      "seed": 2,
+      "labels": [
+        "Omega_m",
+        "sigma_8"
+      ]
+    },
+    {
+      "edge": [
+        0.5238,
+        0.25
+      ],
+      "interior": [
+        0.6962,
+        0.7562
+      ],
+      "nEdge": [
+        42,
+        40
+      ],
+      "nInterior": [
+        158,
+        160
+      ],
+      "architecture": "npeNsf",
+      "task": "camelsJoint",
+      "seed": 0,
+      "labels": [
+        "Omega_m",
+        "sigma_8"
+      ]
+    },
+    {
+      "edge": [
+        0.4286,
+        0.25
+      ],
+      "interior": [
+        0.6456,
+        0.775
+      ],
+      "nEdge": [
+        42,
+        40
+      ],
+      "nInterior": [
+        158,
+        160
+      ],
+      "architecture": "npeNsf",
+      "task": "camelsJoint",
+      "seed": 1,
+      "labels": [
+        "Omega_m",
+        "sigma_8"
+      ]
+    },
+    {
+      "edge": [
+        0.5476,
+        0.225
+      ],
+      "interior": [
+        0.7025,
+        0.7438
+      ],
+      "nEdge": [
+        42,
+        40
+      ],
+      "nInterior": [
+        158,
+        160
+      ],
+      "architecture": "npeNsf",
+      "task": "camelsJoint",
+      "seed": 2,
+      "labels": [
+        "Omega_m",
+        "sigma_8"
+      ]
+    },
+    {
+      "edge": [
+        0.5238,
+        0.25
+      ],
+      "interior": [
+        0.7025,
+        0.7625
+      ],
+      "nEdge": [
+        42,
+        40
+      ],
+      "nInterior": [
+        158,
+        160
+      ],
+      "architecture": "nreMlp",
+      "task": "camelsJoint",
+      "seed": 0,
+      "labels": [
+        "Omega_m",
+        "sigma_8"
+      ]
+    }
+  ]
+}

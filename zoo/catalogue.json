@@ -1,0 +1,812 @@
+{
+  "entries": [
+    {
+      "key": "tpcf_mlp",
+      "name": "Two-point correlation function plus MLP",
+      "role": "end_to_end",
+      "modality": "point_cloud",
+      "output": "point_estimate",
+      "source": "CosmoBench, arXiv 2507.03707",
+      "summary": "Counts galaxy pairs at 25 separations, then a four-layer network reads the resulting curve.",
+      "parameters": 11000,
+      "minutes_per_fit": 0.2,
+      "hardware": "laptop CPU",
+      "measurements": [
+        {
+          "task": "camels_sam_omega_m",
+          "metric": "R2",
+          "value": 0.7784,
+          "spread": 0.0024,
+          "seeds": 3,
+          "note": "reproduces the published baseline within its error bars",
+          "why": "Pair counting at 25 separations captures most of the Omega_m signal because matter density sets how strongly galaxies cluster at every scale at once."
+        },
+        {
+          "task": "camels_sam_sigma_8",
+          "metric": "R2",
+          "value": 0.8231,
+          "spread": 0.0057,
+          "seeds": 3,
+          "note": "reproduces the published baseline within its error bars",
+          "why": "Far weaker than for Omega_m, because sigma_8 is driven by rare massive structures and the CAMELS box is only 25 units across, so it contains very few of them."
+        },
+        {
+          "task": "camels_omega_m",
+          "metric": "R2",
+          "value": 0.8597,
+          "spread": 0.0011,
+          "seeds": 3,
+          "note": "reproduces the published baseline within its error bars",
+          "why": "Pair counting at 25 separations captures most of the Omega_m signal because matter density sets how strongly galaxies cluster at every scale at once."
+        },
+        {
+          "task": "camels_sigma_8",
+          "metric": "R2",
+          "value": 0.3772,
+          "spread": 0.0074,
+          "seeds": 3,
+          "note": "reproduces the published baseline within its error bars",
+          "why": "Far weaker than for Omega_m, because sigma_8 is driven by rare massive structures and the CAMELS box is only 25 units across, so it contains very few of them."
+        }
+      ],
+      "leak_screen": {
+        "r2_recovering_count": null,
+        "status": "clean",
+        "seeds": 0,
+        "note": "xi(r) is a ratio normalised by pair count, so the count divides out. Adding the count as an extra input measured -0.0114 on Omega_m, i.e. it made things slightly worse."
+      },
+      "calibration": null,
+      "failure_modes": [
+        "Fixed binning. The distance range must be chosen for the box, and the ranges shipped with the dataset do not match the published ones.",
+        "Sees only pair separations, so any three-body structure is invisible."
+      ],
+      "requires": [],
+      "tags": [
+        "baseline",
+        "classical",
+        "strong",
+        "cheap"
+      ]
+    },
+    {
+      "key": "lls_pairwise",
+      "name": "Linear least squares on pairwise-distance statistics",
+      "role": "end_to_end",
+      "modality": "point_cloud",
+      "output": "point_estimate",
+      "source": "CosmoBench, arXiv 2507.03707",
+      "summary": "Four statistics of squared pair separations at twelve cutoff radii, then a straight-line fit. Forty-nine parameters in total.",
+      "parameters": 49,
+      "minutes_per_fit": 0.05,
+      "hardware": "laptop CPU",
+      "measurements": [
+        {
+          "task": "camels_sam_omega_m",
+          "metric": "R2",
+          "value": 0.7517,
+          "spread": null,
+          "seeds": 1,
+          "note": "reproduces the published baseline within its error bars",
+          "why": "Forty-nine parameters suffice because the relationship between pair-distance statistics and matter density is close to linear once the right cutoff radii are chosen."
+        },
+        {
+          "task": "camels_sam_sigma_8",
+          "metric": "R2",
+          "value": 0.8291,
+          "spread": null,
+          "seeds": 1,
+          "note": "reproduces the published baseline within its error bars",
+          "why": "Same small-box limitation as above, and a linear model has no capacity to recover the weak nonlinear signal that remains."
+        },
+        {
+          "task": "camels_omega_m",
+          "metric": "R2",
+          "value": 0.8034,
+          "spread": null,
+          "seeds": 1,
+          "note": "reproduces the published baseline within its error bars",
+          "why": "Forty-nine parameters suffice because the relationship between pair-distance statistics and matter density is close to linear once the right cutoff radii are chosen."
+        },
+        {
+          "task": "camels_sigma_8",
+          "metric": "R2",
+          "value": 0.2786,
+          "spread": null,
+          "seeds": 1,
+          "note": "reproduces the published baseline within its error bars",
+          "why": "Same small-box limitation as above, and a linear model has no capacity to recover the weak nonlinear signal that remains."
+        }
+      ],
+      "leak_screen": {
+        "r2_recovering_count": null,
+        "status": "clean",
+        "seeds": 0,
+        "note": "Quantiles and means of pair distances are intensive, so they do not scale with the number of objects."
+      },
+      "calibration": null,
+      "failure_modes": [
+        "No capacity for anything nonlinear beyond the chosen statistics."
+      ],
+      "requires": [],
+      "tags": [
+        "baseline",
+        "classical",
+        "tiny",
+        "surprisingly-strong"
+      ]
+    },
+    {
+      "key": "pool_mean",
+      "name": "Mean pooling",
+      "role": "aggregation",
+      "modality": "point_cloud",
+      "output": "embedding",
+      "source": "baseline",
+      "summary": "Averages every element, so the count divides out.",
+      "parameters": null,
+      "minutes_per_fit": null,
+      "hardware": "",
+      "measurements": [
+        {
+          "task": "camels_omega_m",
+          "metric": "R2",
+          "value": 0.6654,
+          "spread": 0.0302,
+          "seeds": 3,
+          "note": "identical architecture, only the aggregation swapped",
+          "why": ""
+        }
+      ],
+      "leak_screen": {
+        "r2_recovering_count": -0.6616,
+        "status": "clean",
+        "seeds": 3,
+        "note": "held-out probe recovering the element count"
+      },
+      "calibration": null,
+      "failure_modes": [],
+      "requires": [
+        "point_clouds/blocks/"
+      ],
+      "tags": [
+        "aggregation",
+        "screened",
+        "clean"
+      ]
+    },
+    {
+      "key": "pool_sum",
+      "name": "Sum pooling",
+      "role": "aggregation",
+      "modality": "point_cloud",
+      "output": "embedding",
+      "source": "baseline",
+      "summary": "Adds every element, so the total scales with the count.",
+      "parameters": null,
+      "minutes_per_fit": null,
+      "hardware": "",
+      "measurements": [
+        {
+          "task": "camels_omega_m",
+          "metric": "R2",
+          "value": 0.8002,
+          "spread": 0.0289,
+          "seeds": 3,
+          "note": "identical architecture, only the aggregation swapped",
+          "why": ""
+        }
+      ],
+      "leak_screen": {
+        "r2_recovering_count": 0.9138,
+        "status": "leaks",
+        "seeds": 3,
+        "note": "held-out probe recovering the element count"
+      },
+      "calibration": null,
+      "failure_modes": [
+        "Grants access to the element count, which is a documented artefact in CAMELS. Do not use where the count varies with the target."
+      ],
+      "requires": [
+        "point_clouds/blocks/"
+      ],
+      "tags": [
+        "aggregation",
+        "screened",
+        "leaks"
+      ]
+    },
+    {
+      "key": "pool_max",
+      "name": "Max pooling",
+      "role": "aggregation",
+      "modality": "point_cloud",
+      "output": "embedding",
+      "source": "baseline",
+      "summary": "Takes the largest value per channel.",
+      "parameters": null,
+      "minutes_per_fit": null,
+      "hardware": "",
+      "measurements": [
+        {
+          "task": "camels_omega_m",
+          "metric": "R2",
+          "value": 0.2494,
+          "spread": 0.1813,
+          "seeds": 3,
+          "note": "identical architecture, only the aggregation swapped",
+          "why": ""
+        }
+      ],
+      "leak_screen": {
+        "r2_recovering_count": 0.8968,
+        "status": "leaks",
+        "seeds": 3,
+        "note": "held-out probe recovering the element count"
+      },
+      "calibration": null,
+      "failure_modes": [
+        "Grants access to the element count, which is a documented artefact in CAMELS. Do not use where the count varies with the target."
+      ],
+      "requires": [
+        "point_clouds/blocks/"
+      ],
+      "tags": [
+        "aggregation",
+        "screened",
+        "leaks"
+      ]
+    },
+    {
+      "key": "pool_fishnets",
+      "name": "Fishnets aggregation",
+      "role": "aggregation",
+      "modality": "point_cloud",
+      "output": "embedding",
+      "source": "arXiv 2310.03812",
+      "summary": "Weights each element by how informative it is, a precision-weighted mean.",
+      "parameters": null,
+      "minutes_per_fit": null,
+      "hardware": "",
+      "measurements": [
+        {
+          "task": "camels_omega_m",
+          "metric": "R2",
+          "value": 0.6895,
+          "spread": 0.017,
+          "seeds": 3,
+          "note": "identical architecture, only the aggregation swapped",
+          "why": ""
+        }
+      ],
+      "leak_screen": {
+        "r2_recovering_count": -0.1004,
+        "status": "clean",
+        "seeds": 3,
+        "note": "held-out probe recovering the element count"
+      },
+      "calibration": null,
+      "failure_modes": [],
+      "requires": [
+        "point_clouds/blocks/"
+      ],
+      "tags": [
+        "aggregation",
+        "screened",
+        "clean"
+      ]
+    },
+    {
+      "key": "pool_quasi_arithmetic",
+      "name": "Quasi-arithmetic pooling",
+      "role": "aggregation",
+      "modality": "point_cloud",
+      "output": "embedding",
+      "source": "arXiv 2602.04941",
+      "summary": "A learnable power mean containing sum, mean and max as special cases.",
+      "parameters": null,
+      "minutes_per_fit": null,
+      "hardware": "",
+      "measurements": [],
+      "leak_screen": {
+        "r2_recovering_count": -0.7839,
+        "status": "clean",
+        "seeds": 3,
+        "note": "held-out probe recovering the element count"
+      },
+      "calibration": null,
+      "failure_modes": [],
+      "requires": [
+        "point_clouds/blocks/"
+      ],
+      "tags": [
+        "aggregation",
+        "screened",
+        "clean"
+      ]
+    },
+    {
+      "key": "pool_attention_readout",
+      "name": "Attention readout",
+      "role": "aggregation",
+      "modality": "point_cloud",
+      "output": "embedding",
+      "source": "arXiv 2211.04952",
+      "summary": "Learnable seed vectors attend over elements, weights sum to one.",
+      "parameters": null,
+      "minutes_per_fit": null,
+      "hardware": "",
+      "measurements": [],
+      "leak_screen": {
+        "r2_recovering_count": -3.9413,
+        "status": "clean",
+        "seeds": 3,
+        "note": "held-out probe recovering the element count"
+      },
+      "calibration": null,
+      "failure_modes": [],
+      "requires": [
+        "point_clouds/blocks/"
+      ],
+      "tags": [
+        "aggregation",
+        "screened",
+        "clean"
+      ]
+    },
+    {
+      "key": "pool_pna_blind",
+      "name": "PNA without degree scalers",
+      "role": "aggregation",
+      "modality": "point_cloud",
+      "output": "embedding",
+      "source": "arXiv 2004.05718",
+      "summary": "Several aggregators at once, restricted to the count-blind subset.",
+      "parameters": null,
+      "minutes_per_fit": null,
+      "hardware": "",
+      "measurements": [],
+      "leak_screen": {
+        "r2_recovering_count": -2.589,
+        "status": "clean",
+        "seeds": 3,
+        "note": "held-out probe recovering the element count"
+      },
+      "calibration": null,
+      "failure_modes": [],
+      "requires": [
+        "point_clouds/blocks/"
+      ],
+      "tags": [
+        "aggregation",
+        "screened",
+        "clean"
+      ]
+    },
+    {
+      "key": "pool_pna_scaled",
+      "name": "PNA with degree scalers",
+      "role": "aggregation",
+      "modality": "point_cloud",
+      "output": "embedding",
+      "source": "arXiv 2004.05718",
+      "summary": "Several aggregators, scaled by node degree.",
+      "parameters": null,
+      "minutes_per_fit": null,
+      "hardware": "",
+      "measurements": [],
+      "leak_screen": {
+        "r2_recovering_count": 1.0,
+        "status": "leaks",
+        "seeds": 3,
+        "note": "held-out probe recovering the element count"
+      },
+      "calibration": null,
+      "failure_modes": [
+        "Grants access to the element count, which is a documented artefact in CAMELS. Do not use where the count varies with the target."
+      ],
+      "requires": [
+        "point_clouds/blocks/"
+      ],
+      "tags": [
+        "aggregation",
+        "screened",
+        "leaks"
+      ]
+    },
+    {
+      "key": "radius_gnn",
+      "name": "Radius-graph message passing",
+      "role": "encoder",
+      "modality": "point_cloud",
+      "output": "embedding",
+      "source": "CosmoBench, arXiv 2507.03707",
+      "summary": "Connects galaxies closer than a cutoff, then passes messages between neighbours.",
+      "parameters": 66562,
+      "minutes_per_fit": 5.5,
+      "hardware": "Apple M5 Pro, MPS",
+      "measurements": [
+        {
+          "task": "camels_omega_m",
+          "metric": "R2",
+          "value": 0.66,
+          "spread": 0.0057,
+          "seeds": 3,
+          "note": "mean pooling, the count-blind configuration",
+          "why": ""
+        },
+        {
+          "task": "camels_sam_omega_m",
+          "metric": "R2",
+          "value": 0.5196,
+          "spread": 0.0077,
+          "seeds": 3,
+          "note": "mean pooling, the count-blind configuration",
+          "why": ""
+        }
+      ],
+      "leak_screen": {
+        "r2_recovering_count": null,
+        "status": "clean",
+        "seeds": 0,
+        "note": "clean when paired with a count-blind aggregation; the aggregation is what decides"
+      },
+      "calibration": null,
+      "failure_modes": [
+        "Receptive field is bounded by cutoff times depth. Measured on CAMELS: the cutoff grid used reached 0.75 units while the correlation function measures to 12, so the model never saw the scales the baseline works at.",
+        "More message-passing rounds did not help. One round beat five."
+      ],
+      "requires": [
+        "point_clouds/gnn.py"
+      ],
+      "tags": [
+        "encoder",
+        "graph"
+      ]
+    },
+    {
+      "key": "searched_gnn",
+      "name": "Searched graph network (count-blind arm)",
+      "role": "end_to_end",
+      "modality": "point_cloud",
+      "output": "point_estimate",
+      "source": "this project",
+      "summary": "Best of twenty architectures searched with only count-blind aggregations available.",
+      "parameters": null,
+      "minutes_per_fit": 4.0,
+      "hardware": "Apple M5 Pro, MPS",
+      "measurements": [
+        {
+          "task": "camels_omega_m",
+          "metric": "R2",
+          "value": 0.679,
+          "spread": 0.0063,
+          "seeds": 3,
+          "note": "winner of a 20-trial search",
+          "why": ""
+        },
+        {
+          "task": "camels_sigma_8",
+          "metric": "R2",
+          "value": 0.2661,
+          "spread": 0.0187,
+          "seeds": 3,
+          "note": "",
+          "why": ""
+        }
+      ],
+      "leak_screen": {
+        "r2_recovering_count": -0.6616,
+        "status": "clean",
+        "seeds": 3,
+        "note": "uses mean pooling, screened clean"
+      },
+      "calibration": null,
+      "failure_modes": [
+        "Searching 40 architectures gained 0.019 over a hand-built model, against a 0.181 gap to the classical baseline. Architecture search is not where the difficulty lies on this task."
+      ],
+      "requires": [],
+      "tags": [
+        "searched",
+        "clean"
+      ]
+    },
+    {
+      "key": "npe_maf",
+      "name": "Neural posterior estimation, masked autoregressive flow",
+      "role": "inference_head",
+      "modality": "summary_vector",
+      "output": "posterior",
+      "source": "sbi 0.27 / arXiv 1705.07057",
+      "summary": "Learns the posterior directly as a normalising flow, transforming a simple distribution into the shape the data implies.",
+      "parameters": 33010,
+      "minutes_per_fit": 0.01,
+      "hardware": "laptop CPU",
+      "measurements": [
+        {
+          "task": "camels_omega_m_posterior",
+          "metric": "R2_posterior_mean",
+          "value": 0.8639,
+          "spread": 0.0007,
+          "seeds": 3,
+          "note": "posterior mean, Omega_m",
+          "why": "Beats the point-estimate baseline on the same features because learning the whole conditional distribution extracts more from each of the 600 training universes than fitting a mean does."
+        },
+        {
+          "task": "camels_sigma_8_posterior",
+          "metric": "R2_posterior_mean",
+          "value": 0.3276,
+          "spread": 0.0049,
+          "seeds": 3,
+          "note": "posterior mean, sigma_8",
+          "why": "Limited by the same small-box scarcity of massive structures that caps every model on this parameter."
+        },
+        {
+          "task": "camels_joint_posterior",
+          "metric": "R2_posterior_mean",
+          "value": 0.8632,
+          "spread": 0.0046,
+          "seeds": 3,
+          "note": "posterior mean, Omega_m",
+          "why": "Beats the point-estimate baseline on the same features because learning the whole conditional distribution extracts more from each of the 600 training universes than fitting a mean does."
+        },
+        {
+          "task": "camels_joint_posterior",
+          "metric": "R2_posterior_mean",
+          "value": 0.3487,
+          "spread": 0.0146,
+          "seeds": 3,
+          "note": "posterior mean, sigma_8",
+          "why": "Limited by the same small-box scarcity of massive structures that caps every model on this parameter."
+        }
+      ],
+      "leak_screen": {
+        "r2_recovering_count": null,
+        "status": "clean",
+        "seeds": 0,
+        "note": "consumes the correlation function, which is normalised by pair count, so the element count is already divided out upstream"
+      },
+      "calibration": {
+        "coverage_90": 0.8017,
+        "calibration_error": 0.0879,
+        "overconfident": true,
+        "note": "mean over the two single-parameter tasks, 3 seeds each"
+      },
+      "failure_modes": [
+        "Overconfident on this data: the stated ninety percent interval contains the truth only 80% of the time. Fitting a density needs more examples than fitting a mean, and 600 training universes is too few, so sparse sampling is mistaken for precision.",
+        "Degrades sharply when both parameters are inferred together: calibration error rises from 0.088 to 0.240 while R2 barely moves. The joint posterior is a tilted ellipse because the two parameters push clustering in opposite directions, and getting that tilt wrong shrinks the region even when each margin looks correct. No R2 leaderboard would reveal this."
+      ],
+      "requires": [
+        "sbi",
+        "zuko"
+      ],
+      "tags": [
+        "posterior",
+        "sbi",
+        "overconfident"
+      ]
+    },
+    {
+      "key": "npe_nsf",
+      "name": "Neural posterior estimation, neural spline flow",
+      "role": "inference_head",
+      "modality": "summary_vector",
+      "output": "posterior",
+      "source": "sbi 0.27 / arXiv 1906.04032",
+      "summary": "Same idea with spline transforms, which bend more flexibly than the autoregressive version.",
+      "parameters": 26645,
+      "minutes_per_fit": 0.02,
+      "hardware": "laptop CPU",
+      "measurements": [
+        {
+          "task": "camels_omega_m_posterior",
+          "metric": "R2_posterior_mean",
+          "value": 0.8369,
+          "spread": 0.0076,
+          "seeds": 3,
+          "note": "posterior mean, Omega_m",
+          "why": ""
+        },
+        {
+          "task": "camels_sigma_8_posterior",
+          "metric": "R2_posterior_mean",
+          "value": 0.3649,
+          "spread": 0.0099,
+          "seeds": 3,
+          "note": "posterior mean, sigma_8",
+          "why": "Limited by the same small-box scarcity of massive structures that caps every model on this parameter."
+        },
+        {
+          "task": "camels_joint_posterior",
+          "metric": "R2_posterior_mean",
+          "value": 0.8459,
+          "spread": 0.0143,
+          "seeds": 3,
+          "note": "posterior mean, Omega_m",
+          "why": ""
+        },
+        {
+          "task": "camels_joint_posterior",
+          "metric": "R2_posterior_mean",
+          "value": 0.3591,
+          "spread": 0.0121,
+          "seeds": 3,
+          "note": "posterior mean, sigma_8",
+          "why": "Limited by the same small-box scarcity of massive structures that caps every model on this parameter."
+        }
+      ],
+      "leak_screen": {
+        "r2_recovering_count": null,
+        "status": "clean",
+        "seeds": 0,
+        "note": "consumes the correlation function, which is normalised by pair count, so the element count is already divided out upstream"
+      },
+      "calibration": {
+        "coverage_90": 0.8609,
+        "calibration_error": 0.0316,
+        "overconfident": false,
+        "note": "mean over the two single-parameter tasks, 3 seeds each"
+      },
+      "failure_modes": [
+        "Degrades sharply when both parameters are inferred together: calibration error rises from 0.032 to 0.172 while R2 barely moves. The joint posterior is a tilted ellipse because the two parameters push clustering in opposite directions, and getting that tilt wrong shrinks the region even when each margin looks correct. No R2 leaderboard would reveal this."
+      ],
+      "requires": [
+        "sbi",
+        "zuko"
+      ],
+      "tags": [
+        "posterior",
+        "sbi",
+        "calibrated"
+      ]
+    },
+    {
+      "key": "npe_mdn",
+      "name": "Mixture density network",
+      "role": "inference_head",
+      "modality": "summary_vector",
+      "output": "posterior",
+      "source": "sbi 0.27 / Bishop 1994",
+      "summary": "Predicts a weighted sum of Gaussians rather than a single value.",
+      "parameters": 5380,
+      "minutes_per_fit": 0.01,
+      "hardware": "laptop CPU",
+      "measurements": [
+        {
+          "task": "camels_omega_m_posterior",
+          "metric": "R2_posterior_mean",
+          "value": 0.8635,
+          "spread": 0.0127,
+          "seeds": 3,
+          "note": "posterior mean, Omega_m",
+          "why": "Beats the point-estimate baseline on the same features because learning the whole conditional distribution extracts more from each of the 600 training universes than fitting a mean does."
+        },
+        {
+          "task": "camels_sigma_8_posterior",
+          "metric": "R2_posterior_mean",
+          "value": 0.3514,
+          "spread": 0.0031,
+          "seeds": 3,
+          "note": "posterior mean, sigma_8",
+          "why": "Limited by the same small-box scarcity of massive structures that caps every model on this parameter."
+        },
+        {
+          "task": "camels_joint_posterior",
+          "metric": "R2_posterior_mean",
+          "value": 0.8418,
+          "spread": 0.0097,
+          "seeds": 3,
+          "note": "posterior mean, Omega_m",
+          "why": ""
+        },
+        {
+          "task": "camels_joint_posterior",
+          "metric": "R2_posterior_mean",
+          "value": 0.3408,
+          "spread": 0.0025,
+          "seeds": 3,
+          "note": "posterior mean, sigma_8",
+          "why": "Limited by the same small-box scarcity of massive structures that caps every model on this parameter."
+        }
+      ],
+      "leak_screen": {
+        "r2_recovering_count": null,
+        "status": "clean",
+        "seeds": 0,
+        "note": "consumes the correlation function, which is normalised by pair count, so the element count is already divided out upstream"
+      },
+      "calibration": {
+        "coverage_90": 0.8141,
+        "calibration_error": 0.073,
+        "overconfident": true,
+        "note": "mean over the two single-parameter tasks, 3 seeds each"
+      },
+      "failure_modes": [
+        "Overconfident on this data: the stated ninety percent interval contains the truth only 81% of the time. Fitting a density needs more examples than fitting a mean, and 600 training universes is too few, so sparse sampling is mistaken for precision.",
+        "Degrades sharply when both parameters are inferred together: calibration error rises from 0.073 to 0.213 while R2 barely moves. The joint posterior is a tilted ellipse because the two parameters push clustering in opposite directions, and getting that tilt wrong shrinks the region even when each margin looks correct. No R2 leaderboard would reveal this."
+      ],
+      "requires": [
+        "sbi",
+        "zuko"
+      ],
+      "tags": [
+        "posterior",
+        "sbi",
+        "overconfident"
+      ]
+    },
+    {
+      "key": "nre",
+      "name": "Neural ratio estimation",
+      "role": "inference_head",
+      "modality": "summary_vector",
+      "output": "posterior",
+      "source": "sbi 0.27 / arXiv 1903.04057",
+      "summary": "Trains a classifier to tell matched parameter and data pairs from mismatched ones, which recovers the likelihood ratio.",
+      "parameters": 11601,
+      "minutes_per_fit": 0.01,
+      "hardware": "laptop CPU",
+      "measurements": [
+        {
+          "task": "camels_omega_m_posterior",
+          "metric": "R2_posterior_mean",
+          "value": 0.868,
+          "spread": 0.0043,
+          "seeds": 3,
+          "note": "posterior mean, Omega_m",
+          "why": "Beats the point-estimate baseline on the same features because learning the whole conditional distribution extracts more from each of the 600 training universes than fitting a mean does."
+        },
+        {
+          "task": "camels_sigma_8_posterior",
+          "metric": "R2_posterior_mean",
+          "value": 0.3689,
+          "spread": 0.0053,
+          "seeds": 3,
+          "note": "posterior mean, sigma_8",
+          "why": "Limited by the same small-box scarcity of massive structures that caps every model on this parameter."
+        },
+        {
+          "task": "camels_joint_posterior",
+          "metric": "R2_posterior_mean",
+          "value": 0.8546,
+          "spread": 0.0033,
+          "seeds": 3,
+          "note": "posterior mean, Omega_m",
+          "why": ""
+        },
+        {
+          "task": "camels_joint_posterior",
+          "metric": "R2_posterior_mean",
+          "value": 0.3623,
+          "spread": 0.0157,
+          "seeds": 3,
+          "note": "posterior mean, sigma_8",
+          "why": "Limited by the same small-box scarcity of massive structures that caps every model on this parameter."
+        }
+      ],
+      "leak_screen": {
+        "r2_recovering_count": null,
+        "status": "clean",
+        "seeds": 0,
+        "note": "consumes the correlation function, which is normalised by pair count, so the element count is already divided out upstream"
+      },
+      "calibration": {
+        "coverage_90": 0.8667,
+        "calibration_error": 0.0448,
+        "overconfident": false,
+        "note": "mean over the two single-parameter tasks, 3 seeds each"
+      },
+      "failure_modes": [
+        "Degrades sharply when both parameters are inferred together: calibration error rises from 0.045 to 0.162 while R2 barely moves. The joint posterior is a tilted ellipse because the two parameters push clustering in opposite directions, and getting that tilt wrong shrinks the region even when each margin looks correct. No R2 leaderboard would reveal this."
+      ],
+      "requires": [
+        "sbi",
+        "zuko"
+      ],
+      "tags": [
+        "posterior",
+        "sbi",
+        "calibrated"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "stage": "1 gate: 2PCF baseline reproduction",
+  "complete": true,
+  "suites_requested": [
+    "CAMELS-SAM",
+    "CAMELS"
+  ],
+  "trials": 100,
+  "device": "cpu",
+  "epochs": 300,
+  "band_stds": 2.0,
+  "versions": {
+    "torch": "2.12.1",
+    "optuna": "4.9.0",
+    "numpy": "2.5.2",
+    "python": "3.12.13"
+  },
+  "results": [
+    {
+      "suite": "CAMELS-SAM",
+      "best_params": {
+        "h1": 64,
+        "h2": 124,
+        "h3": 51,
+        "lr": 1.1847973440973801e-05,
+        "dropout": 0.12144245210246973,
+        "batch_size": 4
+      },
+      "n_trials": 100,
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "search_minutes": 37.15,
+      "targets": {
+        "Omega_m": {
+          "ours_mean": 0.7783892321045617,
+          "ours_std_across_seeds": 0.0023704325193390106,
+          "ours_per_seed": [
+            0.7750639274722158,
+            0.779684206137879,
+            0.7804195627035904
+          ],
+          "bootstrap_mean": 0.7799191052399033,
+          "bootstrap_std": 0.029949584834500255,
+          "published_mean": 0.73,
+          "published_std": 0.03,
+          "band": [
+            0.6699999999999999,
+            0.79
+          ],
+          "pass": true
+        },
+        "sigma_8": {
+          "ours_mean": 0.8230743610719861,
+          "ours_std_across_seeds": 0.005668201847397353,
+          "ours_per_seed": [
+            0.8310722898215899,
+            0.8186088990428984,
+            0.8195418943514701
+          ],
+          "bootstrap_mean": 0.8192873441716753,
+          "bootstrap_std": 0.026084680525741085,
+          "published_mean": 0.82,
+          "published_std": 0.02,
+          "band": [
+            0.7799999999999999,
+            0.86
+          ],
+          "pass": true
+        }
+      },
+      "pass": true
+    },
+    {
+      "suite": "CAMELS",
+      "best_params": {
+        "h1": 119,
+        "h2": 77,
+        "h3": 64,
+        "lr": 1.1125631479956926e-05,
+        "dropout": 0.13530447004525756,
+        "batch_size": 16
+      },
+      "n_trials": 100,
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "search_minutes": 9.5,
+      "targets": {
+        "Omega_m": {
+          "ours_mean": 0.8596877617189751,
+          "ours_std_across_seeds": 0.0011166178101461345,
+          "ours_per_seed": [
+            0.8581597048118458,
+            0.8601067763071164,
+            0.8607968040379629
+          ],
+          "bootstrap_mean": 0.8595810122065898,
+          "bootstrap_std": 0.017995569303117846,
+          "published_mean": 0.84,
+          "published_std": 0.02,
+          "band": [
+            0.7999999999999999,
+            0.88
+          ],
+          "pass": true
+        },
+        "sigma_8": {
+          "ours_mean": 0.37719263094252575,
+          "ours_std_across_seeds": 0.007389865056241335,
+          "ours_per_seed": [
+            0.38229489166934716,
+            0.36674274371927706,
+            0.3825402574389529
+          ],
+          "bootstrap_mean": 0.3798898872970484,
+          "bootstrap_std": 0.052227538030361106,
+          "published_mean": 0.3,
+          "published_std": 0.06,
+          "band": [
+            0.18,
+            0.42
+          ],
+          "pass": true
+        }
+      },
+      "pass": true
+    }
+  ]
+}
