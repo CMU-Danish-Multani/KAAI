@@ -39,6 +39,11 @@ class Architecture:
     # close under a fifth of the calibration gap, so mixing families is the next
     # thing to try rather than more clones.
     mixture: Tuple[Tuple[str, Dict[str, Any]], ...] = ()
+    # Name from ili_kaai.embeddings.EMBEDDINGS. Empty means the density estimator
+    # reads the data directly, which is all a summary vector needs. A point cloud
+    # needs one, and which one is the architectural choice being measured.
+    embedding: str = ""
+    embedding_args: Dict[str, Any] = field(default_factory=dict)
     summary: str = ""
     known_failure_modes: List[str] = field(default_factory=list)
 
@@ -283,6 +288,87 @@ ZOO: Dict[str, Architecture] = {a.key: a for a in [
             "Three different failure modes rather than one, so a pathology in any "
             "member reaches the average.",
             "Members converge at different rates under one shared training budget."]),
+    Architecture(
+        key="npeMafDeepSets", engine="NPE", model="maf", family="set_encoder",
+        repeats=1, embedding="deepSets",
+        model_args={"hidden_features": HIDDEN, "num_transforms": 5},
+        embedding_args={"hidden": 64, "out_features": 32, "pooling": "mean"},
+        summary="A MAF reading a permutation invariant set encoder. Deistler et al. "
+                "name set architectures as the baseline for i.i.d. observations, and "
+                "a galaxy catalogue has no order.",
+        known_failure_modes=[
+            "Mean pooling is chosen deliberately. We measured sum and max pooling "
+            "recovering the point count at probe R2 +0.91 and +0.90, and in CAMELS "
+            "that count correlates with Omega_m at 0.73.",
+            "A single pooling step gives every point the same weight, so it cannot "
+            "represent which regions of the cloud matter."]),
+    Architecture(
+        key="npeMafPointNet", engine="NPE", model="maf", family="set_encoder",
+        repeats=1, embedding="pointNetLite",
+        model_args={"hidden_features": HIDDEN, "num_transforms": 5},
+        embedding_args={"hidden": 64, "out_features": 32, "pooling": "mean"},
+        summary="A set encoder with one round of message passing through a global "
+                "summary, so a point's representation depends on the cloud around it. "
+                "Cheaper than a radius graph and needs no cutoff hyperparameter.",
+        known_failure_modes=[
+            "Twice the parameters of plain DeepSets for a single context round.",
+            "A global summary carries no locality, so genuinely local structure still "
+            "needs a graph."]),
+    Architecture(
+        key="npeMafFlatten", engine="NPE", model="maf", family="control",
+        repeats=1, embedding="flattenMlp",
+        model_args={"hidden_features": HIDDEN, "num_transforms": 5},
+        embedding_args={"hidden": 128, "out_features": 32},
+        summary="A plain MLP over the flattened cloud, deliberately NOT permutation "
+                "invariant. The control: if the set encoders do not beat this, then "
+                "permutation invariance buys nothing here and the zoo should say so "
+                "rather than assume the inductive bias helps.",
+        known_failure_modes=[
+            "Twenty times the parameters of DeepSets, because it cannot share weights "
+            "across points.",
+            "Depends on the order galaxies happen to sit in the file, which is sorted "
+            "by mass. Reordering the catalogue would change its answer."]),
+    Architecture(
+        key="npeMdnDeepSets", engine="NPE", model="mdn", family="set_encoder",
+        repeats=1, embedding="deepSets",
+        model_args={"hidden_features": HIDDEN, "num_components": 5},
+        embedding_args={"hidden": 64, "out_features": 32, "pooling": "mean"},
+        summary="The cheapest density estimator on a set encoder. npeMdn matched "
+                "every other entry on accuracy for 0.7 seconds on summary vectors, so "
+                "this asks whether that holds once an embedding does the work.",
+        known_failure_modes=[
+            "Inherits the mixture's inability to represent a hard edged posterior.",
+            "Embedding and estimator train jointly, so a weak estimator can bottleneck "
+            "an embedding that would otherwise be fine."]),
+    Architecture(
+        key="npeMafPairwiseGnn", engine="NPE", model="maf", family="graph_encoder",
+        repeats=1, embedding="pairwiseGnn",
+        model_args={"hidden_features": HIDDEN, "num_transforms": 5},
+        embedding_args={"hidden": 64, "out_features": 32, "k": 16, "pooling": "mean"},
+        summary="Message passing over a 16 nearest neighbour graph built from relative "
+                "offsets through the periodic box. Set encoders reading absolute "
+                "positions probe at R2 -0.04 for Omega_m because pooling per point "
+                "features is a first moment statistic and clustering is a second "
+                "moment one. This one probes at +0.24 before any training.",
+        known_failure_modes=[
+            "Cost grows with the square of the point count, because the neighbour "
+            "search compares every pair. Fine at 512 points, not at 5000.",
+            "A fixed k imposes the same neighbourhood size everywhere, so it cannot "
+            "adapt to dense and empty regions of the same cloud.",
+            "Sees no absolute position at all, so it cannot represent anything that "
+            "depends on where in the box something sits. For a periodic cosmological "
+            "volume that is correct, and for a survey with a boundary it would not be."]),
+    Architecture(
+        key="npeMdnPairwiseGnn", engine="NPE", model="mdn", family="graph_encoder",
+        repeats=1, embedding="pairwiseGnn",
+        model_args={"hidden_features": HIDDEN, "num_components": 5},
+        embedding_args={"hidden": 64, "out_features": 32, "k": 16, "pooling": "mean"},
+        summary="The cheapest density estimator on the graph encoder, to separate the "
+                "embedding's contribution from the estimator's.",
+        known_failure_modes=[
+            "Same quadratic neighbour search as the MAF version.",
+            "If this matches the MAF version, the embedding is doing all the work and "
+            "the choice of density estimator is not the interesting axis here."]),
 ]}
 
 

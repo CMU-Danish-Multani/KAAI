@@ -1,0 +1,76 @@
+{
+  "complete": false,
+  "note": "Point cloud investigation, 2026-08-29. Stopped mid-run at the user's request. Numbers are single seed diagnostics, not zoo measurements.",
+  "task": "camelsCloud",
+  "nPoints": 512,
+  "seed": 0,
+  "nEval": 200,
+  "nDraws": 1000,
+  "probesUntrained": {
+    "deepSetsAbsolutePositions": -0.0434,
+    "pairwiseGnnRelativeOffsets": 0.2386,
+    "twoPointCorrelationFunction": 0.7047,
+    "crudePairDistanceHistogram": 0.2152,
+    "pairwiseGnnUnderSbiZScoring": 0.0598,
+    "pairwiseGnnUnderZScoringAfterBoxInference": 0.0911,
+    "what": "held out linear probe for Omega_m, 600 training simulations"
+  },
+  "supervisedRegression": {
+    "pairwiseGnn": [
+      0.299,
+      0.175
+    ],
+    "deepSets": [
+      -0.088,
+      -0.067
+    ],
+    "what": "plain MSE regression outside sbi, 150 epochs, no early stopping"
+  },
+  "throughNpe": {
+    "npeMafPairwiseGnn": {
+      "r2": [
+        -0.019,
+        -0.014
+      ],
+      "coverage68": [
+        0.58,
+        0.53
+      ],
+      "seconds": 131
+    },
+    "npeMafDeepSets": {
+      "r2": [
+        -0.001,
+        0.014
+      ],
+      "coverage68": [
+        0.56,
+        0.54
+      ],
+      "seconds": 9
+    },
+    "npeMafFlatten": {
+      "r2": [
+        -0.117,
+        -0.011
+      ],
+      "coverage68": [
+        0.38,
+        0.53
+      ],
+      "seconds": 3
+    }
+  },
+  "earlyStoppingTest": {
+    "patience20": {
+      "r2": [
+        -0.019,
+        -0.014
+      ],
+      "seconds": 139
+    },
+    "patience100": null,
+    "note": "patience 100 was still training when the run was stopped"
+  },
+  "openQuestion": "The graph embedding reaches R2 0.299 under supervised regression and 0.00 through NPE at the same budget. The cause is not yet identified. Early stopping was the leading hypothesis and is untested."
+}

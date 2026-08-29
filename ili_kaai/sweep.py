@@ -34,6 +34,7 @@ from ili.inference import InferenceRunner
 
 from common.metrics import credible_coverage, seed_all
 from ili_kaai.architectures import TRAIN_ARGS, ZOO, Architecture
+from ili_kaai.embeddings import EMBEDDINGS
 from ili_kaai.tasks import TASKS, Task, load, prior_bounds
 
 warnings.filterwarnings("ignore")
@@ -50,13 +51,39 @@ def build(arch: Architecture, task: Task, device: str, out_dir: Path):
     """
     lo, hi = prior_bounds(task)
     prior = ili.utils.Uniform(low=lo, high=hi, device=device)
+    embed = {}
+    if arch.embedding:
+        x_train = load(task)["train"][0]
+        if x_train.ndim != 3:
+            raise ValueError(f"{arch.key} needs a point cloud task, but {task.key} "
+                             f"gives x with shape {x_train.shape[1:]}")
+        n_points, n_features = x_train.shape[1], x_train.shape[2]
+        embed = {"embedding_net": EMBEDDINGS[arch.embedding](
+            n_points=n_points, n_features=n_features, **arch.embedding_args)}
+
     members = arch.mixture or ((arch.model, arch.model_args),) * arch.repeats
     if arch.backend == "lampe":
         nets = [n for model, args in members
                 for n in ili.utils.load_nde_lampe(
-                    model=model, engine=arch.engine, device=device, **args)]
+                    model=model, engine=arch.engine, device=device, **embed, **args)]
+    elif arch.embedding:
+        # sbi z-scores every dimension of x independently before the embedding sees
+        # it, and ltu-ili's argument validation will not pass `z_score_x` through. For
+        # a point cloud that scaling is destructive rather than merely unnecessary: x
+        # is (n_points, 3), so each galaxy slot gets its own affine map and the
+        # relative geometry the embedding exists to read is scrambled. Measured: a
+        # held out probe for Omega_m falls from +0.2326 to +0.0598 under it.
+        # Positions are already in [0, 1] by construction, so scaling is switched off
+        # by calling sbi's factory directly with the same arguments ltu-ili would use.
+        try:                                     # sbi moved this between versions
+            from sbi.neural_nets import posterior_nn
+        except ImportError:
+            from sbi.utils import posterior_nn
+        nets = [posterior_nn(model=model, z_score_x="none", **embed, **args)
+                for model, args in members]
     else:
-        nets = [ili.utils.load_nde_sbi(engine=arch.engine, model=model, **args)
+        nets = [ili.utils.load_nde_sbi(engine=arch.engine, model=model,
+                                       **embed, **args)
                 for model, args in members]
     runner = InferenceRunner.load(
         backend=arch.backend, engine=arch.engine, prior=prior, nets=nets,

@@ -989,3 +989,130 @@ retractions go in as new entries.
 - INTERPRETED that blocker is why the data side is now the right thing to work on. The
   measured gap is not architectures, it is modalities. CNN, transformer and set
   architectures are 6.2 per cent of the literature and 0 per cent of the zoo.
+
+## 2026-08-29 Point cloud data inspected. Two things the zoo has been ignoring.
+
+- MEASURED CAMELS carries SEVEN labels, not two: Omega_m, sigma_8, and four
+  astrophysical feedback parameters A_AGN1, A_AGN2, A_SN1, A_SN2, plus a seed. The zoo
+  has only ever inferred two of them. CAMELS-SAM carries six: Omega_m, sigma_8, A_sn1,
+  A_sn2, Aagn1, LH.
+- INTERPRETED a six parameter CAMELS task is available with no new data. That is a
+  genuinely different dim(theta), and both Thiele Section 2.7 and Deistler Table 1 say
+  the NPE over NLE advantage should shrink as the parameter vector grows. We measured
+  +0.179 at dim(theta) 2. This gives a second point on that curve for free.
+- MEASURED velocities are present for every galaxy, shape matching positions, and have
+  never been used. Node features available per galaxy: Mstar, Mgas, Metal_star, Vmax on
+  CAMELS; Mstar, mHI, Metal_star on CAMELS-SAM.
+- MEASURED galaxy counts per cloud, first 150 training sims: CAMELS 588 to 4293, median
+  2283, box 25 Mpc/h. CAMELS-SAM fixed at exactly 5000, box 100 Mpc/h.
+- DECISION point cloud tasks will use a fixed number of points per cloud, taken as the
+  N most massive by Mstar. That closes the counting leak by construction, which we
+  measured earlier to be worth a spurious +0.149 on Omega_m for sum pooling.
+- DECISION the embedding will default to mean pooling, because we measured sum and max
+  pooling recover log N at probe R2 +0.9138 and +0.8968 while mean gives -0.6616. Even
+  with N fixed, the default should be the one that cannot leak.
+
+## 2026-08-29 Set encoders fail on point clouds, and the reason is structural.
+
+- MEASURED first point cloud cells on camelsCloud, 512 most massive galaxies,
+  Omega_m and sigma_8: npeMafDeepSets R2 [-0.008, -0.012], npeMafFlatten
+  R2 [-0.117, -0.011]. Both at or below zero, meaning no better than predicting the
+  mean.
+- METHOD diagnosed rather than reported. Four probes on the same 600 training
+  simulations.
+- MEASURED an untrained DeepSets embedding varies across clouds by a relative spread of
+  0.051, so its output is nearly constant whatever cloud it reads.
+- MEASURED held out linear probe for Omega_m from that embedding: R2 -0.0434.
+- MEASURED the same probe from the 2PCF representation the zoo already uses: R2 +0.7047.
+  So the information is present in these very simulations.
+- MEASURED the same probe from a crude histogram of pairwise separations, 300 clouds,
+  4000 sampled pairs, periodic wrapped: R2 +0.2152.
+- INTERPRETED this is structural, not a training failure. A permutation invariant
+  network that pools per point features of ABSOLUTE positions computes a first moment
+  statistic. Clustering is a second moment property, defined on pairs. The mean of
+  f(x_i) over points cannot see it, whatever f is learned.
+- INTERPRETED that is why the correlation function works: it is built from pairwise
+  separations by construction. And it is why the literature reaches for graph networks
+  on halo catalogues rather than plain DeepSets. We now have the measurement rather
+  than the folklore.
+- VERIFIED the control earned its place. npeMafFlatten was added as a deliberately non
+  permutation invariant baseline to test whether the inductive bias helps. It also
+  failed, which distinguishes "the bias is useless" from "neither architecture can see
+  the signal". The second is what happened.
+- DECISION the fix is to give the network pairwise information: a radius graph so each
+  point sees its neighbours, or relative coordinates rather than absolute. We already
+  have `point_clouds/gnn.py`, which builds a radius graph and message passes over edge
+  lengths.
+- HONEST CAVEAT one seed, one task, 512 points, one training budget. The claim is that
+  these encoders on absolute positions cannot represent clustering, and the probe
+  evidence supports it, but a much larger set encoder was not tried.
+- FLAG the zoo should carry this as a documented failure mode with its reason, not as a
+  low score. "DeepSets scores 0.00 on point clouds" is a leaderboard row. "Set encoders
+  over absolute positions cannot represent a second moment statistic, so use a graph"
+  is what the zoo exists to say.
+
+## 2026-08-29 Point cloud plan, registered before executing.
+
+- STEP 1 write a pairwise embedding. Each galaxy sees its k nearest neighbours through
+  the periodic box, and the edge feature is the RELATIVE offset, not the absolute
+  position. That is the missing ingredient measured yesterday: clustering is a second
+  moment property and only relative separations carry it.
+- STEP 2 verify three properties before training anything. Permutation invariance,
+  translation invariance (a rigid shift of the whole cloud must not change the output),
+  and that a held out linear probe can recover Omega_m from an UNTRAINED embedding at
+  better than the -0.04 the set encoders gave.
+- STEP 3 one timed cell against the DeepSets baseline on camelsCloud.
+- STEP 4 the cloud sweep across camelsCloud and camelsSamCloud, 3 seeds.
+- STEP 5 record the failure mode and its reason in the zoo, then move to merger trees.
+- PREDICTION 1. The untrained pairwise embedding probes above +0.20 for Omega_m, since
+  a crude pair distance histogram already gave +0.2152 and this sees the same
+  information with learnable features.
+- PREDICTION 2. Trained, it beats the set encoders' R2 of about 0.00 by a wide margin,
+  but does NOT beat the 2PCF summary vector's 0.864, because 512 galaxies is a
+  quarter of the median cloud and the correlation function uses every galaxy.
+- PREDICTION 3. Translation invariance holds exactly, to floating point, because the
+  embedding never sees an absolute coordinate.
+
+## 2026-08-29 CHECKPOINT. Point cloud work paused mid investigation.
+
+- USER DIRECTIVE stop and checkpoint, resume later.
+- BUILT this session: `ili_kaai/embeddings.py` with four embedding networks (DeepSets,
+  PointNetLite, FlattenMlp, PairwiseGnn), `point_clouds/cloudCache.py` producing an
+  11 MB fixed size cloud cache for both suites, three point cloud tasks in `tasks.py`
+  (camelsCloud, camelsSamCloud, camelsCloudAll), six point cloud entries in
+  `architectures.py`, and embedding support in `sweep.py`'s `build()`.
+- MEASURED all diagnostics saved to `ili_kaai/results/pointCloudDiagnostics.json`,
+  flagged complete=false because the last configuration never finished.
+- VERIFIED PairwiseGnn is permutation invariant and translation invariant to 4.5e-07,
+  and its UNTRAINED embedding probes Omega_m at +0.2386 against the set encoder's
+  -0.0434 and a crude pair histogram's +0.2152. Predictions 1 and 3 held.
+- MEASURED under plain supervised regression outside sbi, 150 epochs, no early
+  stopping: pairwiseGnn R2 [0.299, 0.175], deepSets R2 [-0.088, -0.067].
+- VERIFIED the structural finding twice over. Set encoders reading absolute positions
+  fail on a probe (-0.0434) AND under direct supervised training (-0.088). Pooling per
+  point features is a first moment statistic; clustering is a second moment property.
+- CORRECTION prediction 2 failed. I predicted the graph embedding would beat the set
+  encoders by a wide margin through NPE. Measured R2 [-0.019, -0.014], no better.
+- OPEN the same embedding reaches 0.299 supervised and 0.00 through NPE at the same
+  budget. That gap is unexplained and is the thing to resume on.
+- BUG CAUGHT + FIXED sbi z-scores every dimension of x independently before the
+  embedding sees it, and for a (512, 3) cloud that gives each galaxy slot its own
+  affine map, scrambling relative geometry. Measured: the probe falls from +0.2326 to
+  +0.0598 under it. Embedded entries now call sbi's `posterior_nn` directly with
+  `z_score_x="none"`, because ltu-ili's argument validation will not pass that through.
+- CORRECTION disabling the scaling did NOT fix the NPE result, so z-scoring was a real
+  defect but not the cause of the zero. Both facts stand.
+- BUG CAUGHT + FIXED `_to_unit_box` was added so the periodic wrap stops assuming a box
+  of side 1. It recovered the probe only from 0.0598 to 0.0911, because per slot
+  scaling is not a global affine map and no in embedding fix can undo it. Kept as a
+  defence, not as the fix.
+- HONEST CAVEAT every number here is a single seed diagnostic. None of it is a zoo
+  measurement and none of it belongs in the catalogue yet.
+- FINAL STATE: nothing running. Working tree committed. Zoo unchanged at 8 measured
+  entries; 29 architectures now defined.
+- NEXT, in order. 1) Finish the early stopping test: does patience 100 with a 400 epoch
+  cap recover the 0.299 the supervised run reached. 2) If not, check whether the flow's
+  validation log probability is improving while the embedding stays useless, which
+  would confirm the flow fits the marginal prior first. 3) If the gap closes, run the
+  cloud sweep across camelsCloud and camelsSamCloud at 3 seeds. 4) Record the set
+  encoder failure in the zoo with its reason, not as a score. 5) Merger trees.
