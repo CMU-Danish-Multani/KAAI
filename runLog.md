@@ -1116,3 +1116,37 @@ retractions go in as new entries.
   would confirm the flow fits the marginal prior first. 3) If the gap closes, run the
   cloud sweep across camelsCloud and camelsSamCloud at 3 seeds. 4) Record the set
   encoder failure in the zoo with its reason, not as a score. 5) Merger trees.
+
+## 2026-08-29 The point cloud collapse is diagnosed and fixed. Pretraining is the answer.
+
+- VERIFIED early stopping is NOT the cause. Patience 100 trained 156 epochs instead of
+  57 and gave R2 [-0.015, -0.011], unchanged. Prediction refuted.
+- MEASURED the decisive pair of numbers from that run: validation log probability rose
+  from 0.310 to 1.572 while R2 stayed at zero.
+- INTERPRETED the flow is modelling the MARGINAL distribution of theta and ignoring x.
+  Log probability improves because the marginal beats a random initialisation, and R2
+  stays at zero because nothing conditional is learned. Early in training the embedding
+  is noise, so conditioning on it hurts; the flow learns to ignore the context; the
+  embedding then receives no gradient and never improves. A self reinforcing collapse,
+  which is why more epochs cannot help.
+- METHOD tested the standard remedy: pretrain the embedding on plain regression for 60
+  epochs, then hand it to NPE.
+- MEASURED from scratch R2 [-0.015, -0.011]; with a pretrained embedding
+  R2 [0.235, 0.160]. Validation log probability starts at 1.229 rather than 0.310 and
+  reaches 1.890 rather than 1.572.
+- INTERPRETED this is a measured answer to the brief's own design question, "when
+  should the skill recommend fine-tuning pretrained weights versus training from
+  scratch". For a point cloud embedding trained jointly with a flow at 800 simulations,
+  from scratch does not work at all and pretraining does.
+- CORRECTION my linear probe is not a complete measure of embedding quality. The
+  pretrained embedding probes Omega_m at -0.1122, WORSE than the untrained +0.2386, and
+  yet reaches R2 0.235 through NPE. A linear probe measures linearly decodable
+  information, not information. The probe was still right about the set encoders, which
+  fail under supervised training too, but it cannot be used alone to rank embeddings.
+- FLAG the hand designed summary statistic still wins by a wide margin. The 25 bin
+  correlation function reaches R2 0.864 on Omega_m for the same simulations; the best
+  point cloud result here is 0.235. Using 512 of a median 2283 galaxies is part of that,
+  and so is the fact that the correlation function is built from pairwise separations by
+  construction while the network has to learn them.
+- HONEST CAVEAT single seed, one task, one architecture, one pretraining length. None
+  of this is a zoo measurement yet.
