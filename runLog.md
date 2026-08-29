@@ -965,3 +965,27 @@ retractions go in as new entries.
   Scholar rate limited so counts are unweighted by citations, 62 of 256 papers had no
   abstract and are uncounted and are not a random sample, and counting a term in an
   abstract is a proxy for using the method.
+
+## 2026-08-28 Zoo held at 23 defined, 8 measured. Run plan recorded, not executed.
+
+- USER DIRECTIVE hold the architecture runs, move to the data side.
+- STATE 23 architectures defined and all verified to construct with correct member
+  counts. 8 have measurements. 15 are defined and never run.
+- The 15 split cleanly by cost, and this is the plan when it resumes:
+  CHEAP, 13 entries, all posterior estimation so no MCMC. The 8 lampe flows
+  (lampeMaf, lampeNsf, lampeGf, lampeCnf, lampeNcsf, lampeNaf, lampeSospf, lampeUnaf),
+  npeMade, and the 4 ensembles (npeMafEnsemble2, npeMafEnsemble8, npeMdnEnsemble4,
+  npeMixedEnsemble3). On the three CAMELS tasks at 3 seeds that is 117 cells, tens of
+  minutes at measured posterior estimation rates.
+  EXPENSIVE, 2 entries. nreLinear and nleMade both need MCMC per observation, 400 to
+  3,500 seconds per cell. These belong on the cluster alongside Quijote.
+- The load bearing pair is lampeMaf and lampeNsf against npeMaf and npeNsf. Same flow
+  type, same width, same transforms, different backend, which isolates the backend and
+  measures the unquantified claim in LtU-ILI Section 3.4.
+- Candidates that need code rather than config, and are NOT in the 23: Balanced NRE
+  (exists in sbi 0.22, not exposed by ltu-ili), and six embedding networks (FCN, CNN,
+  transformer, DeepSets, GNN, Fishnets). The last five are all blocked on the same
+  thing, a data modality the zoo has never seen.
+- INTERPRETED that blocker is why the data side is now the right thing to work on. The
+  measured gap is not architectures, it is modalities. CNN, transformer and set
+  architectures are 6.2 per cent of the literature and 0 per cent of the zoo.
