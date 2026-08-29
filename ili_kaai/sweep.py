@@ -43,14 +43,24 @@ RESULTS = ROOT / "ili_kaai" / "results"
 
 
 def build(arch: Architecture, task: Task, device: str, out_dir: Path):
+    """Both backends go through the same runner, so entries stay comparable.
+
+    lampe takes its device at net construction time; sbi takes it at runner
+    construction. That asymmetry is the only thing this function has to know.
+    """
     lo, hi = prior_bounds(task)
     prior = ili.utils.Uniform(low=lo, high=hi, device=device)
-    nets = [ili.utils.load_nde_sbi(engine=arch.engine, model=arch.model,
-                                   **arch.model_args)
-            for _ in range(arch.repeats)]
+    members = arch.mixture or ((arch.model, arch.model_args),) * arch.repeats
+    if arch.backend == "lampe":
+        nets = [n for model, args in members
+                for n in ili.utils.load_nde_lampe(
+                    model=model, engine=arch.engine, device=device, **args)]
+    else:
+        nets = [ili.utils.load_nde_sbi(engine=arch.engine, model=model, **args)
+                for model, args in members]
     runner = InferenceRunner.load(
-        backend="sbi", engine=arch.engine, prior=prior, nets=nets, device=device,
-        train_args=dict(TRAIN_ARGS), out_dir=out_dir)
+        backend=arch.backend, engine=arch.engine, prior=prior, nets=nets,
+        device=device, train_args=dict(TRAIN_ARGS), out_dir=out_dir)
     return runner, prior
 
 

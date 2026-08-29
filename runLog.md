@@ -913,3 +913,55 @@ retractions go in as new entries.
   data is worth the allocation rather than asserting it.
 - FINAL STATE: nothing running.
 - NEXT: compute request to the supervisor, then the Quijote sweep on the cluster.
+
+## 2026-08-28 Literature gaps closed. Usage counted rather than asserted.
+
+- USER DIRECTIVE close the three limits I had flagged for later at the end of
+  notes/zooCandidates.md.
+- BUG CAUGHT + FIXED the bundled multi-source search script failed on every source with
+  SSL certificate errors under the system python. Running it under the conda interpreter
+  with its certifi bundle fixed it, and arXiv, OpenAlex and Crossref all returned.
+  Non arXiv venues are now covered.
+- CORRECTION my first counting attempt used queries that named architectures, then
+  reported those architectures as common. That measures the query, not the field.
+  Discarded and redone with five queries naming no architecture at all.
+- MEASURED 256 unique papers since 2021, 194 with abstracts. Architecture shares:
+  normalizing flow 7.2 per cent, Bayesian neural network 4.1, ratio estimation 3.1,
+  ensemble 2.6, CNN 2.6, transformer 2.1, flow matching or diffusion 2.1, set or
+  permutation invariant 1.5, Gaussian process 1.5, autoencoder 1.0, mixture density
+  network 0.5, graph neural network 0.5.
+- MEASURED engine shares: NPE 7.2 per cent, NRE 2.6, NLE 1.5, a ratio of about
+  5 to 1.7 to 1. Our zoo runs 17 to 3 to 3, or 5.7 to 1 to 1, so NRE is slightly under
+  weighted and the balance is otherwise close.
+- INTERPRETED mixture density networks are our most over covered family, three entries
+  against 0.5 per cent of the literature. Worth keeping: our own measurement puts npeMdn
+  at the same accuracy as everything else for 0.7 seconds, so the field may be under
+  using the cheapest option rather than us over stocking it.
+- INTERPRETED Bayesian neural networks are the largest genuine gap, second most
+  mentioned and absent. LtU-ILI Section 3.2 calls ensembling the practical alternative,
+  and we now carry four ensembles, which mitigates it.
+- MEASURED CNN, transformer and set architectures together are 6.2 per cent of the
+  literature and 0 per cent of the zoo. All three are blocked on the same missing thing,
+  a data modality with an embedding network. One gap, not three.
+- PUBLISHED read Deistler et al. "Simulation-Based Inference: A Practical Guide"
+  (arXiv 2508.12939) in full, from the group that maintains sbi. Its Table 1 compares
+  the three engines on inference speed, i.i.d. handling, data dimensionality, training
+  cost and robustness to invalid simulations. That is the decision table the skill
+  should implement alongside Thiele Section 2.7.
+- VERIFIED their ensembling result complements ours rather than contradicting it. On a
+  31 parameter model with three million simulations, five NPE members turned slight
+  overconfidence into good calibration. We measured four members closing under a fifth
+  of the gap at 800 simulations. Both fit one explanation: averaging needs members that
+  disagree, and clones on a small shared training set do not. That is the argument for
+  npeMixedEnsemble3.
+- FLAG they name two local diagnostics we do not run, LCT and L-C2ST, and one global
+  one, SBC. Our nreMlp finding, calibrated on aggregate and broken near the sigma_8
+  boundary, is exactly what local tests exist to catch. We found it by hand and should
+  adopt the named tool.
+- FLAG they maintain a curated database of over 100 published SBI applications. That is
+  the natural source for the five held out problem descriptions the brief requires, and
+  it removes the objection that we wrote our own test cases.
+- HONEST CAVEAT what remains open: NASA ADS is still unqueried (no token), Semantic
+  Scholar rate limited so counts are unweighted by citations, 62 of 256 papers had no
+  abstract and are uncounted and are not a random sample, and counting a term in an
+  abstract is a proxy for using the method.

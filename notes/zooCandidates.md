@@ -125,11 +125,124 @@ rates the whole sweep is well under an hour.
 Then Tier 3's Balanced NRE, because it is the only thing on this list that directly
 attacks the problem the zoo has actually found.
 
-## 5. Honest limits of this sweep
+## 5. What the field actually uses, counted
 
-- Discovery was through the alphaXiv semantic index over arXiv. It does not cover
-  non arXiv venues, and I did not run the NASA ADS index, which is astronomy native.
-- I read one paper in full, the Thiele review. Everything else is from abstracts and
-  the review's own reference list.
-- "Commonly used" here means "appears repeatedly in the applications a 2026 review
-  chose to list". I did not count citations or usage systematically.
+The first version of this file said "commonly used" meant "appears repeatedly in the
+applications one 2026 review chose to list", and admitted that was not a measurement.
+This section replaces that with a count.
+
+**Method.** Five search queries that name **no architecture at all**, so the counts are
+what papers volunteer rather than what the query planted. Sources were arXiv, OpenAlex
+and Crossref, which covers non arXiv venues. Semantic Scholar rate limited and was
+dropped. 256 unique papers since 2021, of which 194 carry an abstract and are countable.
+
+An earlier attempt used queries that did name architectures. Those counts are discarded:
+searching for "convolutional neural network" and then reporting that convolutional
+networks are common measures the query, not the field.
+
+    architecture or embedding      papers    share      in our zoo
+    normalizing flow                   14     7.2%      14 entries
+    Bayesian neural network             8     4.1%      none
+    ratio estimation                    6     3.1%      3 entries
+    ensemble                            5     2.6%      4 entries
+    CNN or convolutional                5     2.6%      none
+    transformer or attention            4     2.1%      none
+    flow matching or diffusion          4     2.1%      one, lampeCnf, adjacent
+    set or permutation invariant        3     1.5%      none
+    Gaussian process                    3     1.5%      out of ltu-ili scope
+    autoencoder or VAE                  2     1.0%      out of ltu-ili scope
+    mixture density network             1     0.5%      3 entries
+    graph neural network                1     0.5%      none
+
+    inference engine               papers    share      in our zoo
+    NPE                                14     7.2%      17 entries
+    NRE                                 5     2.6%      3 entries
+    NLE                                 3     1.5%      3 entries
+
+Shares are low in absolute terms because most abstracts never name an architecture. The
+ratios are the signal, not the percentages.
+
+**What this says about the zoo.**
+
+- Engine balance is roughly right. The field runs about 5 NPE to 1.7 NRE to 1 NLE. We
+  run 5.7 to 1 to 1, so NRE is slightly under weighted.
+- Normalizing flows dominate and we cover them heavily. Correct call.
+- **Mixture density networks are the most over covered thing we have**, at 3 entries
+  against 0.5 per cent of the literature. That is worth keeping rather than cutting: our
+  measurements put npeMdn at the same accuracy as everything else for 0.7 seconds, so
+  the field may simply be under using the cheapest option.
+- **Bayesian neural networks are the largest genuine gap**, second most mentioned and
+  absent from the zoo. Mitigating fact: LtU-ILI Section 3.2 calls ensembling the
+  practical alternative to expensive Bayesian networks, and we now carry four ensembles.
+- CNN, transformer and set architectures are all absent, and all three need a data
+  modality we have not wired in. That is one gap, not three.
+
+## 6. The field's own decision table
+
+Deistler et al., "Simulation-Based Inference: A Practical Guide" (arXiv 2508.12939),
+from the group that maintains `sbi`. Read in full. Its Table 1 compares the three
+engines on inference speed, handling of i.i.d. observations, data dimensionality,
+training cost, and robustness to invalid simulations. **That is the decision table the
+skill should implement**, alongside Thiele's Section 2.7 rules.
+
+Their architecture guidance by data type, which is what a zoo has to stock:
+
+    images                    CNN embedding
+    time series               RNN or transformer embedding
+    i.i.d. observations       permutation invariant, they name Set Transformers
+    NPE inference net         normalizing flows, or diffusion models
+    NLE inference net         normalizing flows
+    NRE classifier            ResNets
+
+Two things in it bear directly on our results.
+
+**Their ensembling result complements ours rather than contradicting it.** On a 31
+parameter neuroscience model trained on three million simulations, an ensemble of five
+NPE models turned slight individual overconfidence into good global and local
+calibration. We measured four members closing under a fifth of the gap at 800
+simulations. Both are consistent with the same explanation: averaging needs members that
+disagree, and clones trained on a small shared training set do not disagree. That is
+also the argument for `npeMixedEnsemble3`.
+
+**They name local diagnostics we do not run.** Global: expected coverage, SBC, TARP. We
+have coverage and TARP, and no SBC. Local: LCT and L-C2ST. We have neither, and our
+nreMlp finding, calibrated on aggregate and broken near the sigma_8 boundary, is exactly
+what local tests exist to catch.
+
+**They maintain a curated database of over 100 published SBI applications** (their
+Appendix A4). That is the natural source for the five held out problem descriptions the
+brief requires, and it removes the objection that we wrote our own test cases.
+
+## 7. Revised priorities, now evidence backed
+
+1. `lampeNsf` and `lampeMaf` against `npeNsf` and `npeMaf`. Measures an unquantified
+   claim in the supervisor's own Section 3.4. Costs nothing, and flows are the most used
+   family in the count above.
+2. SBC and L-C2ST diagnostics. Named by both reviews, and L-C2ST is the named tool for
+   the failure we already found by hand.
+3. One data modality with an embedding network. CNN, transformer and set architectures
+   are 6.2 per cent of the literature between them and 0 per cent of the zoo, and all
+   three are blocked on the same thing.
+4. Balanced NRE, still not exposed by ltu-ili, still the only method on this list aimed
+   at the overconfidence the zoo actually measured.
+5. Held out problem descriptions from the Deistler application database.
+
+## 8. Honest limits, after closing the first three
+
+Closed since the first version: non arXiv venues are now covered through OpenAlex and
+Crossref; two papers are read in full rather than one; and usage is counted from
+architecture neutral queries rather than asserted.
+
+What remains:
+
+- NASA ADS, the astronomy native index, still not queried. No token is configured.
+  Astronomy specific venues that neither OpenAlex nor Crossref index well could shift
+  the counts.
+- Semantic Scholar rate limited during the neutral sweep, so citation weighted ranking
+  was not applied. Counts are paper counts, not impact weighted.
+- 194 of 256 papers had abstracts. The 62 without are uncounted, and they are not a
+  random sample: older and paywalled records are likelier to lack one.
+- Counting a term in an abstract is a proxy for using the method. A paper can use a
+  normalizing flow and never write the phrase.
+- Two papers read in full out of 256. The rest is abstracts plus two reviews'
+  reference lists.
