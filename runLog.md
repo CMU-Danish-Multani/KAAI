@@ -874,3 +874,42 @@ retractions go in as new entries.
 - FINAL STATE: nothing running. Live code 24 files, notes 7 files, all imports verified,
   zoo rebuilt identical.
 - NEXT: run the 8 entries on Quijote, then build the skill.
+
+## 2026-08-28 Quijote run launched. Predictions were registered when it was wired in.
+
+- METHOD 4 posterior-estimation entries (npeMaf, npeNsf, npeMdn, npeMafEnsemble4) on
+  both Quijote tasks, 3 seeds, 1000 evaluation points, 1000 draws. 24 cells.
+- DECISION posterior estimators only for this first pass. The likelihood and ratio
+  entries need MCMC per observation, which at Quijote's test set size is between 3.7 and
+  32.7 hours per cell. They come after the cheap answer is in hand.
+- DECISION 1000 evaluation points rather than the full 6,550. Our measured noise band
+  says 200 points gives 0.022 at two sigma; 1000 brings that to about 0.010, which is
+  well inside anything claimed here, and it keeps the run cheap.
+- The three predictions for this run were registered earlier today when Quijote was
+  wired into tasks.py, before any of it was run. Restated for the record:
+  h, n_s and Omega_b recover poorly while Omega_m and sigma_8 recover well; coverage at
+  19,651 training simulations lands much closer to nominal than at 800; and the NPE over
+  NLE gap shrinks from the +0.179 measured on CAMELS.
+
+## 2026-08-28 Quijote run stopped after 2 cells. Partial result kept as preliminary evidence.
+
+- USER DIRECTIVE stop, the dataset is large and compute will be requested from the
+  supervisor instead of run on the laptop.
+- MEASURED 2 of 24 cells completed before stopping, both npeMaf on quijoteJoint.
+  `ili_kaai/results/sweepQuijote.json`, flagged complete=false.
+- MEASURED seed 0: Omega_m 0.811, sigma_8 0.695, coverage68 [0.65, 0.63].
+  Seed 1: Omega_m 0.792, sigma_8 0.689, coverage68 [0.66, 0.66].
+- MEASURED against the same architecture on CAMELS: sigma_8 0.363 and coverage68 0.569.
+- INTERPRETED sigma_8 nearly doubled and coverage moved from roughly 7.8 sigma below
+  nominal to close to the noise band. Both registered predictions point the right way.
+- HONEST CAVEAT two cells and one seed pair is not a result. Reported as preliminary.
+- HONEST CAVEAT the box size and the training set size both changed at once, so the
+  sigma_8 improvement cannot yet be attributed to either. Quijote cut to 800 simulations
+  would separate them and is cheap.
+- FLAG Omega_m went the other way, 0.864 on CAMELS to 0.811 and 0.792 on Quijote,
+  despite 33 times the data. Untested guess: Quijote ships 24 bins from 2 to 80 Mpc/h
+  while CAMELS uses 25 from 0.0125 to 12, so Quijote carries no small scale information.
+- DECISION these two cells are useful evidence for the compute request. They show the
+  data is worth the allocation rather than asserting it.
+- FINAL STATE: nothing running.
+- NEXT: compute request to the supervisor, then the Quijote sweep on the cluster.
