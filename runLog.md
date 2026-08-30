@@ -1176,3 +1176,64 @@ retractions go in as new entries.
   twice. No test data is involved, so this is not leakage, but it is not free either.
 - MEASURED 30 architectures now defined, 8 measured.
 - NEXT step 2, the cloud sweep, 7 entries x 2 tasks x 3 seeds = 42 cells.
+
+## 2026-08-29 STEP 2 launched. Cloud sweep, predictions registered first.
+
+- METHOD 7 point cloud entries x 2 tasks (camelsCloud, camelsSamCloud) x 3 seeds = 42
+  cells, 200 evaluation points, 1000 draws, same matched compute as every other entry.
+- PREDICTION 1. The three set encoders (npeMafDeepSets, npeMdnDeepSets,
+  npeMafPointNet) and the non invariant control (npeMafFlatten) all score R2 within
+  0.05 of zero on BOTH tasks. They pool per point features of absolute positions,
+  which is a first moment statistic, and clustering is a second moment property. If
+  any of them clears 0.10 the structural explanation is wrong.
+- PREDICTION 2. npeMafPairwiseGnn and npeMdnPairwiseGnn, trained from scratch, also
+  score near zero, because the collapse is a property of joint training rather than of
+  the architecture. Only npeMafPairwiseGnnPretrained clears 0.15.
+- PREDICTION 3. sigma_8 recovers better on camelsSamCloud than on camelsCloud. The
+  CAMELS-SAM box is 100 Mpc/h against CAMELS' 25, and sigma_8 is defined on 8 Mpc/h
+  spheres, so the larger box samples that scale far better. The same argument held on
+  the summary vector tasks, where sigma_8 went 0.363 to 0.832, and on Quijote.
+- PREDICTION 4. Every cloud entry stays well below the 2PCF summary vector's 0.864 on
+  Omega_m. 512 galaxies out of a median 2283, and the network must learn pairwise
+  structure the correlation function is built from.
+
+## 2026-08-29 STEP 2 done. Cloud sweep complete, 42 of 42, no errors.
+
+- MEASURED `ili_kaai/results/sweepCloud.json`, 7 entries x 2 tasks x 3 seeds, 200
+  evaluation points, 1000 draws, matched compute.
+- VERIFIED prediction 1 held. All four set encoders on both tasks land within 0.05 of
+  zero: camelsCloud -0.006 to -0.018, camelsSamCloud -0.004 to -0.020. Eight of eight.
+  The structural claim survives at three seeds on two suites.
+- MEASURED the pretraining pair, Omega_m, three seeds:
+    camelsCloud     from scratch +0.060 +/- 0.098   pretrained +0.250 +/- 0.020
+    camelsSamCloud  from scratch -0.003 +/- 0.004   pretrained +0.655 +/- 0.014
+- CORRECTION prediction 2 only partially held. I said from scratch would sit near zero
+  and only the pretrained entry would clear 0.15. npeMdnPairwiseGnn reached +0.140 on
+  camelsCloud, but with a spread of 0.106.
+- INTERPRETED the spread is the finding, not the mean. Individual seeds of
+  npeMafPairwiseGnn on camelsCloud gave -0.019, +0.198 and -0.000. From scratch
+  training does not reliably fail, it fails unpredictably, roughly two runs in three.
+  For a practitioner that is worse than reliable failure, and it is a stronger argument
+  for pretraining than yesterday's single seed suggested. Pretrained spread is 0.020
+  against 0.098, so pretraining buys reliability as much as accuracy.
+- CORRECTION prediction 3 refuted. I predicted sigma_8 would recover better on the
+  larger 100 Mpc/h CAMELS-SAM box, as it does on the summary vector tasks. Measured the
+  opposite: sigma_8 +0.176 on camelsCloud against +0.015 on camelsSamCloud, while
+  Omega_m went the other way, +0.250 to +0.655.
+- INTERPRETED untested explanation. Both tasks keep the 512 most massive galaxies.
+  CAMELS-SAM holds 5000 galaxies in a 100 Mpc/h box, so 512 is a very sparse sample of
+  a large volume; CAMELS holds a median 2283 in 25 Mpc/h, so 512 is comparatively
+  dense. sigma_8 is an 8 Mpc/h quantity and needs the small scale structure that sparse
+  sampling destroys first, while Omega_m rides on the largest scales, which survive it.
+  This is a hypothesis, not a measurement. Varying the point count would test it.
+- VERIFIED prediction 4 held, but narrowly on one suite. Best cloud against best
+  summary vector on Omega_m: camelsCloud 0.250 against 0.870, a gap of 0.620;
+  camelsSamCloud 0.655 against 0.791, a gap of only 0.136.
+- INTERPRETED on CAMELS-SAM a learned point cloud embedding gets within 0.14 of a
+  hand designed correlation function while reading 512 of 5000 galaxies. That is the
+  first result here where the learned representation is competitive.
+- FLAG calibration is poor everywhere on clouds. Mean coverage at 68 per cent runs
+  0.489 to 0.621 against a nominal 0.680, so every cloud entry is overconfident, the
+  same direction as every summary vector entry.
+- NEXT step 3, rebuild the whole zoo across all models, including the 13 unrun
+  posterior entries and the 2 MCMC entries.
