@@ -68,7 +68,7 @@ def run(arch_key: str, task_key: str, seed: int, n_draws: int, frac: float,
     ttr = np.concatenate([data["train"][1], data["val"][1]])
 
     from ili.dataloaders import NumpyLoader
-    runner, _ = build(arch, task, device, RESULTS / "runs" / f"edge_{arch_key}")
+    runner, _, _ = build(arch, task, device, RESULTS / "runs" / f"edge_{arch_key}")
     posterior, _ = runner(loader=NumpyLoader(x=xtr, theta=ttr))
 
     xte, tte = data["test"]

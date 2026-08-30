@@ -1150,3 +1150,29 @@ retractions go in as new entries.
   construction while the network has to learn them.
 - HONEST CAVEAT single seed, one task, one architecture, one pretraining length. None
   of this is a zoo measurement yet.
+
+## 2026-08-29 STEP 1 done. Pretraining is a config option and reproduces exactly.
+
+- USER DIRECTIVE four steps, in order, no deviation. 1) pretraining as a config option,
+  2) the cloud sweep, 3) rebuild the whole zoo, 4) the Claude wrapper.
+- BUILT `Architecture.pretrainEpochs`, `sweep.pretrain_embedding()`, and
+  `npeMafPairwiseGnnPretrained` with 60 epochs. `build()` now returns the pretraining
+  cost and `run_cell` records it as `pretrainSeconds`, so the extra compute is on the
+  record rather than hidden.
+- BUG CAUGHT + FIXED the first config version pretrained on the train split alone, 600
+  simulations, while the density estimator trains on train and val concatenated, 800.
+  Measured cost of that 200 simulation shortfall: R2 [0.125, 0.145] instead of
+  [0.235, 0.160]. Fixed so the embedding sees exactly what the estimator sees.
+- VERIFIED the config version now reproduces the hand written script exactly:
+  R2 [0.235, 0.16] against [0.235, 0.160].
+- MEASURED the matched pair at one seed on camelsCloud:
+    npeMafPairwiseGnn            R2 [-0.019, -0.014]   133 s
+    npeMafPairwiseGnnPretrained  R2 [ 0.235,  0.160]   95 s pretrain + 104 s train
+- HONEST CAVEAT the pair is NOT at matched compute. Pretraining costs 95 extra seconds,
+  so the comparison is about whether pretraining works, not about which is better per
+  second. That limitation is written into the entry's failure modes.
+- FLAG a second limitation recorded on the entry: pretraining fits the same training
+  split labels the density estimator later fits, so the embedding sees those targets
+  twice. No test data is involved, so this is not leakage, but it is not free either.
+- MEASURED 30 architectures now defined, 8 measured.
+- NEXT step 2, the cloud sweep, 7 entries x 2 tasks x 3 seeds = 42 cells.

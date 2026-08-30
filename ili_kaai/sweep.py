@@ -26,6 +26,7 @@ from typing import Dict, List, Tuple
 
 import numpy as np
 import torch
+import torch.nn as nn
 from scipy.stats import gaussian_kde
 
 import ili
@@ -43,6 +44,44 @@ RESULTS = ROOT / "ili_kaai" / "results"
 
 
 
+def pretrain_embedding(emb: nn.Module, x: np.ndarray, theta: np.ndarray,
+                       epochs: int, device: str, lr: float = 1e-3,
+                       batch_size: int = 32) -> float:
+    """Train the embedding alone on plain regression. Returns seconds spent.
+
+    Measured: joint training from scratch collapses. Validation log probability rises
+    while R2 stays at zero, because the flow models the marginal distribution of theta
+    and ignores x. The embedding starts as noise, so conditioning on it hurts, so the
+    flow learns to ignore the context, so the embedding never receives a gradient.
+
+    Giving the embedding a head start removes the thing that triggers the collapse.
+    Targets are standardised here because a plain squared error on raw parameters
+    would weight sigma_8 and Omega_m by their arbitrary units.
+    """
+    with torch.no_grad():
+        out_dim = emb(torch.tensor(x[:2], device=device)).shape[1]
+    head = nn.Linear(out_dim, theta.shape[1]).to(device)
+    model = nn.Sequential(emb, head)
+    opt = torch.optim.Adam(model.parameters(), lr=lr)
+    loss_fn = nn.MSELoss()
+
+    X = torch.tensor(x, device=device)
+    T = torch.tensor(theta, device=device)
+    mean, spread = T.mean(0), T.std(0).clamp_min(1e-8)
+    target = (T - mean) / spread
+
+    t0 = time.time()
+    model.train()
+    for _ in range(epochs):
+        order = torch.randperm(len(X), device=device)
+        for i in range(0, len(X), batch_size):
+            b = order[i:i + batch_size]
+            opt.zero_grad()
+            loss_fn(model(X[b]), target[b]).backward()
+            opt.step()
+    return time.time() - t0
+
+
 def build(arch: Architecture, task: Task, device: str, out_dir: Path):
     """Both backends go through the same runner, so entries stay comparable.
 
@@ -51,15 +90,26 @@ def build(arch: Architecture, task: Task, device: str, out_dir: Path):
     """
     lo, hi = prior_bounds(task)
     prior = ili.utils.Uniform(low=lo, high=hi, device=device)
-    embed = {}
+    embed, pretrain_seconds = {}, 0.0
     if arch.embedding:
-        x_train = load(task)["train"][0]
+        # The embedding must see exactly what the density estimator sees, no more and
+        # no less. run_cell hands the runner train and val concatenated, because
+        # ltu-ili carves its own validation split out of whatever it is given, so
+        # "val" here is simply more training data. Pretraining on train alone left the
+        # embedding 200 simulations short and cost R2 0.235 -> 0.125 at one seed.
+        d = load(task)
+        x_train = np.concatenate([d["train"][0], d["val"][0]])
+        theta_train = np.concatenate([d["train"][1], d["val"][1]])
         if x_train.ndim != 3:
             raise ValueError(f"{arch.key} needs a point cloud task, but {task.key} "
                              f"gives x with shape {x_train.shape[1:]}")
         n_points, n_features = x_train.shape[1], x_train.shape[2]
-        embed = {"embedding_net": EMBEDDINGS[arch.embedding](
-            n_points=n_points, n_features=n_features, **arch.embedding_args)}
+        net = EMBEDDINGS[arch.embedding](n_points=n_points, n_features=n_features,
+                                         **arch.embedding_args).to(device)
+        if arch.pretrainEpochs:
+            pretrain_seconds = pretrain_embedding(
+                net, x_train, theta_train, arch.pretrainEpochs, device)
+        embed = {"embedding_net": net}
 
     members = arch.mixture or ((arch.model, arch.model_args),) * arch.repeats
     if arch.backend == "lampe":
@@ -88,7 +138,7 @@ def build(arch: Architecture, task: Task, device: str, out_dir: Path):
     runner = InferenceRunner.load(
         backend=arch.backend, engine=arch.engine, prior=prior, nets=nets,
         device=device, train_args=dict(TRAIN_ARGS), out_dir=out_dir)
-    return runner, prior
+    return runner, prior, pretrain_seconds
 
 
 def draw(posterior, x: np.ndarray, n_draws: int, method: str,
@@ -152,7 +202,8 @@ def run_cell(arch: Architecture, task: Task, seed: int, n_eval: int, n_draws: in
     xtr = np.concatenate([data["train"][0], data["val"][0]])
     ttr = np.concatenate([data["train"][1], data["val"][1]])
 
-    runner, _ = build(arch, task, device, RESULTS / "runs" / f"{arch.key}_{task.key}")
+    runner, _, pretrain_seconds = build(
+        arch, task, device, RESULTS / "runs" / f"{arch.key}_{task.key}")
     t0 = time.time()
     posterior, summaries = runner(loader=NumpyLoader(x=xtr, theta=ttr))
     train_seconds = time.time() - t0
@@ -171,6 +222,7 @@ def run_cell(arch: Architecture, task: Task, seed: int, n_eval: int, n_draws: in
                 if hasattr(n, "parameters"))
     return {"architecture": arch.key, "task": task.key, "seed": seed,
             "trainSeconds": round(train_seconds, 1),
+            "pretrainSeconds": round(pretrain_seconds, 1),
             "evalSeconds": round(eval_seconds, 1),
             "nParameters": int(n_par),
             "nEvalPoints": int(len(xte)), "nDraws": n_draws,

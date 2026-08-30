@@ -44,6 +44,12 @@ class Architecture:
     # needs one, and which one is the architectural choice being measured.
     embedding: str = ""
     embedding_args: Dict[str, Any] = field(default_factory=dict)
+    # Epochs of plain regression on the embedding alone, before the density estimator
+    # ever sees it. Zero means joint training from scratch, which is the default and
+    # which we measured collapsing: the flow fits the marginal, ignores the context,
+    # and the embedding then gets no gradient. Non-zero costs extra compute, and that
+    # cost is recorded per cell rather than hidden.
+    pretrainEpochs: int = 0
     summary: str = ""
     known_failure_modes: List[str] = field(default_factory=list)
 
@@ -369,6 +375,26 @@ ZOO: Dict[str, Architecture] = {a.key: a for a in [
             "Same quadratic neighbour search as the MAF version.",
             "If this matches the MAF version, the embedding is doing all the work and "
             "the choice of density estimator is not the interesting axis here."]),
+    Architecture(
+        key="npeMafPairwiseGnnPretrained", engine="NPE", model="maf",
+        family="graph_encoder", repeats=1, embedding="pairwiseGnn", pretrainEpochs=60,
+        model_args={"hidden_features": HIDDEN, "num_transforms": 5},
+        embedding_args={"hidden": 64, "out_features": 32, "k": 16, "pooling": "mean"},
+        summary="Identical to npeMafPairwiseGnn except the embedding is trained alone "
+                "on plain regression for 60 epochs first. The two form a matched pair "
+                "differing in nothing else, which is what makes them evidence about "
+                "pretraining rather than about architecture. Measured at one seed: "
+                "from scratch R2 [-0.015, -0.011], pretrained R2 [0.235, 0.160].",
+        known_failure_modes=[
+            "Costs more compute than its twin, and that is real rather than "
+            "bookkeeping. The comparison is not at matched compute and the zoo must "
+            "say so wherever the pair is quoted.",
+            "Pretraining uses the same labels the density estimator will later fit, so "
+            "the embedding has seen the targets twice. It sees only training split "
+            "labels, so this is not test leakage, but it is not a free lunch either.",
+            "The regression objective is a point estimate while the flow needs a "
+            "distribution, so the pretrained features are optimised for the wrong "
+            "thing and only serve as a starting point."]),
 ]}
 
 
