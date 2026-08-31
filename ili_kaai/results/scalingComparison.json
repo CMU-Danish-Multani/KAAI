@@ -1,0 +1,261 @@
+{
+  "old": "/Users/danishmultani/KAAI/ili_kaai/results/sweepCloud.json",
+  "new": "/Users/danishmultani/KAAI/ili_kaai/results/sweepCloudFixedScaling.json",
+  "nPairs": 14,
+  "nMovedBeyondSeedSpread": 0,
+  "meanDeltaR2": 0.0043,
+  "rows": [
+    {
+      "architecture": "npeMafDeepSets",
+      "task": "camelsCloud",
+      "old": {
+        "r2": -0.008407235145568848,
+        "r2Std": 0.005887471327786403,
+        "coverage68": 0.545,
+        "nSeeds": 3
+      },
+      "new": {
+        "r2": -0.008407235145568848,
+        "r2Std": 0.005887471327786403,
+        "coverage68": 0.545,
+        "nSeeds": 3
+      },
+      "deltaR2": 0.0,
+      "largerThanSeedSpread": false
+    },
+    {
+      "architecture": "npeMafDeepSets",
+      "task": "camelsSamCloud",
+      "old": {
+        "r2": -0.016905943552652996,
+        "r2Std": 0.003238710017511352,
+        "coverage68": 0.5314625850340136,
+        "nSeeds": 3
+      },
+      "new": {
+        "r2": -0.016905943552652996,
+        "r2Std": 0.003238710017511352,
+        "coverage68": 0.5314625850340136,
+        "nSeeds": 3
+      },
+      "deltaR2": 0.0,
+      "largerThanSeedSpread": false
+    },
+    {
+      "architecture": "npeMafFlatten",
+      "task": "camelsCloud",
+      "old": {
+        "r2": -0.01810618241628011,
+        "r2Std": 0.012749222097585328,
+        "coverage68": 0.6208333333333333,
+        "nSeeds": 3
+      },
+      "new": {
+        "r2": -0.01810618241628011,
+        "r2Std": 0.012749222097585328,
+        "coverage68": 0.6208333333333333,
+        "nSeeds": 3
+      },
+      "deltaR2": 0.0,
+      "largerThanSeedSpread": false
+    },
+    {
+      "architecture": "npeMafFlatten",
+      "task": "camelsSamCloud",
+      "old": {
+        "r2": -0.00906531016031901,
+        "r2Std": 0.006773016335743408,
+        "coverage68": 0.5416666666666666,
+        "nSeeds": 3
+      },
+      "new": {
+        "r2": -0.00906531016031901,
+        "r2Std": 0.006773016335743408,
+        "coverage68": 0.5416666666666666,
+        "nSeeds": 3
+      },
+      "deltaR2": 0.0,
+      "largerThanSeedSpread": false
+    },
+    {
+      "architecture": "npeMafPairwiseGnn",
+      "task": "camelsCloud",
+      "old": {
+        "r2": 0.059688031673431396,
+        "r2Std": 0.09807198483202674,
+        "coverage68": 0.5783333333333334,
+        "nSeeds": 3
+      },
+      "new": {
+        "r2": 0.07242049773534139,
+        "r2Std": 0.11603260949010334,
+        "coverage68": 0.5816666666666667,
+        "nSeeds": 3
+      },
+      "deltaR2": 0.0127,
+      "largerThanSeedSpread": false
+    },
+    {
+      "architecture": "npeMafPairwiseGnn",
+      "task": "camelsSamCloud",
+      "old": {
+        "r2": -0.0033594369888305664,
+        "r2Std": 0.0036392383742997274,
+        "coverage68": 0.4897959183673469,
+        "nSeeds": 3
+      },
+      "new": {
+        "r2": -0.003179748853047689,
+        "r2Std": 0.0037698428695907477,
+        "coverage68": 0.4897959183673469,
+        "nSeeds": 3
+      },
+      "deltaR2": 0.0002,
+      "largerThanSeedSpread": false
+    },
+    {
+      "architecture": "npeMafPairwiseGnnPretrained",
+      "task": "camelsCloud",
+      "old": {
+        "r2": 0.25007577737172443,
+        "r2Std": 0.020006973662590553,
+        "coverage68": 0.5833333333333334,
+        "nSeeds": 3
+      },
+      "new": {
+        "r2": 0.2605265776316325,
+        "r2Std": 0.017384968627028072,
+        "coverage68": 0.6191666666666666,
+        "nSeeds": 3
+      },
+      "deltaR2": 0.0105,
+      "largerThanSeedSpread": false
+    },
+    {
+      "architecture": "npeMafPairwiseGnnPretrained",
+      "task": "camelsSamCloud",
+      "old": {
+        "r2": 0.6547493934631348,
+        "r2Std": 0.01381889668113088,
+        "coverage68": 0.5586734693877551,
+        "nSeeds": 3
+      },
+      "new": {
+        "r2": 0.6232218742370605,
+        "r2Std": 0.05699812198409733,
+        "coverage68": 0.5544217687074829,
+        "nSeeds": 3
+      },
+      "deltaR2": -0.0315,
+      "largerThanSeedSpread": false
+    },
+    {
+      "architecture": "npeMafPointNet",
+      "task": "camelsCloud",
+      "old": {
+        "r2": -0.006481269995371501,
+        "r2Std": 0.007666335468388389,
+        "coverage68": 0.5575,
+        "nSeeds": 3
+      },
+      "new": {
+        "r2": -0.006481269995371501,
+        "r2Std": 0.007666335468388389,
+        "coverage68": 0.5575,
+        "nSeeds": 3
+      },
+      "deltaR2": 0.0,
+      "largerThanSeedSpread": false
+    },
+    {
+      "architecture": "npeMafPointNet",
+      "task": "camelsSamCloud",
+      "old": {
+        "r2": -0.01972198486328125,
+        "r2Std": 0.011819391392226687,
+        "coverage68": 0.5867346938775511,
+        "nSeeds": 3
+      },
+      "new": {
+        "r2": -0.01972198486328125,
+        "r2Std": 0.011819391392226687,
+        "coverage68": 0.5867346938775511,
+        "nSeeds": 3
+      },
+      "deltaR2": 0.0,
+      "largerThanSeedSpread": false
+    },
+    {
+      "architecture": "npeMdnDeepSets",
+      "task": "camelsCloud",
+      "old": {
+        "r2": -0.010337551434834799,
+        "r2Std": 0.010871768371073611,
+        "coverage68": 0.5658333333333334,
+        "nSeeds": 3
+      },
+      "new": {
+        "r2": -0.010337551434834799,
+        "r2Std": 0.010871768371073611,
+        "coverage68": 0.5658333333333334,
+        "nSeeds": 3
+      },
+      "deltaR2": 0.0,
+      "largerThanSeedSpread": false
+    },
+    {
+      "architecture": "npeMdnDeepSets",
+      "task": "camelsSamCloud",
+      "old": {
+        "r2": -0.004482368628184001,
+        "r2Std": 0.007272126714648897,
+        "coverage68": 0.48894557823129253,
+        "nSeeds": 3
+      },
+      "new": {
+        "r2": -0.004482368628184001,
+        "r2Std": 0.007272126714648897,
+        "coverage68": 0.48894557823129253,
+        "nSeeds": 3
+      },
+      "deltaR2": 0.0,
+      "largerThanSeedSpread": false
+    },
+    {
+      "architecture": "npeMdnPairwiseGnn",
+      "task": "camelsCloud",
+      "old": {
+        "r2": 0.14037885268529257,
+        "r2Std": 0.1055926765156381,
+        "coverage68": 0.5983333333333334,
+        "nSeeds": 3
+      },
+      "new": {
+        "r2": 0.20892300208409628,
+        "r2Std": 0.014680997349400194,
+        "coverage68": 0.595,
+        "nSeeds": 3
+      },
+      "deltaR2": 0.0685,
+      "largerThanSeedSpread": false
+    },
+    {
+      "architecture": "npeMdnPairwiseGnn",
+      "task": "camelsSamCloud",
+      "old": {
+        "r2": -0.006862044334411621,
+        "r2Std": 0.0021685456260845605,
+        "coverage68": 0.4965986394557823,
+        "nSeeds": 3
+      },
+      "new": {
+        "r2": -0.007188200950622559,
+        "r2Std": 0.002075537581842775,
+        "coverage68": 0.49829931972789115,
+        "nSeeds": 3
+      },
+      "deltaR2": -0.0003,
+      "largerThanSeedSpread": false
+    }
+  ]
+}

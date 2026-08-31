@@ -24,3 +24,7 @@ sbi-logs/
 # Saved posteriors and per-epoch summaries that ltu-ili writes to out_dir. Nothing
 # reads them; every number we quote lives in ili_kaai/results/*.json.
 ili_kaai/results/runs/
+
+# Runtime output directory. The emitted ltu-ili configs default to ./ili_out,
+# so running one creates this. Nothing in it is a result.
+ili_out/

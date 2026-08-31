@@ -1,0 +1,210 @@
+{
+  "bar": "4 of 5",
+  "arm": "structured",
+  "engineCorrect": 5,
+  "keyCorrect": 3,
+  "nProblems": 5,
+  "gradedAutomatically": [
+    "engine",
+    "entry key",
+    "correct decline"
+  ],
+  "gradedByHand": [
+    "required warnings"
+  ],
+  "heldOutSource": "Deistler et al., Simulation-Based Inference: A Practical Guide, arXiv 2508.12939",
+  "results": [
+    {
+      "id": "gravitationalWaveMasses",
+      "modality": "timeSeries",
+      "outOfScope": true,
+      "expectedEngines": [
+        "NPE"
+      ],
+      "expectedKeys": [
+        "npeNsf",
+        "npeMaf",
+        "npeMdn"
+      ],
+      "excludedByBudget": [],
+      "requiredWarnings": [
+        "modality not covered by this zoo, a time series needs an embedding network and every entry here was measured on a compressed summary vector or a point cloud",
+        "amortization is the deciding property because inference runs on many events"
+      ],
+      "recommended": null,
+      "recommendedEngine": null,
+      "engineCorrect": true,
+      "keyCorrect": true,
+      "actualWarnings": [
+        "This zoo has never measured the modality 'timeSeries'. Every entry was measured on a compressed summary vector or a point cloud, so there is no ranking to give. A time series or an image needs an embedding network, and the choice of embedding is the architectural decision, which this catalogue cannot inform.",
+        "MEASURED here. Amortization decides at this observation count. NPE answers a new observation in a forward pass; NLE and NRE run a fresh MCMC chain each, measured at 493 to 3294 seconds per observation."
+      ],
+      "verdict": "declined, correct"
+    },
+    {
+      "id": "driftDiffusionTrials",
+      "modality": "summary_vector",
+      "outOfScope": false,
+      "expectedEngines": [
+        "NLE"
+      ],
+      "expectedKeys": [
+        "nleMaf",
+        "nleMdn"
+      ],
+      "excludedByBudget": [
+        "nleMaf",
+        "nleMade",
+        "nleMdn",
+        "lampeUnaf",
+        "nreResnet",
+        "nreMlp",
+        "lampeNaf"
+      ],
+      "requiredWarnings": [
+        "a likelihood estimator needs its own MCMC run per participant, so the inference cost multiplies by the number of participants",
+        "NPE would need as many simulations per parameter set as the maximum trial count and a permutation invariant architecture"
+      ],
+      "recommended": "lampeNcsf",
+      "recommendedEngine": "NPE",
+      "runnerUp": [
+        "lampeNsf",
+        "lampeSospf"
+      ],
+      "engineCorrect": true,
+      "keyCorrect": false,
+      "actualWarnings": [
+        "The task level verdict 'calibrated' is an average over parameters that disagree: Omega_b 0.648 overconfident, Omega_m 0.683 calibrated, h 0.657 overconfident, n_s 0.662 calibrated, sigma_8 0.695 calibrated. Read the parameter you are actually inferring.",
+        "Measured at dim(theta) 5, you asked for 4. This is extrapolation, and the further apart they are the less it transfers.",
+        "LITERATURE, not measured here. Deistler et al. (arXiv 2508.12939) Table 1 lists handling of i.i.d. observations as a primary axis, and NLE is the engine that takes it natively: it learns a per trial likelihood and multiplies across exchangeable trials. NPE for i.i.d. data needs as many simulations per parameter set as the largest trial count, plus a permutation invariant architecture. This zoo has never measured an i.i.d. trial setting, so the ranking below cannot speak to it.",
+        "The cost is that NLE runs a fresh MCMC chain per subject. At 40 subjects that multiplies the measured per observation inference cost by the same factor."
+      ],
+      "advisedEngine": "NLE",
+      "verdict": "answered"
+    },
+    {
+      "id": "pyloricNetwork",
+      "modality": "summary_vector",
+      "outOfScope": false,
+      "expectedEngines": [
+        "NPE"
+      ],
+      "expectedKeys": [
+        "npeMafEnsemble4",
+        "npeMafEnsemble8",
+        "npeMdnEnsemble4",
+        "npeMixedEnsemble3"
+      ],
+      "excludedByBudget": [],
+      "requiredWarnings": [
+        "dim(theta) 31 is far outside the 1 to 6 this zoo measured, so this is extrapolation",
+        "single density estimators measured overconfident here and the posterior width is the scientific claim"
+      ],
+      "recommended": "lampeNcsf",
+      "recommendedEngine": "NPE",
+      "runnerUp": [
+        "lampeNsf",
+        "nreMlp"
+      ],
+      "engineCorrect": true,
+      "keyCorrect": false,
+      "actualWarnings": [
+        "The task level verdict 'calibrated' is an average over parameters that disagree: Omega_b 0.648 overconfident, Omega_m 0.683 calibrated, h 0.657 overconfident, n_s 0.662 calibrated, sigma_8 0.695 calibrated. Read the parameter you are actually inferring.",
+        "Measured at dim(theta) 5, you asked for 31. This is extrapolation, and the further apart they are the less it transfers.",
+        "LITERATURE, not measured here. dim(theta) 31 is above the largest this zoo measured, which is 5. Miller et al. (2021) and LtU-ILI Section 2.3 both record that ratio estimators degrade at high parameter dimensionality without truncation, so NRE entries are penalised in the ranking below rather than trusted at face value."
+      ],
+      "advisedEngine": null,
+      "verdict": "answered"
+    },
+    {
+      "id": "spectralEnergyDistributions",
+      "modality": "summary_vector",
+      "outOfScope": false,
+      "expectedEngines": [
+        "NPE"
+      ],
+      "expectedKeys": [
+        "npeNsf",
+        "npeMaf",
+        "npeMdn",
+        "npeMafEnsemble4"
+      ],
+      "excludedByBudget": [
+        "nleMaf",
+        "nleMade",
+        "nleMdn",
+        "lampeUnaf",
+        "nreResnet",
+        "nreMlp",
+        "lampeNaf",
+        "lampeSospf",
+        "lampeCnf",
+        "lampeNsf",
+        "npeMafEnsemble8",
+        "lampeNcsf",
+        "lampeGf",
+        "npeMafEnsemble4",
+        "npeMafEnsemble2",
+        "npeMixedEnsemble3",
+        "npeMaf",
+        "lampeMaf",
+        "npeMade",
+        "npeNsf",
+        "npeMdnEnsemble4",
+        "npeMdn"
+      ],
+      "requiredWarnings": [
+        "every likelihood and ratio estimator is removed by the compute budget at this observation count",
+        "the posteriors feed a population level analysis, which inherits the error bars, and almost every entry here is overconfident"
+      ],
+      "recommended": "npeNsf",
+      "recommendedEngine": "NPE",
+      "runnerUp": [
+        "npeMdnEnsemble4",
+        "npeMdn"
+      ],
+      "engineCorrect": true,
+      "keyCorrect": true,
+      "actualWarnings": [
+        "OVER BUDGET: needs 200,192 s against 7,200 s allowed, 27.8 times over. Nothing in the zoo fits this budget, so the cheapest options are shown anyway.",
+        "The task level verdict 'overconfident' is an average over parameters that disagree: Omega_b 0.637 overconfident, Omega_m 0.675 calibrated, h 0.633 overconfident, n_s 0.625 overconfident, sigma_8 0.678 calibrated. Read the parameter you are actually inferring.",
+        "Error bars from this entry are too small. Almost every entry in the zoo is overconfident, so this is a property of the setting, not of this pick.",
+        "MEASURED here. Amortization decides at this observation count. NPE answers a new observation in a forward pass; NLE and NRE run a fresh MCMC chain each, measured at 493 to 3294 seconds per observation.",
+        "MEASURED. Nothing in the zoo fits 7,200 s at 100000 observations. The cheapest is npeMdn at 10,036 s. Either raise the budget or reduce the observation count."
+      ],
+      "advisedEngine": null,
+      "verdict": "answered"
+    },
+    {
+      "id": "galaxyCatalogueClustering",
+      "modality": "point_cloud",
+      "outOfScope": false,
+      "expectedEngines": [
+        "NPE"
+      ],
+      "expectedKeys": [
+        "npeMafPairwiseGnnPretrained"
+      ],
+      "excludedByBudget": [],
+      "requiredWarnings": [
+        "set encoders over absolute positions cannot represent clustering because pooling per point features is a first moment statistic and clustering is a second moment property",
+        "the embedding must be pretrained or joint training collapses unpredictably",
+        "a hand designed correlation function still outperforms the learned embedding on this data"
+      ],
+      "recommended": "npeMafPairwiseGnnPretrained",
+      "recommendedEngine": "NPE",
+      "runnerUp": [
+        "npeMdnPairwiseGnn"
+      ],
+      "engineCorrect": true,
+      "keyCorrect": true,
+      "actualWarnings": [
+        "Error bars from this entry are too small. Almost every entry in the zoo is overconfident, so this is a property of the setting, not of this pick.",
+        "Needs 60 epochs of embedding pretraining. Trained jointly from scratch this collapses unpredictably, about two runs in three.",
+        "A hand designed correlation function still beats every learned embedding here on CAMELS, R2 0.870 against 0.250. The learned route is only competitive on CAMELS-SAM, 0.655 against 0.791."
+      ],
+      "advisedEngine": null,
+      "verdict": "answered"
+    }
+  ]
+}

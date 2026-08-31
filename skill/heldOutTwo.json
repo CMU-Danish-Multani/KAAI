@@ -1,0 +1,106 @@
+{
+  "provenance": {
+    "source": "Applications cited in Deistler et al., arXiv 2508.12939, reference list",
+    "how": "Five further published applications, none of them used while developing the recommender. Written after skill/heldOut.json had already been used to find and fix four defects, and deliberately not looked at while making those fixes.",
+    "why": "The first held out set stopped being held out the moment its failures were used to design fixes. Its 5 of 5 on the engine decision is a development score, not evidence of generalisation. This set exists so there is one number that was measured before anything was tuned to it.",
+    "rule": "Run once. If it scores badly, the honest response is to report the score and diagnose, not to fix the recommender and re-run. Any fix made after seeing these results makes this set a development set too, and a third would be needed."
+  },
+  "problems": [
+    {
+      "id": "galacticCentreGammaRay",
+      "source": "Mishra-Sharma and Cranmer 2022 (Phys. Rev. D 105:063017)",
+      "description": "We are characterising the Galactic Centre gamma ray excess. The data is a binned photon count map of the sky region, a HEALPix map rather than a vector, and we want the flux contributions of the different emission components including whether an unresolved point source population is present. We have one sky to analyse. Getting the uncertainty right is the entire scientific question, because the claim is about whether one component is needed at all.",
+      "query": {
+        "modality": "skyMap",
+        "nParams": 8,
+        "nObservations": 1,
+        "computeSeconds": 7200,
+        "downstream": true
+      },
+      "acceptableEngines": ["NPE"],
+      "acceptableKeys": [],
+      "requiredWarnings": [
+        "a binned sky map is not a modality this zoo has measured and needs a convolutional or graph embedding on the sphere",
+        "the scientific claim is about uncertainty, so an overconfident posterior would answer the question wrongly"
+      ],
+      "note": "The original work used a neural approach on the photon map with a learned embedding. Out of scope on modality. The correct behaviour is to decline the ranking and still name the engine."
+    },
+    {
+      "id": "exoplanetAtmosphere",
+      "source": "Gebhard et al. 2025 (A&A 693:A42), and Barrado et al. 2023 (Nature 624:263)",
+      "description": "We do atmospheric retrieval on a transmission spectrum of a single planet. The observation is a spectrum binned into a few dozen wavelength channels, so it is already a short vector. We are inferring about a dozen parameters covering temperature structure, cloud properties and molecular abundances. There is one object we care about. The abundance posteriors are quoted directly in the paper as the result, so their widths are the claim.",
+      "query": {
+        "modality": "summary_vector",
+        "nParams": 12,
+        "nObservations": 1,
+        "computeSeconds": 7200,
+        "downstream": true
+      },
+      "acceptableEngines": ["NPE"],
+      "acceptableKeys": ["npeNsf", "npeMaf", "npeMafEnsemble4", "npeMafEnsemble8", "npeMdnEnsemble4", "npeMixedEnsemble3"],
+      "requiredWarnings": [
+        "dim(theta) 12 is well outside what this zoo measured, so the ranking is extrapolation",
+        "the posterior widths are the published result, so an overconfident entry would overstate the detection"
+      ],
+      "note": "The original work used a normalising flow style amortized approach and emphasised reliability of the reported posterior."
+    },
+    {
+      "id": "populationGenetics",
+      "source": "Chan et al. 2018 (NeurIPS 31), and Korfmann et al. 2023 (Genome Biol. Evol. 15:evad008)",
+      "description": "We infer recombination and demographic parameters from population genetic data. The data is a set of sampled haplotypes, and the sampling order carries no meaning, so the representation has to be invariant to permuting the individuals. Each dataset is a collection of exchangeable observations. We have a handful of populations to analyse and simulation from the coalescent is cheap.",
+      "query": {
+        "modality": "summary_vector",
+        "nParams": 3,
+        "nObservations": 6,
+        "computeSeconds": 7200,
+        "downstream": false,
+        "iidTrials": true
+      },
+      "acceptableEngines": ["NLE"],
+      "acceptableKeys": ["nleMaf", "nleMdn"],
+      "requiredWarnings": [
+        "exchangeable data needs either a likelihood estimator or a permutation invariant embedding",
+        "this zoo has never measured an exchangeable or i.i.d. setting"
+      ],
+      "note": "The original work built exchangeable neural networks precisely because permutation invariance is the structural requirement."
+    },
+    {
+      "id": "wholeBrainEpilepsy",
+      "source": "Hashemi et al. 2023 (Neural Networks 163:178)",
+      "description": "We fit a generative model of seizure propagation across a whole brain network to patient recordings, to estimate where seizures start. Each patient gives one recording summarised into a feature vector. We want to run this across a clinical cohort of well over a hundred patients, and the point of the neural approach is that a clinician should get an answer without a new fit each time. Around a dozen parameters.",
+      "query": {
+        "modality": "summary_vector",
+        "nParams": 12,
+        "nObservations": 150,
+        "computeSeconds": 7200,
+        "downstream": false
+      },
+      "acceptableEngines": ["NPE"],
+      "acceptableKeys": ["npeNsf", "npeMaf", "npeMdn", "npeMafEnsemble4", "npeMafEnsemble8", "npeMdnEnsemble4", "npeMixedEnsemble3"],
+      "requiredWarnings": [
+        "amortization is the reason to use a neural method here, since a per patient MCMC fit defeats the clinical purpose",
+        "dim(theta) 12 is outside the measured range"
+      ],
+      "note": "The original work is explicitly framed as amortized inference over a cohort."
+    },
+    {
+      "id": "galaxyClusteringField",
+      "source": "Lemos et al. 2024 (Phys. Rev. D 109:083536)",
+      "description": "We infer cosmological parameters from galaxy clustering at the field level, feeding the three dimensional density field straight into a convolutional network rather than compressing to a power spectrum first. The input is a voxel grid. We have a few thousand simulations and we want the two standard cosmological parameters. We will apply it to a small number of survey volumes.",
+      "query": {
+        "modality": "field",
+        "nParams": 2,
+        "nObservations": 5,
+        "computeSeconds": 7200,
+        "downstream": false
+      },
+      "acceptableEngines": ["NPE"],
+      "acceptableKeys": [],
+      "requiredWarnings": [
+        "a voxel field is not a modality this zoo has measured and needs a 3D convolutional embedding",
+        "the closest thing measured here is a point cloud of galaxy positions, which is a different representation of the same information"
+      ],
+      "note": "Out of scope on modality. The zoo does measure the catalogue representation of this same physics, so a good answer points at that as the nearest neighbour while declining to rank."
+    }
+  ]
+}

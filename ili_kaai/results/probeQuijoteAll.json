@@ -1,0 +1,114 @@
+{
+  "complete": true,
+  "args": {
+    "architectures": [
+      "npeMaf"
+    ],
+    "tasks": [
+      "quijoteAll"
+    ],
+    "seeds": [
+      0
+    ],
+    "n_eval": 200,
+    "n_draws": 1000,
+    "device": "cpu",
+    "smoke": false,
+    "out": "probeQuijoteAll.json"
+  },
+  "trainArgs": {
+    "training_batch_size": 32,
+    "learning_rate": 0.001,
+    "max_num_epochs": 300,
+    "stop_after_epochs": 20,
+    "validation_fraction": 0.2
+  },
+  "versions": {
+    "torch": "2.13.0",
+    "ili": "0.1.5",
+    "numpy": "2.4.6",
+    "python": "3.11.16"
+  },
+  "cells": [
+    {
+      "architecture": "npeMaf",
+      "task": "quijoteAll",
+      "seed": 0,
+      "trainSeconds": 96.9,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 2.9,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        9.258966679953359
+      ],
+      "r2": [
+        0.08888089656829834,
+        0.8368144035339355,
+        0.03361397981643677,
+        0.1232571005821228,
+        0.7519076466560364
+      ],
+      "coverage68": [
+        0.525,
+        0.645,
+        0.595,
+        0.625,
+        0.635
+      ],
+      "coverage95": [
+        0.885,
+        0.925,
+        0.905,
+        0.93,
+        0.925
+      ],
+      "logProbTruth": 8.9833553767929,
+      "logProbFailures": 0,
+      "tarpAt68": 0.59,
+      "tarpAt95": 0.9249999999999997
+    }
+  ],
+  "aggregate": [
+    {
+      "architecture": "npeMaf",
+      "task": "quijoteAll",
+      "nSeeds": 1,
+      "r2": [
+        0.0889,
+        0.8368,
+        0.0336,
+        0.1233,
+        0.7519
+      ],
+      "r2Std": null,
+      "coverage68": [
+        0.525,
+        0.645,
+        0.595,
+        0.625,
+        0.635
+      ],
+      "coverage68Std": null,
+      "coverage95": [
+        0.885,
+        0.925,
+        0.905,
+        0.93,
+        0.925
+      ],
+      "coverage95Std": null,
+      "logProbTruth": 8.9834,
+      "logProbTruthStd": null,
+      "trainSeconds": 96.9,
+      "trainSecondsStd": null,
+      "tarpAt68": 0.59,
+      "tarpAt68Std": null,
+      "tarpAt95": 0.925,
+      "tarpAt95Std": null,
+      "nParameters": 0
+    }
+  ]
+}

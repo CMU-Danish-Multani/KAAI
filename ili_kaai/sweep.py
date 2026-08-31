@@ -22,7 +22,7 @@ import platform
 import time
 import warnings
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 import torch
@@ -82,11 +82,16 @@ def pretrain_embedding(emb: nn.Module, x: np.ndarray, theta: np.ndarray,
     return time.time() - t0
 
 
-def build(arch: Architecture, task: Task, device: str, out_dir: Path):
+def build(arch: Architecture, task: Task, device: str, out_dir: Path,
+          pretrain: bool = True):
     """Both backends go through the same runner, so entries stay comparable.
 
     lampe takes its device at net construction time; sbi takes it at runner
     construction. That asymmetry is the only thing this function has to know.
+
+    pretrain=False skips the embedding pretraining. Only paramCount uses it: counting
+    weights does not need a trained embedding, and pretraining costs 95 s per entry.
+    Never pass it False from the sweep, or the pretrained entry stops being pretrained.
     """
     lo, hi = prior_bounds(task)
     prior = ili.utils.Uniform(low=lo, high=hi, device=device)
@@ -106,7 +111,7 @@ def build(arch: Architecture, task: Task, device: str, out_dir: Path):
         n_points, n_features = x_train.shape[1], x_train.shape[2]
         net = EMBEDDINGS[arch.embedding](n_points=n_points, n_features=n_features,
                                          **arch.embedding_args).to(device)
-        if arch.pretrainEpochs:
+        if arch.pretrainEpochs and pretrain:
             pretrain_seconds = pretrain_embedding(
                 net, x_train, theta_train, arch.pretrainEpochs, device)
         embed = {"embedding_net": net}
@@ -196,11 +201,21 @@ def score(samples: np.ndarray, truth: np.ndarray) -> Dict:
 
 
 def run_cell(arch: Architecture, task: Task, seed: int, n_eval: int, n_draws: int,
-             device: str) -> Dict:
+             device: str, n_train: Optional[int] = None) -> Dict:
     seed_all(seed)
     data = load(task)
     xtr = np.concatenate([data["train"][0], data["val"][0]])
     ttr = np.concatenate([data["train"][1], data["val"][1]])
+
+    # Subsample the training set to a fixed size, to separate "more simulations" from
+    # "a different simulation suite". Measured 2026-08-30: npeMaf reads overconfident
+    # at coverage 0.569 on 800 CAMELS simulations and calibrated at 0.665 on 26,202
+    # Quijote ones, but those differ in suite as well as in size, so neither number
+    # alone says which caused it. Drawn with the cell's own seed so the subset varies
+    # across seeds exactly as the rest of the run does.
+    if n_train is not None and n_train < len(xtr):
+        pick = np.random.default_rng(seed).choice(len(xtr), n_train, replace=False)
+        xtr, ttr = xtr[pick], ttr[pick]
 
     runner, _, pretrain_seconds = build(
         arch, task, device, RESULTS / "runs" / f"{arch.key}_{task.key}")
@@ -221,6 +236,7 @@ def run_cell(arch: Architecture, task: Task, seed: int, n_eval: int, n_draws: in
                 for n in getattr(posterior, "posteriors", [posterior])
                 if hasattr(n, "parameters"))
     return {"architecture": arch.key, "task": task.key, "seed": seed,
+            "nTrainUsed": int(len(xtr)),
             "trainSeconds": round(train_seconds, 1),
             "pretrainSeconds": round(pretrain_seconds, 1),
             "evalSeconds": round(eval_seconds, 1),
@@ -266,6 +282,9 @@ def main() -> None:
     p.add_argument("--n-eval", type=int, default=100,
                    help="test points used for coverage; 0 means all")
     p.add_argument("--n-draws", type=int, default=1000)
+    p.add_argument("--n-train", type=int, default=None,
+                   help="subsample the training set to this many simulations, to "
+                        "separate training set size from simulation suite")
     p.add_argument("--device", type=str, default="cpu", choices=["cpu", "mps", "cuda"])
     p.add_argument("--smoke", action="store_true",
                    help="one cheap cell, to check wiring before committing compute")
@@ -308,7 +327,8 @@ def main() -> None:
                 head = f"[{i}/{total}] {arch_key:16s} {task_key:15s} seed {seed}"
                 try:
                     cell = run_cell(ZOO[arch_key], TASKS[task_key], seed,
-                                    args.n_eval, args.n_draws, args.device)
+                                    args.n_eval, args.n_draws, args.device,
+                                    n_train=args.n_train)
                     payload["cells"].append(cell)
                     print(f"  {head}  R2 {cell['r2']}  cov68 "
                           f"{[round(v, 2) for v in cell['coverage68']]}  "

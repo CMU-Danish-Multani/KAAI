@@ -1,0 +1,182 @@
+{
+  "bar": "4 of 5",
+  "arm": "structured",
+  "engineCorrect": 5,
+  "keyCorrect": 2,
+  "nProblems": 5,
+  "gradedAutomatically": [
+    "engine",
+    "entry key",
+    "correct decline"
+  ],
+  "gradedByHand": [
+    "required warnings"
+  ],
+  "heldOutSource": "Applications cited in Deistler et al., arXiv 2508.12939, reference list",
+  "results": [
+    {
+      "id": "galacticCentreGammaRay",
+      "modality": "skyMap",
+      "outOfScope": true,
+      "expectedEngines": [
+        "NPE"
+      ],
+      "expectedKeys": [],
+      "excludedByBudget": [],
+      "requiredWarnings": [
+        "a binned sky map is not a modality this zoo has measured and needs a convolutional or graph embedding on the sphere",
+        "the scientific claim is about uncertainty, so an overconfident posterior would answer the question wrongly"
+      ],
+      "recommended": null,
+      "recommendedEngine": null,
+      "engineCorrect": true,
+      "keyCorrect": true,
+      "actualWarnings": [
+        "This zoo has never measured the modality 'skyMap'. Every entry was measured on a compressed summary vector or a point cloud, so there is no ranking to give. A time series or an image needs an embedding network, and the choice of embedding is the architectural decision, which this catalogue cannot inform.",
+        "LITERATURE, not measured here. dim(theta) 8 is above the largest this zoo measured, which is 5. Miller et al. (2021) and LtU-ILI Section 2.3 both record that ratio estimators degrade at high parameter dimensionality without truncation, so NRE entries are penalised in the ranking below rather than trusted at face value."
+      ],
+      "verdict": "declined, correct"
+    },
+    {
+      "id": "exoplanetAtmosphere",
+      "modality": "summary_vector",
+      "outOfScope": false,
+      "expectedEngines": [
+        "NPE"
+      ],
+      "expectedKeys": [
+        "npeNsf",
+        "npeMaf",
+        "npeMafEnsemble4",
+        "npeMafEnsemble8",
+        "npeMdnEnsemble4",
+        "npeMixedEnsemble3"
+      ],
+      "excludedByBudget": [],
+      "requiredWarnings": [
+        "dim(theta) 12 is well outside what this zoo measured, so the ranking is extrapolation",
+        "the posterior widths are the published result, so an overconfident entry would overstate the detection"
+      ],
+      "recommended": "lampeNcsf",
+      "recommendedEngine": "NPE",
+      "runnerUp": [
+        "nreMlp",
+        "lampeNsf"
+      ],
+      "engineCorrect": true,
+      "keyCorrect": false,
+      "actualWarnings": [
+        "The task level verdict 'calibrated' is an average over parameters that disagree: Omega_b 0.648 overconfident, Omega_m 0.683 calibrated, h 0.657 overconfident, n_s 0.662 calibrated, sigma_8 0.695 calibrated. Read the parameter you are actually inferring.",
+        "Measured at dim(theta) 5, you asked for 12. This is extrapolation, and the further apart they are the less it transfers.",
+        "LITERATURE, not measured here. dim(theta) 12 is above the largest this zoo measured, which is 5. Miller et al. (2021) and LtU-ILI Section 2.3 both record that ratio estimators degrade at high parameter dimensionality without truncation, so NRE entries are penalised in the ranking below rather than trusted at face value."
+      ],
+      "advisedEngine": null,
+      "verdict": "answered"
+    },
+    {
+      "id": "populationGenetics",
+      "modality": "summary_vector",
+      "outOfScope": false,
+      "expectedEngines": [
+        "NLE"
+      ],
+      "expectedKeys": [
+        "nleMaf",
+        "nleMdn"
+      ],
+      "excludedByBudget": [
+        "nleMaf",
+        "nleMade",
+        "nleMdn"
+      ],
+      "requiredWarnings": [
+        "exchangeable data needs either a likelihood estimator or a permutation invariant embedding",
+        "this zoo has never measured an exchangeable or i.i.d. setting"
+      ],
+      "recommended": "nreMlp",
+      "recommendedEngine": "NRE",
+      "runnerUp": [
+        "npeNsf",
+        "npeMixedEnsemble3"
+      ],
+      "engineCorrect": true,
+      "keyCorrect": false,
+      "actualWarnings": [
+        "Measured at dim(theta) 2, you asked for 3. This is extrapolation, and the further apart they are the less it transfers.",
+        "LITERATURE, not measured here. Deistler et al. (arXiv 2508.12939) Table 1 lists handling of i.i.d. observations as a primary axis, and NLE is the engine that takes it natively: it learns a per trial likelihood and multiplies across exchangeable trials. NPE for i.i.d. data needs as many simulations per parameter set as the largest trial count, plus a permutation invariant architecture. This zoo has never measured an i.i.d. trial setting, so the ranking below cannot speak to it.",
+        "The cost is that NLE runs a fresh MCMC chain per subject. At 6 subjects that multiplies the measured per observation inference cost by the same factor."
+      ],
+      "advisedEngine": "NLE",
+      "verdict": "answered"
+    },
+    {
+      "id": "wholeBrainEpilepsy",
+      "modality": "summary_vector",
+      "outOfScope": false,
+      "expectedEngines": [
+        "NPE"
+      ],
+      "expectedKeys": [
+        "npeNsf",
+        "npeMaf",
+        "npeMdn",
+        "npeMafEnsemble4",
+        "npeMafEnsemble8",
+        "npeMdnEnsemble4",
+        "npeMixedEnsemble3"
+      ],
+      "excludedByBudget": [
+        "nleMaf",
+        "nleMade",
+        "nleMdn",
+        "lampeUnaf",
+        "nreResnet",
+        "nreMlp",
+        "lampeNaf",
+        "lampeSospf"
+      ],
+      "requiredWarnings": [
+        "amortization is the reason to use a neural method here, since a per patient MCMC fit defeats the clinical purpose",
+        "dim(theta) 12 is outside the measured range"
+      ],
+      "recommended": "lampeNcsf",
+      "recommendedEngine": "NPE",
+      "runnerUp": [
+        "lampeNsf",
+        "npeNsf"
+      ],
+      "engineCorrect": true,
+      "keyCorrect": false,
+      "actualWarnings": [
+        "The task level verdict 'calibrated' is an average over parameters that disagree: Omega_b 0.648 overconfident, Omega_m 0.683 calibrated, h 0.657 overconfident, n_s 0.662 calibrated, sigma_8 0.695 calibrated. Read the parameter you are actually inferring.",
+        "Measured at dim(theta) 5, you asked for 12. This is extrapolation, and the further apart they are the less it transfers.",
+        "LITERATURE, not measured here. dim(theta) 12 is above the largest this zoo measured, which is 5. Miller et al. (2021) and LtU-ILI Section 2.3 both record that ratio estimators degrade at high parameter dimensionality without truncation, so NRE entries are penalised in the ranking below rather than trusted at face value.",
+        "MEASURED here. Amortization decides at this observation count. NPE answers a new observation in a forward pass; NLE and NRE run a fresh MCMC chain each, measured at 493 to 3294 seconds per observation."
+      ],
+      "advisedEngine": null,
+      "verdict": "answered"
+    },
+    {
+      "id": "galaxyClusteringField",
+      "modality": "field",
+      "outOfScope": true,
+      "expectedEngines": [
+        "NPE"
+      ],
+      "expectedKeys": [],
+      "excludedByBudget": [],
+      "requiredWarnings": [
+        "a voxel field is not a modality this zoo has measured and needs a 3D convolutional embedding",
+        "the closest thing measured here is a point cloud of galaxy positions, which is a different representation of the same information"
+      ],
+      "recommended": null,
+      "recommendedEngine": null,
+      "engineCorrect": true,
+      "keyCorrect": true,
+      "actualWarnings": [
+        "This zoo has never measured the modality 'field'. Every entry was measured on a compressed summary vector or a point cloud, so there is no ranking to give. A time series or an image needs an embedding network, and the choice of embedding is the architectural decision, which this catalogue cannot inform."
+      ],
+      "verdict": "declined, correct"
+    }
+  ]
+}

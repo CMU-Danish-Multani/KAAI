@@ -1,10 +1,10 @@
-# Merger trees — what's in the data
+# Merger trees: what's in the data
 
 Family histories of dark matter blobs. Everything here comes from running
 `explore.py`, not from the paper.
 
 Shared background (what the two dials mean, the vocabulary) lives in
-[../notes/cheatsheet.md](../notes/cheatsheet.md).
+[glossary.md](glossary.md).
 
 ---
 
@@ -20,7 +20,7 @@ Load a `.pt` file → a plain **Python list**. Each item is one tree, stored as
 Data(x=[125, 4], edge_index=[2, 124], edge_attr=[124, 1], y=[1, 2])
 ```
 
-**`x` — the blobs.** One row each, four columns:
+**`x`, the blobs.** One row each, four columns:
 
 ```
  blob      mass  concentr    v_max   time a
@@ -29,17 +29,16 @@ Data(x=[125, 4], edge_index=[2, 124], edge_attr=[124, 1], y=[1, 2])
     2    12.992     0.409    2.496    0.977
 ```
 
-**`edge_index` — the arrows.** Two rows, read *column by column*:
+**`edge_index`, the arrows.** Two rows, read *column by column*:
 
 ```
-row 0  (from — older blob):   1  2  3  4 ...
-row 1  (to   — newer blob):   0  1  2  3 ...
+row 0  (from, older blob):   1  2  3  4 ...
+row 1  (to, newer blob):   0  1  2  3 ...
 ```
 
 Column 0 means "blob 1 merged into blob 0."
 
-**The tree's shape is never stored as a shape.** No nesting, no parent pointers —
-it's implied entirely by the arrows. A merger is where two arrows land on the
+**The tree's shape is never stored as a shape.** No nesting, no parent pointers, it's implied entirely by the arrows. A merger is where two arrows land on the
 same blob:
 
 ```
@@ -50,7 +49,7 @@ same blob:
 
 Only ~4% of blobs are real mergers; the rest is one blob quietly growing.
 
-**`y` — the answer.** One `(Ω_m, σ_8)` pair for the **whole tree**. 125 blobs in,
+**`y`, the answer.** One `(Ω_m, σ_8)` pair for the **whole tree**. 125 blobs in,
 2 numbers out.
 
 **Why flat arrays?** GPUs work on big arrays. Linked objects would be walked one
@@ -60,13 +59,13 @@ node at a time.
 
 | Feature | Meaning | Range | Watch out |
 |---|---|---|---|
-| **mass** | Matter content, as a power of 10 | 9.28 – 14.84 | **Already logged — don't log twice** |
-| **concentration** | How centrally squished | 0.0001 – 4.19 | Records formation time |
-| **v_max** | Fastest orbital speed inside | 1.45 – 3.24 | Also logged (28–1738 km/s) |
-| **scale factor a** | When this blob existed | 0.0625 – 1.0 | Only 172 distinct values |
+| **mass** | Matter content, as a power of 10 | 9.28 to 14.84 | **Already logged, don't log twice** |
+| **concentration** | How centrally squished | 0.0001 to 4.19 | Records formation time |
+| **v_max** | Fastest orbital speed inside | 1.45 to 3.24 | Also logged (28 to 1738 km/s) |
+| **scale factor a** | When this blob existed | 0.0625 to 1.0 | Only 172 distinct values |
 
-Scales differ ~30×, and `edge_attr` (2–70) is ~100× the others. **Normalise
-before training** — inside a network, a bigger number simply shouts louder.
+Scales differ ~30×, and `edge_attr` (2 to 70) is ~100× the others. **Normalise
+before training**. Inside a network, a bigger number simply shouts louder.
 
 ### Bookkeeping fields
 
@@ -76,7 +75,7 @@ before training** — inside a network, a bigger number simply shouts louder.
 | `node_halo_id` | Each blob's global ID |
 | `mask_main` | IDs of the main trunk (verified: 93% match `node_halo_id`) |
 
-## 5. Splits — verified clean
+## 5. Splits: verified clean
 
 | Split | Trees | Simulations | Blobs |
 |---|---|---|---|
@@ -86,12 +85,12 @@ before training** — inside a network, a bigger number simply shouts louder.
 
 25 trees come from each simulation and **all 25 share one answer**. If a
 simulation straddled train and test, a model could recognise it and copy the
-answer — a brilliant score meaning nothing. **Checked all three pairs: no
+answer, a brilliant score meaning nothing. **Checked all three pairs: no
 overlap.** So the published 0.996 is real, not leakage.
 
 ## 6. What the trees told us
 
-![features](plots/01_features.png)
+![features](../merger_trees/plots/01_features.png)
 
 ### Which summaries carry each dial
 
@@ -107,15 +106,15 @@ Correlation runs −1 to +1. **0 means useless.**
 | mean mass | −0.23 | **−0.00** |
 | number of mergers | +0.12 | +0.12 |
 
-![omega](plots/03_correlations.png)
-![sigma](plots/05_sigma8.png)
+![omega](../merger_trees/plots/03_correlations.png)
+![sigma](../merger_trees/plots/05_sigma8.png)
 
 **The two dials are read from completely different things:**
 
 - **Ω\_m ← concentration** (how squished the blobs are)
 - **σ\_8 ← time** (how much of the tree sits early)
 
-**Mass is nearly useless** — −0.23 for Ω\_m, exactly **0.00** for σ\_8. The most
+**Mass is nearly useless**, −0.23 for Ω\_m, exactly **0.00** for σ\_8. The most
 counter-intuitive result here. It independently reproduces the paper's own
 ablation (concentration alone → 0.84, mass alone → 0.16).
 
@@ -132,27 +131,27 @@ together reach **0.996**. A model's job is *combining* features.
   10.527    435,979
 ```
 
-That's exactly `log10(3e10)` — the pruning threshold. Blobs below it were
+That's exactly `log10(3e10)`, the pruning threshold. Blobs below it were
 deleted to shrink files. **Not physics, an editing decision.**
 
 **(b) The history is amputated.** Because small blobs were deleted, anything
 rebuilt from the early history is unreliable. `a_50` (when a blob had half its
 final mass) is a standard astronomy statistic and scores **+0.05**. Useless.
 
-![formation time](plots/04_formation_time.png)
+![formation time](../merger_trees/plots/04_formation_time.png)
 
 Like being handed a photo album with every baby photo removed, then asked when
 the person learned to walk. Concentration survives because it's measured
 directly per blob, not rebuilt from structure.
 
 **This predicts architectures leaning on node features beat ones leaning on
-topology** — and indeed DeepSets, which discards *all* edges, gets 0.993 versus
+topology**, and indeed DeepSets, which discards *all* edges, gets 0.993 versus
 the GNN's 0.996.
 
-**(c) Sizes vary 300×.** 121 to 37,865 blobs (train; val is 125–19,330), median
+**(c) Sizes vary 300×.** 121 to 37,865 blobs (train; val is 125 to 19,330), median
 ~769. Awkward to batch.
 
-![tree sizes](plots/06_tree_sizes.png)
+![tree sizes](../merger_trees/plots/06_tree_sizes.png)
 
 ---
 
@@ -162,10 +161,10 @@ the GNN's 0.996.
 
 | Task | Best published R² |
 |---|---|
-| Ω\_m from trees | **0.996** — solved |
+| Ω\_m from trees | **0.996**, solved |
 | σ\_8 from trees | **0.82** ← the real target |
 
-σ\_8's signal lives in the tree's *time* structure — precisely the part the
+σ\_8's signal lives in the tree's *time* structure, precisely the part the
 pruning damaged. The most valuable signal sits in the most degraded data.
 
 ## Code here

@@ -5,8 +5,8 @@ before the project was re-grounded on LtU-ILI (Ho et al. 2024, arXiv 2402.05137)
 framework named in the assigned task. They are kept because measurements we still quote
 were produced by them, and a quoted number whose producing code is gone is not evidence.
 
-Every number these produced lives in `point_clouds/results/*.json` and `zoo/*.json`,
-which stay on the live path.
+Every number these produced lives in `point_clouds/results/*.json` and `archive/zooV1Results/*.json`,
+which are kept as the evidence for those numbers.
 
 ## blocks/
 Aggregation blocks. Each contributed one screened entry to the pre-LtU-ILI catalogue.
@@ -53,8 +53,12 @@ than deleted because they record what was believed at the time.
   written when the goal was neural architecture search over CosmoBench point clouds.
   That is not the goal. The current sweep is `notes/zooCandidates.md`, and the technical
   paper index that survives is `notes/related_papers.md`.
-- `cheatsheet.md` a glossary of five terms, subsumed by the twenty-eight term glossary
-  in `notes/projectGuide.md` Section 9.
+- `cheatsheet.md` MOVED OUT 2026-08-30 to `notes/glossary.md`. This entry used to call
+  it "a glossary of five terms, subsumed by notes/projectGuide.md Section 9". That was
+  wrong on both counts: it holds 94 rows, and it covers physics vocabulary (Omega_m,
+  halo, Mpc/h, NFW, the correlation function) where Section 9 covers inference
+  vocabulary (NPE, TARP, PIT, amortized). They barely overlap, three current notes link
+  to it, and it was never superseded.
 
 ## pointClouds/ (added 2026-08-28)
 

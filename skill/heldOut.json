@@ -1,0 +1,137 @@
+{
+  "provenance": {
+    "source": "Deistler et al., Simulation-Based Inference: A Practical Guide, arXiv 2508.12939",
+    "how": "Each problem is a paraphrase of a published application described in that guide or in the work it cites. The parameter counts, observation counts, data types and the engine the original authors chose are taken from the source, not invented here. The wording is ours because a test case has to read like something a user would type, but no problem was designed around an answer this zoo happens to give.",
+    "why": "The brief's success bar is 4 of 5 held out descriptions answered correctly. Writing our own test cases would make that bar meaningless, since we would be grading the recommender on problems shaped to fit it.",
+    "grading": "An answer is correct when the recommended engine matches acceptableEngines AND every string in requiredWarnings is addressed. Entry level keys in acceptableKeys are a stronger match and are recorded separately, because more than one entry in a family can be a defensible answer.",
+    "limits": "Five problems is a small sample. A single disagreement moves the score by 20 points, so 4 of 5 and 3 of 5 are not far apart in evidence. These also test the decision axes this zoo measured, so they are not a neutral sample of all SBI problems."
+  },
+  "problems": [
+    {
+      "id": "gravitationalWaveMasses",
+      "source": "Deistler et al. Section 4.1, after Dax et al. 2025 (Nature 639:49) and Dax et al. 2021",
+      "description": "We simulate gravitational wave signals from binary black hole mergers as recorded by the two LIGO detectors, and we want the masses of the two black holes. Each observation is a pair of time series of 8192 samples. We have about 75 thousand simulations. New events arrive from the detector network and we need a posterior for each one quickly enough to be useful for follow up observation, so we will be running this on many events, not one.",
+      "query": {
+        "modality": "timeSeries",
+        "nParams": 2,
+        "nObservations": 1000,
+        "computeSeconds": 7200,
+        "downstream": false
+      },
+      "acceptableEngines": [
+        "NPE"
+      ],
+      "acceptableKeys": [
+        "npeNsf",
+        "npeMaf",
+        "npeMdn"
+      ],
+      "requiredWarnings": [
+        "modality not covered by this zoo, a time series needs an embedding network and every entry here was measured on a compressed summary vector or a point cloud",
+        "amortization is the deciding property because inference runs on many events"
+      ],
+      "note": "The original authors used NPE with a neural spline flow and a 1D convolutional embedding, and reported the posterior as well calibrated. Out of scope on modality, in scope on the engine decision."
+    },
+    {
+      "id": "driftDiffusionTrials",
+      "source": "Deistler et al. Section 4.2, after Boelts et al. 2022 (eLife 11:e77220)",
+      "description": "We fit a drift diffusion model with collapsing decision boundaries to choices and reaction times from a perceptual decision task. The likelihood is intractable for this variant. Each participant gives us a couple of hundred independent trials and we treat the trials as exchangeable, so the per trial likelihood is what we actually need. We have a few dozen participants and we fit each one separately. Simulation is cheap per trial.",
+      "query": {
+        "modality": "summary_vector",
+        "nParams": 4,
+        "nObservations": 40,
+        "computeSeconds": 7200,
+        "downstream": false,
+        "iidTrials": true
+      },
+      "acceptableEngines": [
+        "NLE"
+      ],
+      "acceptableKeys": [
+        "nleMaf",
+        "nleMdn"
+      ],
+      "requiredWarnings": [
+        "a likelihood estimator needs its own MCMC run per participant, so the inference cost multiplies by the number of participants",
+        "NPE would need as many simulations per parameter set as the maximum trial count and a permutation invariant architecture"
+      ],
+      "note": "The original authors chose NLE precisely because it handles i.i.d. trials efficiently, and were explicit that the trade is slow MCMC at inference time. This problem exists to check the recommender does not reflexively answer NPE."
+    },
+    {
+      "id": "pyloricNetwork",
+      "source": "Deistler et al. Section 4.3, after Deistler et al. 2022 (PNAS 119:e2207632119) and Prinz et al. 2004",
+      "description": "We have a biophysical simulator of a small neural circuit with 31 parameters, three neurons of eight parameters each plus seven synapses. We compare it to one experimental voltage recording through 18 expert defined summary statistics. We can afford millions of simulations. There is one observation that matters and the posterior will be used to make claims about which parameter combinations the circuit can tolerate, so the width of the posterior is the scientific result.",
+      "query": {
+        "modality": "summary_vector",
+        "nParams": 31,
+        "nObservations": 1,
+        "computeSeconds": 7200,
+        "downstream": true
+      },
+      "acceptableEngines": [
+        "NPE"
+      ],
+      "acceptableKeys": [
+        "npeMafEnsemble4",
+        "npeMafEnsemble8",
+        "npeMdnEnsemble4",
+        "npeMixedEnsemble3"
+      ],
+      "requiredWarnings": [
+        "dim(theta) 31 is far outside the 1 to 6 this zoo measured, so this is extrapolation",
+        "single density estimators measured overconfident here and the posterior width is the scientific claim"
+      ],
+      "note": "The original authors used an ensemble of five NPE models and reported that the ensemble had good expected coverage while individual NPE models were overconfident. Our own sweep measured ensembling closing under a fifth of the calibration gap, so this problem can produce a real disagreement with the published result. That disagreement is the useful outcome, not a failure."
+    },
+    {
+      "id": "spectralEnergyDistributions",
+      "source": "Hahn and Melchior 2022 (ApJ 938:11), cited in Deistler et al.",
+      "description": "We fit spectral energy distribution models to galaxy photometry to get stellar mass, star formation history and dust parameters. The point of moving to a neural approach is throughput: we have hundreds of thousands of galaxies in the survey and the traditional nested sampling fit takes hours per galaxy. The input per galaxy is a short vector of broadband fluxes. We need the posteriors to feed a population level analysis afterwards.",
+      "query": {
+        "modality": "summary_vector",
+        "nParams": 5,
+        "nObservations": 100000,
+        "computeSeconds": 7200,
+        "downstream": true
+      },
+      "acceptableEngines": [
+        "NPE"
+      ],
+      "acceptableKeys": [
+        "npeNsf",
+        "npeMaf",
+        "npeMdn",
+        "npeMafEnsemble4"
+      ],
+      "requiredWarnings": [
+        "every likelihood and ratio estimator is removed by the compute budget at this observation count",
+        "the posteriors feed a population level analysis, which inherits the error bars, and almost every entry here is overconfident"
+      ],
+      "note": "Amortization is the entire reason the original work exists. This is the clearest case where the measured inference cost decides the answer on its own."
+    },
+    {
+      "id": "galaxyCatalogueClustering",
+      "source": "Problem setup after Lemos et al. 2024 (PRD 109:083536) and the CAMELS catalogue tasks this zoo measures directly",
+      "description": "We want Omega_m and sigma_8 from the three dimensional positions of galaxies in a simulation box, using the catalogue itself rather than a compressed statistic like the correlation function. Each simulation gives us a few thousand galaxies with positions and we have a few hundred simulations. We would like to avoid hand designing a summary statistic and let the network read the catalogue. We are inferring on a handful of boxes, not thousands.",
+      "query": {
+        "modality": "point_cloud",
+        "nParams": 2,
+        "nObservations": 10,
+        "computeSeconds": 7200,
+        "downstream": false
+      },
+      "acceptableEngines": [
+        "NPE"
+      ],
+      "acceptableKeys": [
+        "npeMafPairwiseGnnPretrained"
+      ],
+      "requiredWarnings": [
+        "set encoders over absolute positions cannot represent clustering because pooling per point features is a first moment statistic and clustering is a second moment property",
+        "the embedding must be pretrained or joint training collapses unpredictably",
+        "a hand designed correlation function still outperforms the learned embedding on this data"
+      ],
+      "note": "This is the problem the zoo is best placed to answer, because it measured the failure directly rather than inheriting it. The correct answer is not merely an entry key, it is the reason the obvious choice fails."
+    }
+  ]
+}

@@ -1237,3 +1237,846 @@ retractions go in as new entries.
   same direction as every summary vector entry.
 - NEXT step 3, rebuild the whole zoo across all models, including the 13 unrun
   posterior entries and the 2 MCMC entries.
+
+## 2026-08-30 Chat lost and rebuilt from disk. No work lost.
+
+- USER DIRECTIVE the session was lost; recover it.
+- METHOD located the transcript at `~/.claude/projects/-Users-danishmultani-KAAI/`
+  be7d78b6-be0c-4667-9b26-59df79edae77.jsonl, 16 MB, 4810 records, 217 user messages,
+  running 2026-08-17 to 2026-08-30. Extracted 708 conversation blocks to a scratchpad
+  file and read the whole arc.
+- MEASURED the session ended at 02:48 on an unanswered question: whether to run the
+  two MCMC entries in full, at reduced evaluation points, or skip them.
+- USER DIRECTIVE do not resume the old session, continue here. Then option (a), the
+  full 8.3 hour MCMC run. Then "do whatever is right", "complete everything in night".
+
+## 2026-08-30 STEP 3 launched. Predictions registered, then the estimate was wrong.
+
+- METHOD split step 3 into run A, the 13 unmeasured posterior entries, 117 cells, and
+  run B, the 2 MCMC entries, 18 cells. Sequential, never concurrent, because
+  trainSeconds is wall clock and the zoo compares entries on it.
+- VERIFIED the 8.3 hour figure for run B independently. The original came from a mean
+  over all MCMC cells; recomputing per task gives 6.8 h for nleMade and 1.4 h for
+  nreLinear. Same answer by a better method.
+- PREDICTION 1 all 13 land in +0.75 to +0.88 on Omega_m for camelsJoint.
+- PREDICTION 2 lampeMaf matches npeMaf within 0.02, the backend comparison.
+- PREDICTION 3 ensembles order 2 <= 4 <= 8 with total gain under 0.02.
+- PREDICTION 4 every entry stays overconfident, coverage68 below 0.680.
+- PREDICTION 5 117 cells finishes inside 25 minutes.
+- CORRECTION prediction 5 refuted badly. Measured about 2.5 hours. Cause is one entry:
+  lampeUnaf costs 783 s per cell against lampeMaf at 1.3 s, a 600 fold spread inside
+  the same family and backend.
+- BUG CAUGHT + FIXED my progress grep anchored on start of line, but sweep.py prints
+  the cell result appended to the training chatter, so it matched nothing and read
+  0 cells for 52 minutes while 48 had completed. conda run also buffers stdout until
+  exit. The incremental JSON is the reliable progress source, not the log.
+
+## 2026-08-30 camelsJoint complete. Cheap ensembles beat MCMC by a thousandfold.
+
+- MEASURED 39 cells, all 13 new entries at 3 seeds, Omega_m R2 with train+eval cost:
+  npeMdnEnsemble4 +0.873 at 3.3 s, npeMafEnsemble8 +0.872 at 23.2 s,
+  npeMixedEnsemble3 +0.869 at 10.7 s, lampeNcsf +0.854, lampeNsf +0.848,
+  npeMafEnsemble2 +0.846, lampeSospf +0.843, lampeUnaf +0.837 at 783 s,
+  lampeMaf +0.827, lampeCnf +0.815, lampeGf +0.806, lampeNaf +0.800,
+  npeMade +0.312.
+- VERIFIED prediction 1 held for 12 of 13. npeMade at +0.312 is far outside the band.
+- CORRECTION prediction 2 refuted, narrowly. lampeMaf +0.827 against npeMaf +0.864 is
+  a gap of 0.037 where I predicted under 0.02. Same flow type, same width, same
+  transform count, different backend. That is Matt's unquantified Section 3.4 claim
+  and the measurement says the backends are not interchangeable. lampeMaf is also
+  twice as fast.
+- CORRECTION prediction 3 partially held. Order was monotone as predicted but total
+  gain 2 to 8 was 0.026, above my 0.02. Unpredicted: npeMafEnsemble2 at +0.846 is
+  WORSE than a single npeMaf at +0.864, and 4 to 8 buys 0.002 for double the compute.
+- VERIFIED prediction 4 held, 21 of 21 entries overconfident.
+- INTERPRETED the zoo's headline result so far. npeMdnEnsemble4 tops the table at
+  3.3 s per cell while nleMaf sits 0.037 lower at 3294 s, a thousandfold more compute.
+- FLAG the zoo advertises "matched compute". That is true of the budget, batch 32,
+  lr 1e-3, 300 epochs, patience 20, and false of the cost, which spans 0.9 s to
+  3294 s per cell. The skill must rank on measured seconds, not on the claim.
+
+## 2026-08-30 npeMade's config is a no-op in one of its two arguments.
+
+- METHOD read sbi's build_made rather than run an experiment, so it cost no compute
+  against the running sweep.
+- VERIFIED sbi/neural_nets/flow.py build_made takes num_mixture_components, not
+  num_transforms, and its own docstring says extra kwargs "are not relevant for mades
+  and are therefore ignored". npeMade's model_args are hidden_features 50 and
+  num_transforms 5, so half the config is silently discarded and the mixture
+  component count is the library default of 10, never chosen by us.
+- MEASURED the transform is IdentityTransform, so npeMade is not a flow at all.
+- HONEST CAVEAT this does NOT yet explain +0.312. npeMdn is also a mixture model and
+  scores +0.865, so "less expressive" is not the answer. The entry's pre-registered
+  failure mode pointed the right direction for the wrong reason.
+- OPEN set num_mixture_components explicitly and re-measure. Costs 2.2 s per cell.
+
+## 2026-08-30 The zoo already admitted nothing, and had done for two days.
+
+- MEASURED every entry in the shipped zoo.json carries admitted=false, including the
+  eight I have been calling measured. Eight entries exist with measurements; zero are
+  admitted by the zoo's own rule.
+- INTERPRETED admit() compares len(measurements) to len(TASKS). TASKS grew from 3 to 8
+  when Quijote and the point cloud tasks were added and nothing rebuilt the zoo, so
+  the flag flipped everywhere and the file kept looking finished.
+- CORRECTION I told the user repeatedly that the zoo has 8 measured entries. Accurate
+  for entries present, wrong for entries admitted.
+- MEASURED three further defects in the rebuild path. zoo.py reads only sweep.json so
+  it cannot see the new sweeps. backend is hardcoded to "sbi", which would mislabel
+  all 8 lampe entries. explain() writes that CAMELS-SAM's larger box samples sigma_8
+  better, which our own cloud sweep refuted, so the rebuild would have shipped a
+  falsified explanation on every cloud row.
+- DECISION admission moves from the entry to the (entry, task) pair, amended openly in
+  the module docstring with its reason. No entry can span both modalities, so the old
+  rule is unsatisfiable rather than strict.
+
+## 2026-08-30 RETRACTION. The averaging defect is real but one level down.
+
+- RETRACTION I claimed the entry level verdict hid overconfidence by averaging across
+  TASKS, and cited nreMlp. Measured under the zoo's actual metric, coverage averaged
+  over parameters then over seeds, NO entry has disagreeing per task verdicts. My test
+  had read only the first parameter's coverage, which is not what the catalogue
+  computes. The claim was wrong and it had already been written into the docstring.
+- MEASURED the hiding is across PARAMETERS. On 3 of 30 multi-parameter rows the
+  parameter mean disagrees with a per parameter verdict.
+  nreMlp camelsSamJoint mean 0.6624 calibrated, Omega_m 0.6395 overconfident.
+  npeNsf camelsSamJoint mean 0.6531 overconfident, Omega_m 0.6599 calibrated.
+  npeMafEnsemble4 camelsSamJoint mean 0.6394 overconfident, Omega_m 0.6616 calibrated.
+- INTERPRETED nreMlp is the only entry in the whole zoo reading calibrated, so the one
+  entry a user would pick on calibration grounds is the one whose headline verdict
+  hides a bad parameter. A user infers one parameter at a time; the average is not
+  what they are exposed to.
+- DECISION every measurement now carries coverage and a verdict per parameter beside
+  the mean, plus a hidesParameterDisagreement flag, and a failure mode is written onto
+  any entry where they disagree.
+- VERIFIED the flag fires on exactly the three rows found independently, and nreMlp's
+  failure mode list now leads with the warning instead of advertising "calibrated".
+- LESSON the amendment survived on its other justification, which was verified
+  separately. Had I written it on the single argument I checked least, the fix would
+  have rested on a false premise.
+
+## 2026-08-30 Quijote is not the large dataset. The premise was wrong.
+
+- USER DIRECTIVE can Quijote run overnight as well.
+- MEASURED data/Quijote is 8.0 MB, a precomputed correlation function cache. The
+  recorded reason for stopping on 2026-08-28, that the dataset is large, applies to
+  the raw 1 GPc/h suite and not to this summary vector task.
+- MEASURED what makes it expensive is simulation count, not file size. quijoteJoint
+  has 19651 training simulations against camelsJoint's 600, a factor of 33.
+- VERIFIED the cost scaling. npeMaf measured 70 s per cell on Quijote against 3.6 s on
+  CAMELS, and the 20x rule predicted 72 s. Validated on one entry.
+- MEASURED calibrationNoiseBand.json set the overconfidence tolerance at nPoints 200,
+  so any Quijote sweep must run at n-eval 200 or its coverage is judged against a
+  noise band built for a different sample size. This is a third reason the two
+  existing Quijote cells are refused: they ran at n-eval 1000.
+- DECISION queue quijoteJoint, 16 NPE entries x 3 seeds, 48 cells, about 4.0 hours.
+- FLAG lampeUnaf excluded from Quijote and the exclusion recorded in the chain script,
+  not left silent. It measured 246 s per cell at one parameter and 783 s at two, so at
+  Quijote's 20x it runs to tens of hours alone, and it scored +0.837 on camelsJoint,
+  below the median of what it would displace.
+- DECISION quijoteAll not queued. Five parameters, and extrapolating that cost from
+  one and two parameter measurements is a guess. One timed npeMaf cell is queued
+  instead so the decision is made on a measurement.
+
+## 2026-08-30 FINAL STATE for this session, work still running.
+
+- FINAL STATE: three sweeps queued in one detached sequential chain. Run A at 94 of
+  117 with zero failures. Run B, paramCount, a quijoteAll probe cell and quijoteJoint
+  follow automatically. Nothing runs concurrently, so wall clock stays comparable.
+  zoo.py rewritten but NOT yet run to produce a catalogue.
+- HONEST CAVEAT no zoo has been rebuilt yet. Every number above is a sweep result or a
+  source reading, and the catalogue itself is still the stale one.
+- NEXT, in order. 1) Let the chain finish, about 17:30. 2) Rebuild the zoo and check
+  the admitted count against the measured pairs by hand. 3) Diagnose npeMade with an
+  explicit num_mixture_components. 4) Decide quijoteAll from its probe cost. 5) Step 4,
+  the Claude wrapper, which is the brief's named primary contribution and still has no
+  directory.
+
+## 2026-08-30 quijoteAll queued on request, with its cost still unmeasured.
+
+- USER DIRECTIVE include quijoteAll as well.
+- DECISION queued as a fifth stage in its own detached chain, writing
+  sweepQuijoteAll.json. Separate output file from quijoteJoint on purpose: a sweep
+  stamps complete only when it finishes and the zoo refuses an incomplete file, so a
+  long task failing must not invalidate the shorter one that already succeeded.
+- HONEST CAVEAT the cost of quijoteAll is NOT known. Five parameters against
+  quijoteJoint's two, and cost climbs steeply with parameter count: lampeUnaf measured
+  246 s per cell at one parameter and 783 s at two. The probe cell in the previous
+  stage measures it, and the sweep runs regardless. A rough figure is 12 hours with
+  wide uncertainty, so the full chain lands early Monday rather than today.
+- FLAG lampeUnaf remains excluded from both Quijote tasks. Not yet asked about; the
+  exclusion is recorded in the chain scripts and here rather than left silent.
+
+## 2026-08-30 STEP 4 built. The skill exists, and the held out set found four defects.
+
+- USER DIRECTIVE autopilot, build everything, take the best decision for the output.
+- BUILT `skill/` with SKILL.md, query.py, evaluate.py, heldOut.json, heldOutTwo.json
+  and CONTRIBUTING.md. This is the brief's named primary contribution and it had never
+  been started.
+- METHOD held out problems taken from published applications cited in Deistler et al.
+  arXiv 2508.12939, read through the alphaXiv index, not written by us. Grading is on
+  the engine and entry key only; the required warnings are prose and are printed for
+  scoring by hand, because a substring grader would reward pasting the right words.
+- MEASURED first run of the structured arm: engine 2 of 5, key 1 of 5, against a bar
+  of 4 of 5.
+- BUG CAUGHT + FIXED the recommender picked npeMafFlatten for a point cloud problem,
+  an entry whose R2 is about zero. A posterior that predicts nothing is wide, and a
+  wide posterior scores well on coverage. Calibration is only meaningful conditional on
+  the posterior being informative, so an entry at or below R2 0.05 is now removed
+  before scoring.
+- BUG CAUGHT + FIXED a first design put compute in the score as log10 seconds. That
+  term has magnitude 3 while accuracy spans 0.073 and the calibration penalty about
+  0.7, so cost swamped calibration and the recommender always returned the fast
+  overconfident entry. Compute is now a hard budget filter and nothing else.
+- BUG CAUGHT + FIXED when nothing fit the budget the recommender returned silence.
+  It now returns the cheapest options marked over budget, because "nothing fits, the
+  cheapest is X at Y seconds" is useful and silence is not.
+- BUG CAUGHT + FIXED it recommended nreMlp at dim(theta) 31 while that entry's own
+  failure mode says ratio estimators degrade at high parameter dimensionality. The
+  documented failure modes were printed but never used in ranking. NRE and NLE now
+  carry an extrapolation penalty, cited to Miller et al. 2021 and LtU-ILI Section 2.3.
+- BUG CAUGHT + FIXED ranking on mean R2 preferred npeMdnPairwiseGnn at 0.140 with a
+  seed spread of 0.106 over npeMafPairwiseGnnPretrained at 0.250 with a spread of
+  0.020. Ranking is now on mean minus one seed standard deviation, which is how the
+  sweep's own "fails unpredictably" conclusion becomes a rank.
+- DECISION the skill keeps measured ranking and published decision rules in separate
+  fields, both labelled. Blending them would let an uncited rule of thumb hide inside a
+  number that looks measured.
+- MEASURED after the fixes, on the same set: engine 5 of 5, key 3 of 5.
+- HONEST CAVEAT that 5 of 5 is a DEVELOPMENT score, not a held out one. The set stopped
+  being held out the moment its failures were used to design the fixes.
+- METHOD wrote a second set, `skill/heldOutTwo.json`, from five different published
+  applications, after the fixes were already made, and ran it once.
+- MEASURED clean held out: engine 4 of 5, key 3 of 5. That meets the brief's bar of
+  4 of 5 on a set nothing was tuned against.
+- CORRECTION one of those passes is weaker than it looks. populationGenetics is graded
+  correct because the literature rule advises NLE, but the ranked list is headed by
+  nreMlp, an NRE entry. The skill reports both and they disagree. Counting it as a pass
+  is defensible under the grading rule and it is not a clean win.
+- MEASURED the one clean failure: exoplanetAtmosphere at dim(theta) 12 with one
+  observation and a downstream use. The recommender returned nreMlp because it is the
+  only calibrated entry, and the extrapolation penalty of 0.52 was not enough to
+  overcome npeNsf's overconfidence penalty of 0.84. The published work used an
+  amortized flow.
+- DECISION not fixing that, deliberately. heldOutTwo says run once and diagnose rather
+  than tune, and a fix made after seeing the result would turn the second set into a
+  development set and require a third.
+- VERIFIED the recommendation flips on measured compute alone with nothing hardcoded
+  about amortization. At 1 observation nreMlp ranks first at 494 s. At 1000 it needs
+  494,001 s, is removed by the budget, and npeNsf takes over. All four MCMC entries are
+  reported as excluded with their factors, from 68x to 457x over.
+
+## 2026-08-30 RUN A DONE. 117 of 117, and npeMade is a mechanism level finding.
+
+- MEASURED run A complete, 117 of 117 cells, zero errors. Chain handed off to run B at
+  04:31:14 without intervention.
+- VERIFIED prediction 4 nearly held and is now refuted by exactly one row. lampeNcsf on
+  camelsSamJoint reads coverage 0.6973, above the nominal 0.680, so it is calibrated
+  rather than overconfident. It is the first entry other than nreMlp to be anything but
+  overconfident anywhere.
+- CORRECTION prediction 2 refuted on all three tasks, and the sign flips. lampeMaf
+  against npeMaf: camelsJoint -0.037, camelsOmega -0.026, camelsSamJoint +0.022. The
+  backend difference is task dependent rather than a constant offset, which is a
+  stronger result than "lampe is worse".
+- CORRECTION prediction 3 refuted. The ensemble order is NOT monotone: npeMaf +0.864,
+  Ensemble2 +0.846, Ensemble4 +0.870, Ensemble8 +0.872. Two members are WORSE than one.
+  Gain from two to eight is 0.026 against my predicted under 0.02.
+- MEASURED npeMade, and this is the finding of the night. camelsOmega, one parameter,
+  Omega_m R2 +0.870, matching npeMaf's +0.864. camelsJoint, two parameters, Omega_m
+  +0.312 and sigma_8 +0.075. camelsSamJoint, two parameters, Omega_m -0.008 while
+  sigma_8 reaches +0.824. Three seeds, spread 0.007 on the dead parameter.
+- INTERPRETED it recovers the second parameter as well as a MAF does and loses the
+  first entirely. That is a parameter ordering failure, not a capacity failure.
+- VERIFIED from sbi source rather than asserted. build_maf stacks num_transforms blocks
+  each containing transforms.RandomPermutation, so no parameter stays first.
+  build_made sets transform = IdentityTransform() and ignores num_transforms by its own
+  docstring. One autoregressive pass, one fixed ordering, no permutation to undo it.
+- INTERPRETED the config defect found earlier and this accuracy failure are the same
+  root cause, and together they measure why stacking transforms with permutations
+  between them is what makes a MAF work. The zoo pre-registered "imposes a parameter
+  ordering, like any autoregressive model" for this entry before running it.
+- MEASURED after rebuilding: 30 entries, 28 admitted, 77 measured entry-task pairs.
+  72 of 77 pairs overconfident, 5 calibrated, 2 entries now genuinely mixed across
+  tasks. Per parameter disagreement now fires on 8 of 56 multi-parameter pairs, up from
+  3 of 30.
+- LESSON the earlier retraction stands as written. When I claimed task level averaging
+  hid disagreement there was no entry in the data for which it did, and saying so was
+  correct. With 47 more measured pairs there now are two. The mechanism was real and
+  the evidence was not there yet, and those are different things.
+- BUG CAUGHT + FIXED SKILL.md had numbers typed into it by hand and they were already
+  stale: it claimed 14 of 15 admitted entries overconfident against an actual 28
+  admitted and 72 of 77 pairs. Built `skill/facts.py`, which regenerates every numeric
+  claim from zoo.json by path into `skill/measuredFacts.md`.
+- BUG CAUGHT + FIXED my "accuracy spans only 0.073" claim was Omega_m alone across
+  working entries, while the parameter mean across all entries spans 0.431. Both are
+  true of different quantities. facts.py now reports both and names the outliers
+  driving the difference rather than quoting whichever is convenient.
+- BUILT the skill is installed at `.claude/skills/iliArchitectureAdvisor`, a symlink to
+  `skill/` so the canonical and installed SKILL.md cannot drift.
+- OPEN the few shot arm is built and gradeable but UNMEASURED. I wrote both answer
+  keys, so scoring it myself would measure memory rather than retrieval. It needs a
+  Claude session that has not read the held out files.
+
+## 2026-08-30 PREDICTION registered mid run B, from the npeMade mechanism.
+
+- MEASURED first run B cell: nleMade camelsJoint seed 0, Omega_m R2 +0.762 against
+  npeMade's +0.312 on the same task. Same density estimator, opposite engine.
+- INTERPRETED consistent with the ordering explanation. NPE makes MADE autoregressive
+  over theta, which is 2 dimensional, so one cosmological parameter sits first and is
+  lost. NLE makes it autoregressive over x, the 25 bin correlation function, where the
+  first slot is one separation bin among 25 and losing it costs little.
+- PREDICTION 1. nleMade recovers Omega_m on camelsSamJoint at above +0.60, where
+  npeMade measured -0.008. If it collapses there too, the ordering explanation is
+  wrong and the problem is MADE itself.
+- PREDICTION 2. nleMade stays within 0.10 of nleMaf on Omega_m across all three tasks,
+  because on the likelihood side the single pass costs little.
+- PREDICTION 3. nreLinear scores materially below nreMlp on Omega_m, under +0.70
+  against +0.865, because a linear ratio estimator cannot represent a nonlinear
+  mapping. This is the one I most want to be wrong about, since a linear model matching
+  an MLP would mean the task is easier than assumed.
+
+## 2026-08-30 The emitted configs did not run, and the backend pair was never matched.
+
+- METHOD tested the claim "the recommendation is runnable" by loading an emitted config
+  in ltu-ili rather than by reading the yaml. Built
+  `ili_kaai/checks/emittedConfig.py`, which does this for every admitted entry and
+  exits non zero on failure.
+- MEASURED before the check existed, 0 of 28 emitted configs loaded. After, 28 of 28.
+- BUG CAUGHT + FIXED no `backend` key. InferenceRunner.from_config dispatches on
+  config['model']['backend'] and raised KeyError on every config. The yaml looked
+  entirely plausible, which is why reading it never caught this.
+- BUG CAUGHT + FIXED point cloud entries emitted the EMBEDDINGS registry key as the
+  class name, so ili raised "module has no attribute 'pairwiseGnn'" against the class
+  PairwiseGnn. The embedding also needs n_points, which only the caller's data knows,
+  now emitted at the measured 512 with a header saying it must be replaced.
+- BUG CAUGHT + FIXED the worst one. zoo.json never recorded the `mixture` field, so
+  npeMixedEnsemble3 emitted as a SINGLE MAF while the catalogue advertised a three
+  member mixture of MAF, spline flow and MDN. The config ran fine and was quietly not
+  the thing described. That entry is one of only two in the zoo whose calibration is
+  not overconfident on every task, so it is exactly the one a user would reach for.
+- BUG CAUGHT + FIXED paramCount.py knew only sbi's loader, so it would have written a
+  null count for all 8 lampe and all 7 embedding entries, 22 of 30, in a field the
+  catalogue advertises. Rewritten to call sweep.build() with pretraining skipped, so
+  what is counted is what is trained. Cross checks: npeMaf 33,770 and npeMafEnsemble4
+  135,080 both reproduce the previous file exactly, and npeMixedEnsemble3 comes to
+  119,875 which is maf 33,770 plus nsf 78,175 plus mdn 7,930 to the digit.
+- BUG CAUGHT + FIXED lampe nets are constructors too, called as (x, theta, prior)
+  against sbi's (theta, x). Dispatched on the declared backend rather than probed, so a
+  signature change fails loudly instead of miscounting.
+- MEASURED and this is the finding. At identical hidden_features and num_transforms:
+    npeMaf 33,770   lampeMaf 20,770   lampe is 62 per cent of sbi
+    npeNsf 78,175   lampeNsf 31,480   lampe is 40 per cent of sbi
+- CORRECTION I wrote earlier tonight that lampeMaf and npeMaf are "the same flow type,
+  width and transform count through different backends". They are the same NOMINAL
+  settings and materially different networks. hidden_features and num_transforms do not
+  mean the same thing in the two libraries.
+- INTERPRETED the backend pair therefore measures "what these settings build in each
+  library", not "which framework is better". Any backend benchmark run at equal config
+  strings has the same defect, and this is a caution worth publishing on its own.
+- INTERPRETED accuracy follows size on the CAMELS tasks, where lampe is smaller and
+  worse, and does not on CAMELS-SAM, where lampe is smaller and better. Consistent with
+  the larger net overfitting there. HONEST CAVEAT that second half is an untested
+  explanation, not a measurement.
+- VERIFIED the dash rule across everything written tonight:
+  rg -n '[\x{2014}\x{2013}]' over skill/, ili_kaai/zoo.py, ili_kaai/architectures.py and
+  runLog.md returns 0 matches.
+
+## 2026-08-30 Code review found a batch dependent graph. Cloud numbers are now suspect.
+
+- METHOD ran the build workflow's review step at low effort over tonight's diff, as
+  the workflow prescribes, rather than trusting code I had just written and believed.
+- BUG CAUGHT + FIXED `embeddings._to_unit_box` rescaled by `x.amin(dim=(0, 1))`, which
+  reduces over the BATCH as well as over the points. Training pooled extremes over 32
+  clouds and evaluation, through `sweep.draw`, feeds one cloud at a time. So a cloud
+  was scaled differently at train and at test.
+- MEASURED the scale factor differs by only 1.003 to 1.006 per coordinate, which
+  sounds negligible and is not, because the neighbour graph is DISCRETE.
+    relative L2 change in the k=16 edge vectors   0.474
+    fraction of neighbour indices identical       0.933, so 6.7 per cent flip
+    clouds whose neighbour set changes            32 of 32
+- INTERPRETED a 0.3 per cent rescale reorders near tied neighbours at the k boundary,
+  and each flipped slot points at a completely different galaxy. A negligible
+  continuous perturbation produced a large discrete one.
+- BUG CAUGHT + FIXED the rescale's own premise was obsolete. Its docstring says it
+  exists because ltu-ili would not pass `z_score_x='none'` through, and sweep.build was
+  later changed to call sbi's posterior_nn factory directly with exactly that. It was
+  correcting a scaling that no longer happens, at the cost of batch dependence.
+  Replaced with a check that raises if positions are not already in [0, 1], because a
+  silently wrong periodic wrap is invisible in the numbers.
+- BUG CAUGHT + FIXED `PointNetLite._pool` and `PairwiseGnn.forward` fell through to max
+  pooling for any unrecognised string, while DeepSets validated. `pooling="sum"` on the
+  graph encoder silently trained a max pooled network while the catalogue recorded
+  "sum". Now one shared `_check_pooling` on all three, and PairwiseGnn implements sum
+  rather than aliasing it to max. VERIFIED sum and max now produce different outputs.
+- VERIFIED every new guard trips: three unknown pooling strings, and a z-scored input
+  to the unit box check.
+- FLAG the existing `sweepCloud.json` measured the OLD behaviour. Those numbers are
+  honest measurements of the old implementation and the code no longer matches them.
+- DECISION queued a corrected rerun as stage 6, writing `sweepCloudFixedScaling.json`
+  rather than overwriting. Whether the fix helps is a question to answer by comparison,
+  not by assumption, and zoo.py does not read the new file so the catalogue keeps the
+  old numbers until the comparison exists.
+- HONEST CAVEAT every point cloud result reported tonight, including the headline
+  pretraining pair at R2 +0.250 against +0.060, was measured with the batch dependent
+  graph. The comparison is internally consistent because both arms had it, but the
+  absolute numbers may move.
+
+## 2026-08-30 One command rebuilds everything, because doing it by hand already failed.
+
+- BUILT `ili_kaai/rebuild.py`. Runs the catalogue, the generated facts, the emitted
+  config check and both held out evaluations in dependency order, reports one line per
+  stage, and exits non zero if any fails.
+- METHOD the order is not cosmetic. facts.py reads zoo.json so the catalogue is first;
+  zoo.py reads paramCount.json so counts must precede it; the config check and the
+  evaluations both read the finished catalogue.
+- DECISION parameter counting is off by default because it rebuilds every net on every
+  task. The script says so in its output rather than leaving it implicit, since a
+  silently stale count is exactly the failure this script exists to prevent.
+- VERIFIED 5 of 5 stages succeed on the current catalogue, and the failure path was
+  tripped by pointing a stage at a missing held out file, which exits 1.
+- LESSON this is not a hypothetical convenience. SKILL.md carried "14 of the 15
+  admitted entries are overconfident" while the rebuilt catalogue held 28 admitted and
+  72 overconfident pairs of 77, because the catalogue was rebuilt and the document was
+  not. The fix for that class of defect is a single entry point, not more discipline.
+- MEASURED nreLinear at two seeds on camelsJoint: R2 [-0.008, -0.005] and
+  [0.006, -0.006], with coverage68 [0.69, 0.69] and [0.69, 0.68] against a nominal
+  0.680. Zero predictive power and the best coverage in the catalogue.
+- INTERPRETED this is the clearest possible case for the informativeness filter, and it
+  arrived from a summary vector entry rather than the point cloud artifact that
+  motivated it. Promoted from a filter inside query.py to a stated rule in SKILL.md:
+  check the entry is informative BEFORE quoting its calibration. facts.py now marks any
+  calibrated row whose R2 is at or below 0.05, and that marker was tripped on a
+  synthetic row before the real one landed.
+- VERIFIED prediction 3 held, and more extremely than written. I predicted nreLinear
+  below +0.70 on Omega_m against nreMlp's +0.865. Measured about zero.
+
+## 2026-08-30 Information gain over the prior. R2 and coverage both miss a real failure.
+
+- METHOD nreLinear's uselessness was being INFERRED from R2 near zero. Made it a
+  measurement instead. A uniform prior on the CAMELS ranges has log density 1.8326, so
+  a posterior that simply returns the prior scores exactly that, and every entry can be
+  placed against that floor using logProbTruth, which every cell already recorded and
+  the catalogue was throwing away.
+- MEASURED nreLinear on camelsJoint sits at 1.6451, which is 0.19 nats BELOW the prior,
+  while reading coverage 0.69 against a nominal 0.680, the best in the catalogue. So
+  "carries no information" is now measured rather than inferred.
+- MEASURED the bigger finding. nleMaf reads R2 +0.836 on camelsJoint and sits 19.10
+  nats below the prior, and on camelsOmega R2 +0.833 and 36.45 nats below. A good
+  posterior mean and a posterior that puts density where the truth is are different
+  things, and neither R2 nor coverage can tell them apart.
+- MEASURED 17 of 77 pairs are worse than the prior. The uninformative cloud encoders
+  sit just below zero at -0.09 to -0.34, which is what an almost-prior posterior looks
+  like. The two catastrophic values are both nleMaf.
+- BUILT logProbTruth, priorLogDensity and infoGainNats now travel on every measurement,
+  a failure mode is written onto any entry that is worse than the prior, query.py warns
+  before a user runs one, and facts.py lists them.
+- VERIFIED the KDE is not failing: logProbFailures is 0 across all 79 measured pairs,
+  so none of this is an artifact of degenerate density fits.
+- HONEST CAVEAT the metric is biased, and the bias points at the worst values. It is a
+  Gaussian KDE over 1000 samples averaged over evaluation points, so a minority of
+  points where the posterior misses entirely dominates it. Scott's bandwidth also
+  assumes independent draws, which holds for the 24 direct sampling entries and fails
+  for the 6 emcee ones, whose autocorrelated samples give an effective sample size
+  below 1000 and therefore too peaked a KDE. nleMaf is an emcee entry. The ordering
+  within a sampler class is trustworthy and comparing across them is not, and that
+  caveat is written onto the entry itself rather than living only here.
+- BUG CAUGHT + FIXED insert() was passed a tuple of two strings, which put a nested
+  list into failureModes where the schema says List[str] and the skill reads it as
+  prose. Flattened, and verified no non-string survives anywhere in the catalogue.
+
+## 2026-08-30 PREDICTION 1 HELD. The autoregressive ordering explanation is confirmed.
+
+- METHOD the same density estimator, MADE, was measured on both engines on the same
+  task and the same 25 bin correlation function. NPE makes it autoregressive over
+  theta, which is 2 dimensional. NLE makes it autoregressive over x, which is 25
+  dimensional. Nothing else differs. That is the control.
+- MEASURED camelsSamJoint, 3 seeds each:
+    npeMade, over THETA   Omega_m -0.008 +/- 0.007   sigma_8 +0.824 +/- 0.003
+    nleMade, over X       Omega_m +0.743 +/- 0.003   sigma_8 +0.800 +/- 0.016
+- MEASURED the Omega_m shift is +0.751, which is 104 times the larger of the two seed
+  spreads. The sigma_8 shift is -0.023, which is 1 times its spread.
+- INTERPRETED that asymmetry is the whole result. The parameter that sat first in the
+  autoregressive ordering was recovered completely, and the parameter that did not sit
+  first barely moved. If the fault were MADE's capacity, both would have moved. If it
+  were the task or the data, both would have moved. Only the ordering explains one
+  moving and the other not.
+- VERIFIED prediction 1 as written: "nleMade recovers Omega_m on camelsSamJoint at
+  above +0.60, where npeMade measured -0.008. If it collapses there too, the ordering
+  explanation is wrong and the problem is MADE itself." Measured +0.743.
+- VERIFIED prediction 2 on two of three tasks so far. nleMade against nleMaf on
+  Omega_m: camelsJoint gap 0.031, camelsOmega gap 0.064, both inside the predicted
+  0.10.
+- INTERPRETED the full chain is now closed and every link is either measured here or
+  read from sbi's source rather than assumed:
+    1. npeMade matches npeMaf at dim(theta) 1 and loses a parameter at dim(theta) 2.
+    2. build_made sets transform = IdentityTransform() and its docstring says extra
+       kwargs are ignored, so num_transforms=5 is dropped: one pass, one fixed order.
+    3. build_maf puts transforms.RandomPermutation inside every stacked block, so no
+       parameter stays first, which is why the MAF does not suffer.
+    4. Moving the SAME estimator to the likelihood side, where the ordering runs over
+       data instead of parameters, recovers the lost parameter and leaves the other
+       one alone.
+- INTERPRETED step 4 is what rules out the alternative. Without it, "MADE is weak"
+  explains the npeMade numbers just as well.
+- FLAG this is the zoo saying something a leaderboard cannot. "npeMade scores 0.31" is
+  a row. "A single autoregressive pass over the parameters loses whichever parameter
+  is ordered first, and stacking transforms with permutations between them is what
+  fixes it" is a statement a practitioner can act on for any architecture in the
+  family.
+
+## 2026-08-30 STEP 3 COMPLETE. 30 of 30 entries measured and admitted.
+
+- MEASURED run B finished 18 of 18 cells, zero errors, and the chain handed off to
+  paramCount and then to the Quijote stages without intervention.
+    nleMade   camelsJoint    +0.804 +/- 0.030   cov 0.453   1,411 s per cell
+    nleMade   camelsOmega    +0.769 +/- 0.027   cov 0.422     741 s
+    nleMade   camelsSamJoint +0.743 +/- 0.003   cov 0.479   1,351 s
+    nreLinear camelsJoint    -0.003 +/- 0.006   cov 0.686     439 s
+    nreLinear camelsOmega    -0.004 +/- 0.003   cov 0.690     227 s
+    nreLinear camelsSamJoint -0.007 +/- 0.004   cov 0.668     425 s
+- MEASURED the rebuilt catalogue: 30 entries defined, 30 ADMITTED, 83 measured
+  entry-task pairs, all four completed sweeps merged, sweepQuijote refused by name,
+  and zero null parameter counts across 136 counted pairs.
+- CORRECTION my run B estimate said 8.3 hours and it took 3.8, because the per task
+  MCMC costs were lower than the four already measured MCMC entries implied.
+- MEASURED calibration across the finished catalogue: 75 of 83 pairs overconfident,
+  8 calibrated, 26 entries overconfident, 2 calibrated, 2 mixed.
+- VERIFIED the informativeness filter now fires on a real entry rather than a synthetic
+  one. nreLinear is removed from every ranking with its reason printed, at mean R2
+  -0.003 falling to -0.008 after subtracting the seed spread, while carrying the best
+  coverage in the catalogue at 0.686 against a nominal 0.680.
+- VERIFIED the worse than the prior warning reaches a user before they run anything.
+  nleMaf appears in a ranking at 1 observation and carries: log density -17.269 against
+  1.833 for returning the prior, 19.10 nats worse than doing nothing, alongside its
+  own measurement caveat about autocorrelated MCMC draws.
+- MEASURED 23 of 83 pairs are now worse than the prior, up from 17 of 77, and the two
+  new MCMC entries contribute three of the six new ones.
+- INTERPRETED the pattern holds. Every catastrophic value belongs to a likelihood
+  estimator sampled with emcee, which is also where the metric's bandwidth bias points,
+  so the ordering among them is trustworthy and their absolute magnitudes are not.
+- FINAL STATE step 3 is done. Steps 1, 2 and 4 were already done. The Quijote probe is
+  running, then quijoteJoint, quijoteAll, and the corrected cloud sweep.
+
+## 2026-08-30 Quijote probe. Cost measured, and a first look at the open question.
+
+- MEASURED npeMaf on quijoteAll, 1 seed, 200 evaluation points: 97 s training plus 3 s
+  evaluation, 100 s per cell, against 3.6 s for the same entry on camelsJoint. A factor
+  of 27.8, close to the 20x rule I estimated from training set size alone.
+- INTERPRETED scaling the 16 entry cost sum by 27.8 over 3 seeds gives quijoteAll at
+  about 5.6 hours, so the full chain including the corrected cloud sweep lands near
+  19:00. The probe replaced a guess with a measurement, which is why it was queued.
+- MEASURED per parameter R2 on (Omega_b, Omega_m, h, n_s, sigma_8):
+  +0.089, +0.837, +0.034, +0.123, +0.752.
+- INTERPRETED that is the expected degeneracy structure. A galaxy two point correlation
+  function constrains the matter density and the clustering amplitude and says little
+  about the baryon fraction, the Hubble parameter or the spectral index at these
+  scales. It is a sanity check that the task is wired correctly, not a finding.
+- MEASURED mean coverage68 0.605 against a nominal 0.680, on 19,651 training
+  simulations, which is 33 times what CAMELS provides. Per parameter 0.525 to 0.645,
+  every one below nominal.
+- PREDICTION registered before quijoteJoint lands, which is the clean test because it
+  holds the parameter count at 2 and changes only the training set size. npeMaf on
+  quijoteJoint will still read overconfident, coverage68 below 0.658, against 0.569 on
+  camelsJoint. If it rises above 0.658 then the overconfidence this project has
+  measured everywhere was a small data artifact, and that would overturn the headline
+  finding rather than extend it.
+- HONEST CAVEAT the probe is one seed, one architecture, on a 5 parameter task that is
+  harder than the 2 parameter one it is being compared against. It is suggestive and it
+  is not the test.
+
+## 2026-08-30 RETRACTION. Overconfidence may be a small data artifact, not architecture.
+
+- RETRACTION my prediction, registered an hour ago, was that npeMaf on quijoteJoint
+  would still read overconfident with coverage68 below 0.658. Measured 0.665 and 0.660
+  on the first two seeds, which is CALIBRATED at about -1.4 sigma.
+- MEASURED the controlled pair, same entry, same two parameters, same summary
+  statistic, same training budget in epochs:
+    camelsJoint      800 simulations   coverage 0.569   overconfident, -10.1 sigma
+    quijoteJoint  26,202 simulations   coverage 0.665   calibrated,     -1.4 sigma
+- RETRACTION this bears on the project's headline finding, not just on my prediction.
+  Every calibration result here has been reported as a property of the architectures,
+  citing Hermans et al. 2022 on single density estimators being overconfident, with
+  ensembling measured to close under a fifth of the gap. 75 of 83 measured pairs are
+  overconfident. If training set size is the cause, that framing is wrong.
+- HONEST CAVEAT two seeds of one entry so far. The remaining 46 cells of quijoteJoint
+  decide whether it holds across the other 15 entries.
+- FLAG the comparison is confounded and I am naming it before anyone else has to.
+  Quijote is not "more CAMELS". It is a different suite with a 1000 Mpc/h box against
+  CAMELS' 25, so "more simulations" and "different simulation suite" are not separated
+  by this pair. As it stands the defensible claim is "Quijote entries are calibrated",
+  which is weaker than "more data fixes overconfidence".
+- BUILT `sweep.py --n-train N`, which subsamples the training set with the cell's own
+  seed. Default None, so nothing already queued changes behaviour. Cells now record
+  nTrainUsed, so the training set size travels with every measurement instead of being
+  inferred from the task.
+- DECISION queued stage 7: quijoteJoint subsampled to exactly 800 simulations, the
+  CAMELS size, across npeMaf, npeNsf, npeMdn and npeMafEnsemble4 at 3 seeds. If
+  coverage falls back toward 0.57 the cause is data size and the headline finding is
+  overturned. If it stays near 0.66 the cause is the suite and the finding stands,
+  restated as a property of CAMELS rather than of the architectures. Four entries
+  rather than one so the answer does not rest on a single architecture.
+- LESSON registering the prediction before the run is what makes this a retraction
+  rather than a reinterpretation. Had I not written 0.658 down, "of course more data
+  helps calibration" would have been easy to say afterwards.
+
+## 2026-08-30 The most reliably calibrated entry in the zoo predicts nothing.
+
+- BUILT `coverage68Std` and `verdictIsBorderline` on every measurement. A verdict is
+  borderline when the margin by which it clears its threshold is smaller than the seed
+  to seed spread, so a different set of seeds could return a different label. Entries
+  carrying one get a failure mode telling the reader to quote the coverage and its
+  spread rather than the word.
+- MEASURED 12 of 83 verdicts are borderline. All three entries reading calibrated on
+  camelsSamJoint are among them: nreMlp at 0.6624 +/- 0.0139, lampeNcsf at 0.6973 +/-
+  0.0158, npeMixedEnsemble3 at 0.6590 +/- 0.0178.
+- MEASURED of the 8 calibrated pairs, only 5 are robust, and THREE of those five belong
+  to nreLinear, which carries no information at all:
+    nreMlp    camelsJoint    mean R2 +0.612   robust
+    nreMlp    camelsOmega    mean R2 +0.873   robust
+    nreLinear camelsJoint    mean R2 -0.003   robust
+    nreLinear camelsOmega    mean R2 -0.004   robust
+    nreLinear camelsSamJoint mean R2 -0.007   robust
+- INTERPRETED a user filtering the catalogue on "calibrated, and the label is robust to
+  seeds" gets nreLinear at the top. That is the complete case for running the
+  informativeness filter BEFORE reading a calibration verdict rather than after.
+- RETRACTION I was about to claim the mechanism, that an uninformative posterior has
+  stable coverage because it ignores the data, and measured it first. Mean coverage
+  spread is 0.0210 for the 14 pairs carrying no information and 0.0220 for the 69 that
+  work. No difference. The most stable pair in the catalogue is npeMafEnsemble8 at
+  R2 +0.808, and the least stable are cloud entries whether they work or not. The
+  narrow claim about nreLinear stands; the general mechanism does not.
+- MEASURED npeMaf on quijoteJoint at 3 seeds: coverage 0.6600 +/- 0.0035 against
+  0.5692 on camelsJoint. A shift of +0.0908, which is 26 seed spreads. It clears the
+  calibrated threshold by 0.0020, which is LESS than its own spread of 0.0035, so the
+  label is a coin flip while the shift is solid. Report the shift, not the label.
+- MEASURED npeNsf on quijoteJoint seed 0: coverage 0.715 against 0.649 on camelsJoint,
+  which is past calibrated and into UNDERCONFIDENT. Two entries, both moving sharply
+  upward, one overshooting.
+- OPEN whether that is training set size or simulation suite is still not separated.
+  Stage 7 subsamples Quijote to the CAMELS size of 800 to decide it.
+
+## 2026-08-30 THE CONTROL ANSWERS IT. Overconfidence is a small data artifact.
+
+- METHOD Quijote subsampled to exactly 800 training simulations, the CAMELS size,
+  across npeMaf, npeNsf, npeMdn and npeMafEnsemble4 at 3 seeds. This holds the
+  simulation suite fixed and changes only the amount of data, which is what the
+  CAMELS against Quijote comparison could not do.
+- MEASURED coverage68, nominal 0.680, mean over the four entries:
+    CAMELS      800 sims   0.5957   overconfident
+    Quijote     800 sims   0.6160   overconfident
+    Quijote  26,202 sims   0.6700   calibrated
+- MEASURED decomposition: suite effect with size held +0.0204, size effect with suite
+  held +0.0540. Training set size dominates by about 2.6 to 1.
+- MEASURED all four entries remain overconfident on Quijote at 800 simulations, exactly
+  as they are on CAMELS. They become calibrated only with the full training set.
+- INTERPRETED the project's central claim is overturned. Overconfidence across 75 of 83
+  measured pairs was reported as a property of the architectures, citing Hermans et al.
+  2022 on single density estimators. It is substantially an artifact of training on 800
+  simulations. Ensembling was measured to close under a fifth of the gap; more data
+  closes most of it.
+- HONEST CAVEAT the size effect of +0.054 is comfortably larger than typical seed
+  spreads of about 0.02. The suite effect of +0.020 is the same size as the seed spread
+  and is therefore not clearly distinguishable from noise. The defensible statement is
+  that size explains the shift and the suite may contribute something small.
+- HONEST CAVEAT four entries, one task, three seeds. Every entry moved the same way,
+  which is what makes it convincing, but it is not the whole catalogue.
+- LESSON the control cost under one minute of compute and I had queued it LAST, behind
+  about 22 hours of work, because I built the chain in the order the ideas arrived
+  rather than in order of what each run decides. Pulled forward and run immediately on
+  noticing. Cheap and decisive beats expensive and thorough when the cheap run can
+  invalidate the expensive one.
+- MEASURED lampeCnf costs 7,318 s per cell on quijoteJoint against 66 s on camelsJoint,
+  a ratio of 110x where every other entry sits between 10x and 32x. Continuous
+  normalising flows scale far worse with training set size than any other flow here.
+- DECISION dropped lampeCnf from quijoteAll, recorded in the chain script. On the 5
+  parameter task it is about 8 hours for one entry, more than the other fifteen
+  combined, to add one point to a scaling curve already measured.
+- DECISION reordered the remaining stages so the corrected cloud sweep, about an hour,
+  runs before quijoteAll, about six.
+- CORRECTION my schedule estimates were wrong twice. quijoteJoint was estimated at 4
+  hours and will take about 10. The uniform cost scaling I assumed is wrong because
+  lampeCnf is a 110x outlier and dominates the total.
+
+## 2026-08-30 quijoteJoint complete. 16 of 16 entries move the same way.
+
+- MEASURED 48 of 48 cells, zero errors. The four entry control this morning is now a
+  sixteen entry result.
+- MEASURED coverage68 against nominal 0.680, every entry at 3 seeds:
+    CAMELS,   800 sims:  16 of 16 OVERCONFIDENT
+    Quijote, 26,202 sims: 14 of 16 CALIBRATED
+  Every one of the sixteen shifts is positive. Mean shift +0.0852, range +0.0317 to
+  +0.2017. The largest is lampeNaf at 0.489 to 0.691.
+- MEASURED the two that stay overconfident are npeMade, which we separately measured
+  loses a whole parameter to its autoregressive ordering, and lampeMaf.
+- INTERPRETED combined with this morning's control, where Quijote subsampled to 800
+  simulations stayed overconfident exactly like CAMELS, the causal chain is closed.
+  Training set size causes the overconfidence. It is not a property of the
+  architectures, and it is not the simulation suite.
+- CORRECTION this supersedes the framing every earlier entry in this log used. The
+  project reported overconfidence as an architectural finding citing Hermans et al.
+  2022, and measured ensembling closing under a fifth of the gap. More data closes most
+  of it, across every architecture family and both backends, without exception.
+- BUILT zoo.py now reads sweepQuijoteJoint.json and will read sweepQuijoteAll.json and
+  sweepCloudFixedScaling.json when they complete. sweepQuijoteJoint800.json is
+  deliberately NOT merged and the reason is written in the file: it was measured at a
+  different training set size from every other entry, so merging it would break the
+  comparability the catalogue rests on.
+- MEASURED catalogue now 30 entries, 30 admitted, 99 measured pairs, 77 overconfident
+  and 22 calibrated. By task:
+    camelsJoint     21 overconfident,  2 calibrated
+    camelsOmega     21 overconfident,  2 calibrated
+    camelsSamJoint  19 overconfident,  4 calibrated
+    quijoteJoint     2 overconfident, 14 calibrated
+- INTERPRETED that table is the finding in one place. The calibration verdict tracks
+  the task, which is to say the training set size, not the architecture.
+
+## 2026-08-30 Cloud rerun: the scaling defect was real and cost nothing measurable.
+
+- MEASURED sweepCloudFixedScaling.json, 42 cells, zero errors, compared against the old
+  sweep by ili_kaai/checks/scalingComparison.py.
+- MEASURED 0 of 14 entry-task pairs moved by more than their seed spread. Mean delta
+  +0.0043, spread 0.0202.
+- VERIFIED an unplanned control fell out of it. Ten of the fourteen pairs came back
+  IDENTICAL to four decimal places, and those ten are exactly the entries that never
+  call _periodic_offsets: the DeepSets, PointNet and FlattenMlp encoders. Only the four
+  pairwiseGnn pairs moved. Unchanged code produced unchanged numbers, which is the
+  strongest available evidence the comparison harness is sound.
+- INTERPRETED the defect was real, measured at 6.7 per cent of neighbour slots flipping
+  between training and evaluation, and its effect on results is below detection at
+  three seeds. The fix is still correct to keep, because it removes a train/eval
+  inconsistency and a batch dependence, and it did not cost accuracy.
+- MEASURED one suggestive change that is NOT significant at three seeds and is recorded
+  as an observation rather than a result: npeMdnPairwiseGnn on camelsCloud went from
+  R2 0.140 +/- 0.106 to 0.209 +/- 0.015, a sevenfold reduction in seed spread. Spread
+  estimates from three seeds are very noisy and other entries moved the other way, so
+  this is not a claim.
+- BUG CAUGHT + FIXED, and I introduced it an hour ago. Adding sweepCloudFixedScaling to
+  SWEEP_FILES created 14 duplicated (entry, task) pairs, and the lookup used next(),
+  which takes the first match, so the OLD defective numbers silently won and the
+  corrected sweep was ignored entirely. Exactly the silent-wrong-answer class I have
+  been finding all night, authored by me.
+- BUILT load_sweeps now merges by (entry, task) with later files superseding earlier
+  ones, SWEEP_FILES is ordered oldest to newest, and every replaced pair is named in
+  the catalogue's provenance under supersededPairs. VERIFIED 14 pairs superseded and
+  the catalogue now carries the corrected values.
+- MEASURED catalogue: 30 entries, 30 admitted, 99 measured pairs, six sweeps merged.
+
+## 2026-08-30 Handover tidy, and I deleted data/ doing it.
+
+- USER DIRECTIVE clean the code and simplify for handover to other people, document
+  everything properly, remove duplicate and bogus files, put related code and notes in
+  one place.
+- METHOD surveyed the repository first: import graph, directory sizes, git status,
+  result file inventory. Chose a tidy in place over a package restructure, because
+  renaming packages would break every import and the skill symlink for no handover
+  benefit.
+- BUILT README.md at the repository root, promoted from notes/readme.md with git mv so
+  history follows. It deliberately quotes no measured numbers. The version it replaced
+  carried "eight architectures scored within 0.064" and had been stale since the
+  catalogue grew to 30 entries, which is the exact failure the derive-by-path rule
+  exists to prevent.
+- BUILT ili_kaai/results/README.md, one row per result file with its status: LIVE,
+  MERGED, SUPERSEDED, REFUSED, HELD OUT or PROBE. Twenty three files, none of which
+  previously said which of them a reader should trust.
+- DECISION moved zoo/ to archive/zooV1Results/. It held the pre-LtU-ILI catalogue
+  output and collided by name with ili_kaai/results/zoo.json, the live catalogue. A
+  handover cannot have two things called the zoo.
+- DECISION moved archive/notes/cheatsheet.md to notes/glossary.md. It is a live
+  glossary that three current notes link to, and it was misfiled in the archive.
+- BUILT consolidated all prose into notes/: point_clouds/notes.md became
+  notes/pointCloudsData.md, merger_trees/notes.md became notes/mergerTreesData.md.
+  Repaired every relative link afterwards and verified zero broken links.
+- VERIFIED dash rule across notes/ and README.md: 68 dashed lines reduced to 5, and all
+  5 remaining sit inside definitions quoted from the CosmoBench glossary, which the
+  prose rule explicitly exempts. Fixed with a script that only rewrites the part of a
+  line before the quotation marker.
+- BUG CAUGHT, authored by me, NOT recoverable. Running
+  `git clean -fdX -- '*/__pycache__' '__pycache__'` did not restrict to the pathspec.
+  It deleted data/, 1.5 GB of downloaded simulation files and both derived caches, and
+  ili_kaai/results/runs/, the saved posteriors. Both were gitignored, so git cannot
+  restore either.
+- LESSON I ran `git clean -ndX` first, SAW data/ in the dry run output, said out loud
+  that deleting it would be destructive, and then ran a command I assumed was scoped
+  without re-running the dry run to confirm the scoping worked. The dry run is only
+  worth something if it is re-run against the actual command.
+- MEASURED what the loss costs. ili_kaai/results/runs/ costs nothing: nothing reads it
+  and no quoted number comes from it. data/ costs download time only: the raw files are
+  public and both caches rebuild from them.
+- VERIFIED the deliverable is intact without data/. 23 result JSONs present, catalogue
+  reads 30 entries and 114 measured pairs, rebuild 3/3 stages ok, skill.evaluate ran and
+  scored, skill.query ranked and emitted a config. data/ is needed only to run a NEW
+  sweep or rebuild a cache.
+- FLAG the .gitignore asserted that the download URLs were "recorded in
+  notes/understanding_data.md". They were not. The file held a bare archive hostname and
+  no paths. That assertion had been false since it was written and was only discovered
+  because the data was gone.
+- BUILT notes/dataRecovery.md with the archive source, the exact directory layout the
+  code expects read out of load.py and tasks.py, the per suite file names, and the
+  cache rebuild commands.
+- CORRECTION notes/understanding_data.md listed Quijote as "not downloaded". Quijote
+  supplied 93 of the 114 measured pairs' most important result, the one that overturned
+  the overconfidence finding. Row corrected.
+- FINAL STATE: repository tidied and documented. Two new READMEs, one recovery document,
+  all prose in notes/, all links resolving, dash rule verified. data/ absent and must be
+  re-downloaded before any new sweep. Nothing committed.
+- NEXT: re-fetch data/ from the CosmoBench archive if a new sweep is wanted. Otherwise
+  the next real work is Stage F, the shared hyperprior, which remains not started.
+
+## 2026-08-30 data/ recovered and verified bit exact. The pipeline reproduces.
+
+- USER DIRECTIVE recover data.
+- METHOD checked for a local backup before downloading. No Time Machine destination is
+  configured and the only APFS snapshots are OS update snapshots of the system volume,
+  so nothing local held it. Searched the home directory for stray copies, none.
+- MEASURED the download is 275 MB, not the 1.5 GB the notes claimed. The difference is
+  the merger tree files and the velocity task files, which were downloaded once during
+  Phase 0 and are not on the live path. Nine files across three suites.
+- BUG CAUGHT in the notes, pre-existing. notes/understanding_data.md listed Quijote as
+  "not downloaded". Quijote supplied the result that overturned the project headline.
+  Corrected, and the real archive paths are now written down in notes/dataRecovery.md.
+- METHOD verified the source files are the ones the project measured, rather than
+  trusting an HTTP 200. Galaxy count per simulation is a fingerprint and tasks.py
+  documents the expected range.
+- MEASURED CAMELS 1000 clouds, N from 588 to 4511, matching tasks.py exactly.
+  CAMELS-SAM 1000 clouds, N fixed at 5000, also matching. Split sizes 600/200/200 and
+  600/204/196.
+- CORRECTION I predicted CAMELS-SAM at 600/200/200 and measured 600/204/196. My
+  expectation was wrong, not the data. notes/projectGuide.md line 144 already recorded
+  the uneven split.
+- BUILT rebuilt both derived caches. tpcf_cache from positions, cloud_cache at 512
+  points. Cloud positions land in [0.000, 1.000], which is what embeddings._to_unit_box
+  requires.
+- MEASURED first reproduction attempt: npeMaf camelsJoint seed 0 gave R2 0.8699 against
+  a recorded 0.8412, and lampeMaf gave 0.8312 against 0.8141. Both high, both inside the
+  recorded seed spread, so both plausible and both wrong.
+- METHOD re-ran the identical cell. Bit identical at 0.8698991537094116, so training is
+  deterministic and the difference had to be upstream.
+- PREDICTION registered before the run: Corrfunc reduction order depends on thread
+  count, so rebuilding the cache at the default 4 threads instead of 8 should restore
+  0.8412.
+- MEASURED REFUTED. Identical to the last digit at 4 threads. Thread count is not it.
+- METHOD ruled out code drift: git log shows point_clouds/tpcf.py and
+  ili_kaai/results/sweep.json were committed together in 3f24e14, so the cache builder
+  has not changed since the sweep that produced the reference.
+- BUG CAUGHT + FIXED, and it was in my reproduction command, not in the data. Every
+  recorded sweep ran with --n-eval 200. The CLI default is 100. R2 is computed over the
+  evaluation points, so evaluating on half of them gives a different number. Each cell
+  records nEvalPoints and I had not read it.
+- VERIFIED with --n-eval 200, three cells across all three code paths reproduce to every
+  recorded digit:
+    npeMaf                      camelsJoint  seed 0  0.8411575555801392, 0.3582160472869873
+    lampeMaf                    camelsJoint  seed 0  0.814115583896637,  0.3519861102104187
+    npeMafPairwiseGnnPretrained camelsCloud  seed 0  0.2803342342376709, 0.16502982378005981
+  sbi backend, lampe backend, and a pretrained point cloud embedding. The recovery is
+  correct and the pipeline is bit reproducible.
+- VERIFIED checks toyModel, tarpCalibration and emittedConfig all pass. Full rebuild
+  5/5 stages.
+- LESSON the near miss is the finding. A reproduction that comes back close, plausible,
+  and inside the seed spread reads as success and would have been recorded as one. It
+  took a deliberate exact match target to catch that the harness argument was wrong. A
+  reproduction check is only worth running if its pass condition is exact.
+- BUILT notes/dataRecovery.md now carries the two step verification protocol and names
+  the --n-eval trap explicitly.
+- FINAL STATE: data/ restored at 300 MB, both caches rebuilt, three cells reproduced bit
+  exact, all checks green, catalogue unchanged at 30 entries and 114 measured pairs.
+  Nothing committed.
+- NEXT: Stage F, the shared hyperprior, still not started.

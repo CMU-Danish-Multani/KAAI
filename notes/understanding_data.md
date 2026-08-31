@@ -1,10 +1,10 @@
-# The data — shared overview
+# The data: shared overview
 
 Detail lives with each dataset. This page is only what applies to both.
 
-- **Merger trees** → [../merger_trees/notes.md](../merger_trees/notes.md)
-- **Point clouds** → [../point_clouds/notes.md](../point_clouds/notes.md)
-- **Every term defined** → [cheatsheet.md](cheatsheet.md)
+- **Merger trees** → [mergerTreesData.md](mergerTreesData.md)
+- **Point clouds** → [pointCloudsData.md](pointCloudsData.md)
+- **Every term defined** → [glossary.md](glossary.md)
 
 ---
 
@@ -15,8 +15,8 @@ Someone simulated ~1,000 universes on a supercomputer. Each was made by setting
 
 | Dial | Plain meaning | Range |
 |---|---|---|
-| **Ω\_m** ("omega-m") | How much **stuff** the universe contains | 0.1 – 0.5 |
-| **σ\_8** ("sigma-8") | How **lumpy** it started out | 0.6 – 1.0 |
+| **Ω\_m** ("omega-m") | How much **stuff** the universe contains | 0.1 to 0.5 |
+| **σ\_8** ("sigma-8") | How **lumpy** it started out | 0.6 to 1.0 |
 
 **Your job: look at the finished universe, guess the two dials.**
 
@@ -48,7 +48,7 @@ Six terms cover almost everything here:
 | **concentration** | How squished a blob is toward its centre. Secretly records *when* it formed. |
 | **cMpc/h** | A distance unit. One is about 3 million light years. |
 
-**Full glossary: [cheatsheet.md](cheatsheet.md)** — every field name, every
+**Full glossary: [glossary.md](glossary.md)**, every field name, every
 parameter, every unit, plus the traps.
 
 ## 3. What we have on disk
@@ -60,9 +60,12 @@ parameter, every unit, plus the traps.
 | **CS-Trees** | merger trees | 24,996 | 1.2 GB | ✅ explored |
 | **CAMELS** | point clouds | 1,000 | 96 MB | ✅ explored |
 | **CAMELS-SAM** | point clouds | 1,000 | 175 MB | ✅ explored |
-| **Quijote** | point clouds | 32,752 | 4.1 GB | ⬜ not downloaded |
+| **Quijote** | correlation functions | 26,202 | | used, as `tpcf_top5000_*.hdf5` |
 
-Skipped: the velocity-task files (137 GB) and pre-built graphs (78 GB) — we can
+Skipped: the velocity-task files (137 GB) and pre-built graphs (78 GB), we can
 rebuild those. Source: `users.flatironinstitute.org/~fvillaescusa/CosmoBench/`
+
+`data/` is gitignored and is not in a fresh clone. To restore it, and to rebuild
+the derived caches, see [dataRecovery.md](dataRecovery.md).
 
 ---

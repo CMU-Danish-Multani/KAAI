@@ -1,0 +1,2197 @@
+{
+  "complete": true,
+  "args": {
+    "architectures": [
+      "npeMaf",
+      "npeNsf",
+      "npeMdn",
+      "npeMafEnsemble4",
+      "npeMade",
+      "npeMafEnsemble2",
+      "npeMafEnsemble8",
+      "npeMdnEnsemble4",
+      "npeMixedEnsemble3",
+      "lampeMaf",
+      "lampeNsf",
+      "lampeGf",
+      "lampeCnf",
+      "lampeNcsf",
+      "lampeNaf",
+      "lampeSospf"
+    ],
+    "tasks": [
+      "quijoteJoint"
+    ],
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "n_eval": 200,
+    "n_draws": 1000,
+    "device": "cpu",
+    "smoke": false,
+    "out": "sweepQuijoteJoint.json"
+  },
+  "trainArgs": {
+    "training_batch_size": 32,
+    "learning_rate": 0.001,
+    "max_num_epochs": 300,
+    "stop_after_epochs": 20,
+    "validation_fraction": 0.2
+  },
+  "versions": {
+    "torch": "2.13.0",
+    "ili": "0.1.5",
+    "numpy": "2.4.6",
+    "python": "3.11.16"
+  },
+  "cells": [
+    {
+      "architecture": "npeMaf",
+      "task": "quijoteJoint",
+      "seed": 0,
+      "trainSeconds": 68.7,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 1.1,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.1144373914215464
+      ],
+      "r2": [
+        0.8396151661872864,
+        0.7436398267745972
+      ],
+      "coverage68": [
+        0.665,
+        0.665
+      ],
+      "coverage95": [
+        0.92,
+        0.92
+      ],
+      "logProbTruth": 3.2586725665215055,
+      "logProbFailures": 0,
+      "tarpAt68": 0.638,
+      "tarpAt95": 0.93
+    },
+    {
+      "architecture": "npeMaf",
+      "task": "quijoteJoint",
+      "seed": 1,
+      "trainSeconds": 64.7,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 1.1,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.1377689355721503
+      ],
+      "r2": [
+        0.8275218605995178,
+        0.6920933127403259
+      ],
+      "coverage68": [
+        0.675,
+        0.64
+      ],
+      "coverage95": [
+        0.96,
+        0.905
+      ],
+      "logProbTruth": 3.1903451460686045,
+      "logProbFailures": 0,
+      "tarpAt68": 0.598,
+      "tarpAt95": 0.9299999999999997
+    },
+    {
+      "architecture": "npeMaf",
+      "task": "quijoteJoint",
+      "seed": 2,
+      "trainSeconds": 86.6,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 1.1,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.151879576817612
+      ],
+      "r2": [
+        0.7600376605987549,
+        0.7395803928375244
+      ],
+      "coverage68": [
+        0.635,
+        0.68
+      ],
+      "coverage95": [
+        0.92,
+        0.93
+      ],
+      "logProbTruth": 3.145825703601257,
+      "logProbFailures": 0,
+      "tarpAt68": 0.6619999999999999,
+      "tarpAt95": 0.9449999999999997
+    },
+    {
+      "architecture": "npeNsf",
+      "task": "quijoteJoint",
+      "seed": 0,
+      "trainSeconds": 171.3,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 1.5,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.092165395526067
+      ],
+      "r2": [
+        0.8425800800323486,
+        0.740894615650177
+      ],
+      "coverage68": [
+        0.705,
+        0.73
+      ],
+      "coverage95": [
+        0.935,
+        0.945
+      ],
+      "logProbTruth": 3.225725682506519,
+      "logProbFailures": 0,
+      "tarpAt68": 0.666,
+      "tarpAt95": 0.965
+    },
+    {
+      "architecture": "npeNsf",
+      "task": "quijoteJoint",
+      "seed": 1,
+      "trainSeconds": 176.8,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 1.5,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.118032772848211
+      ],
+      "r2": [
+        0.8297507762908936,
+        0.7013670206069946
+      ],
+      "coverage68": [
+        0.7,
+        0.64
+      ],
+      "coverage95": [
+        0.96,
+        0.935
+      ],
+      "logProbTruth": 3.189281791998903,
+      "logProbFailures": 0,
+      "tarpAt68": 0.6219999999999998,
+      "tarpAt95": 0.9399999999999996
+    },
+    {
+      "architecture": "npeNsf",
+      "task": "quijoteJoint",
+      "seed": 2,
+      "trainSeconds": 197.2,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 1.5,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.106870771185752
+      ],
+      "r2": [
+        0.7574923634529114,
+        0.7449556589126587
+      ],
+      "coverage68": [
+        0.645,
+        0.735
+      ],
+      "coverage95": [
+        0.895,
+        0.945
+      ],
+      "logProbTruth": 3.0858435931139923,
+      "logProbFailures": 0,
+      "tarpAt68": 0.6780000000000002,
+      "tarpAt95": 0.9699999999999998
+    },
+    {
+      "architecture": "npeMdn",
+      "task": "quijoteJoint",
+      "seed": 0,
+      "trainSeconds": 28.5,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 0.1,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.095907334169727
+      ],
+      "r2": [
+        0.8395756483078003,
+        0.7549521923065186
+      ],
+      "coverage68": [
+        0.68,
+        0.71
+      ],
+      "coverage95": [
+        0.93,
+        0.94
+      ],
+      "logProbTruth": 3.2848172447204784,
+      "logProbFailures": 0,
+      "tarpAt68": 0.652,
+      "tarpAt95": 0.9349999999999999
+    },
+    {
+      "architecture": "npeMdn",
+      "task": "quijoteJoint",
+      "seed": 1,
+      "trainSeconds": 26.4,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 0.1,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.136683083750719
+      ],
+      "r2": [
+        0.8265888094902039,
+        0.7022438049316406
+      ],
+      "coverage68": [
+        0.665,
+        0.625
+      ],
+      "coverage95": [
+        0.935,
+        0.925
+      ],
+      "logProbTruth": 3.19894537249395,
+      "logProbFailures": 0,
+      "tarpAt68": 0.5700000000000001,
+      "tarpAt95": 0.895
+    },
+    {
+      "architecture": "npeMdn",
+      "task": "quijoteJoint",
+      "seed": 2,
+      "trainSeconds": 24.5,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 0.1,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.1460131750516367
+      ],
+      "r2": [
+        0.7648524045944214,
+        0.724403977394104
+      ],
+      "coverage68": [
+        0.655,
+        0.64
+      ],
+      "coverage95": [
+        0.91,
+        0.93
+      ],
+      "logProbTruth": 3.124182459878839,
+      "logProbFailures": 0,
+      "tarpAt68": 0.6419999999999999,
+      "tarpAt95": 0.9349999999999997
+    },
+    {
+      "architecture": "npeMafEnsemble4",
+      "task": "quijoteJoint",
+      "seed": 0,
+      "trainSeconds": 322.4,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 2.5,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.12118253824901,
+        3.1053116921266897,
+        3.118820010518735,
+        3.136499963655062
+      ],
+      "r2": [
+        0.8397715091705322,
+        0.7460846900939941
+      ],
+      "coverage68": [
+        0.68,
+        0.72
+      ],
+      "coverage95": [
+        0.935,
+        0.925
+      ],
+      "logProbTruth": 3.26541450629211,
+      "logProbFailures": 0,
+      "tarpAt68": 0.6559999999999999,
+      "tarpAt95": 0.9399999999999998
+    },
+    {
+      "architecture": "npeMafEnsemble4",
+      "task": "quijoteJoint",
+      "seed": 1,
+      "trainSeconds": 340.3,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 2.6,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.1310723851794844,
+        3.133372751481694,
+        3.102987748713581,
+        3.0982135629361394
+      ],
+      "r2": [
+        0.8288345336914062,
+        0.699122428894043
+      ],
+      "coverage68": [
+        0.665,
+        0.605
+      ],
+      "coverage95": [
+        0.96,
+        0.915
+      ],
+      "logProbTruth": 3.2206014626573474,
+      "logProbFailures": 0,
+      "tarpAt68": 0.578,
+      "tarpAt95": 0.9049999999999998
+    },
+    {
+      "architecture": "npeMafEnsemble4",
+      "task": "quijoteJoint",
+      "seed": 2,
+      "trainSeconds": 311.5,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 2.6,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.1536278958700916,
+        3.146400934348077,
+        3.121994278913627,
+        3.1552775198696583
+      ],
+      "r2": [
+        0.7708282470703125,
+        0.7384285926818848
+      ],
+      "coverage68": [
+        0.655,
+        0.665
+      ],
+      "coverage95": [
+        0.925,
+        0.935
+      ],
+      "logProbTruth": 3.155565159692097,
+      "logProbFailures": 0,
+      "tarpAt68": 0.649,
+      "tarpAt95": 0.9599999999999996
+    },
+    {
+      "architecture": "npeMade",
+      "task": "quijoteJoint",
+      "seed": 0,
+      "trainSeconds": 52.6,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 0.7,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        2.2211179331036432
+      ],
+      "r2": [
+        -0.0024362802505493164,
+        0.7202757596969604
+      ],
+      "coverage68": [
+        0.645,
+        0.685
+      ],
+      "coverage95": [
+        0.885,
+        0.92
+      ],
+      "logProbTruth": 2.3649159557192356,
+      "logProbFailures": 0,
+      "tarpAt68": 0.6589999999999998,
+      "tarpAt95": 0.9299999999999998
+    },
+    {
+      "architecture": "npeMade",
+      "task": "quijoteJoint",
+      "seed": 1,
+      "trainSeconds": 50.6,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 0.7,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        2.21528184560179
+      ],
+      "r2": [
+        0.0071572065353393555,
+        0.6289563179016113
+      ],
+      "coverage68": [
+        0.665,
+        0.595
+      ],
+      "coverage95": [
+        0.925,
+        0.88
+      ],
+      "logProbTruth": 2.2035110906947812,
+      "logProbFailures": 0,
+      "tarpAt68": 0.585,
+      "tarpAt95": 0.9199999999999997
+    },
+    {
+      "architecture": "npeMade",
+      "task": "quijoteJoint",
+      "seed": 2,
+      "trainSeconds": 43.2,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 0.7,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        2.1919950276064726
+      ],
+      "r2": [
+        -0.0024573802947998047,
+        0.7309681177139282
+      ],
+      "coverage68": [
+        0.49,
+        0.635
+      ],
+      "coverage95": [
+        0.885,
+        0.925
+      ],
+      "logProbTruth": 2.3100877913088045,
+      "logProbFailures": 0,
+      "tarpAt68": 0.5369999999999999,
+      "tarpAt95": 0.8849999999999996
+    },
+    {
+      "architecture": "npeMafEnsemble2",
+      "task": "quijoteJoint",
+      "seed": 0,
+      "trainSeconds": 162.2,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 1.5,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.1295433439360076,
+        3.12169376472754
+      ],
+      "r2": [
+        0.8378629684448242,
+        0.7469543218612671
+      ],
+      "coverage68": [
+        0.68,
+        0.74
+      ],
+      "coverage95": [
+        0.92,
+        0.935
+      ],
+      "logProbTruth": 3.2611280742851396,
+      "logProbFailures": 0,
+      "tarpAt68": 0.658,
+      "tarpAt95": 0.9449999999999998
+    },
+    {
+      "architecture": "npeMafEnsemble2",
+      "task": "quijoteJoint",
+      "seed": 1,
+      "trainSeconds": 171.3,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 1.5,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.1364458411749156,
+        3.1481758304900187
+      ],
+      "r2": [
+        0.8280887603759766,
+        0.6808957457542419
+      ],
+      "coverage68": [
+        0.67,
+        0.6
+      ],
+      "coverage95": [
+        0.955,
+        0.905
+      ],
+      "logProbTruth": 3.148025495011705,
+      "logProbFailures": 0,
+      "tarpAt68": 0.577,
+      "tarpAt95": 0.9249999999999995
+    },
+    {
+      "architecture": "npeMafEnsemble2",
+      "task": "quijoteJoint",
+      "seed": 2,
+      "trainSeconds": 183.9,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 1.5,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.126917621109383,
+        3.1039897357027955
+      ],
+      "r2": [
+        0.7605249881744385,
+        0.7412363290786743
+      ],
+      "coverage68": [
+        0.655,
+        0.66
+      ],
+      "coverage95": [
+        0.925,
+        0.93
+      ],
+      "logProbTruth": 3.1340220135554087,
+      "logProbFailures": 0,
+      "tarpAt68": 0.6439999999999999,
+      "tarpAt95": 0.9499999999999997
+    },
+    {
+      "architecture": "npeMafEnsemble8",
+      "task": "quijoteJoint",
+      "seed": 0,
+      "trainSeconds": 686.1,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 4.2,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.1031657918099245,
+        3.124035466302392,
+        3.1323141846920084,
+        3.1117391878841847,
+        3.1505526165289384,
+        3.1385361241416696,
+        3.0778234312139405,
+        3.154127508584707
+      ],
+      "r2": [
+        0.8430540561676025,
+        0.7443085312843323
+      ],
+      "coverage68": [
+        0.675,
+        0.71
+      ],
+      "coverage95": [
+        0.92,
+        0.94
+      ],
+      "logProbTruth": 3.2660257965786643,
+      "logProbFailures": 0,
+      "tarpAt68": 0.668,
+      "tarpAt95": 0.9449999999999998
+    },
+    {
+      "architecture": "npeMafEnsemble8",
+      "task": "quijoteJoint",
+      "seed": 1,
+      "trainSeconds": 708.0,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 4.2,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.1321004987494345,
+        3.1508729487109037,
+        3.1410810713387707,
+        3.1188924210203206,
+        3.1102086444573898,
+        3.1530112444988787,
+        3.1369683080655664,
+        3.1629164189648775
+      ],
+      "r2": [
+        0.8300620317459106,
+        0.6920953392982483
+      ],
+      "coverage68": [
+        0.7,
+        0.62
+      ],
+      "coverage95": [
+        0.96,
+        0.915
+      ],
+      "logProbTruth": 3.193743567591065,
+      "logProbFailures": 0,
+      "tarpAt68": 0.578,
+      "tarpAt95": 0.9249999999999996
+    },
+    {
+      "architecture": "npeMafEnsemble8",
+      "task": "quijoteJoint",
+      "seed": 2,
+      "trainSeconds": 740.7,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 4.2,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.113127919062515,
+        3.0726671072603002,
+        3.1029839120759553,
+        3.083345916373598,
+        3.094349350665976,
+        3.1045796549393354,
+        3.0816416550267696,
+        3.1054542327951067
+      ],
+      "r2": [
+        0.7710684537887573,
+        0.7403445243835449
+      ],
+      "coverage68": [
+        0.665,
+        0.7
+      ],
+      "coverage95": [
+        0.93,
+        0.935
+      ],
+      "logProbTruth": 3.1713730598241314,
+      "logProbFailures": 0,
+      "tarpAt68": 0.662,
+      "tarpAt95": 0.955
+    },
+    {
+      "architecture": "npeMdnEnsemble4",
+      "task": "quijoteJoint",
+      "seed": 0,
+      "trainSeconds": 101.6,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 0.2,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.104218586822229,
+        3.09916254932895,
+        3.1312627426685733,
+        3.106476445870897
+      ],
+      "r2": [
+        0.845993161201477,
+        0.7470194101333618
+      ],
+      "coverage68": [
+        0.67,
+        0.705
+      ],
+      "coverage95": [
+        0.94,
+        0.935
+      ],
+      "logProbTruth": 3.2814509334927084,
+      "logProbFailures": 0,
+      "tarpAt68": 0.6659999999999999,
+      "tarpAt95": 0.9499999999999997
+    },
+    {
+      "architecture": "npeMdnEnsemble4",
+      "task": "quijoteJoint",
+      "seed": 1,
+      "trainSeconds": 110.2,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 0.2,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.108016553831978,
+        3.1264715136194523,
+        3.091329508763881,
+        3.1226045748938813
+      ],
+      "r2": [
+        0.8277588486671448,
+        0.7030030488967896
+      ],
+      "coverage68": [
+        0.71,
+        0.625
+      ],
+      "coverage95": [
+        0.96,
+        0.92
+      ],
+      "logProbTruth": 3.1940406534214003,
+      "logProbFailures": 0,
+      "tarpAt68": 0.5889999999999999,
+      "tarpAt95": 0.9299999999999995
+    },
+    {
+      "architecture": "npeMdnEnsemble4",
+      "task": "quijoteJoint",
+      "seed": 2,
+      "trainSeconds": 107.8,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 0.2,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.1543866300875423,
+        3.1327083242451486,
+        3.139859360419899,
+        3.125967091577916
+      ],
+      "r2": [
+        0.7659209966659546,
+        0.7404173612594604
+      ],
+      "coverage68": [
+        0.67,
+        0.69
+      ],
+      "coverage95": [
+        0.93,
+        0.935
+      ],
+      "logProbTruth": 3.134508174915601,
+      "logProbFailures": 0,
+      "tarpAt68": 0.6369999999999998,
+      "tarpAt95": 0.9499999999999996
+    },
+    {
+      "architecture": "npeMixedEnsemble3",
+      "task": "quijoteJoint",
+      "seed": 0,
+      "trainSeconds": 294.6,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 1.6,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.1317521004589057,
+        3.0308441340557635,
+        3.1114479003508397
+      ],
+      "r2": [
+        0.8441643118858337,
+        0.7468060255050659
+      ],
+      "coverage68": [
+        0.69,
+        0.73
+      ],
+      "coverage95": [
+        0.93,
+        0.935
+      ],
+      "logProbTruth": 3.2812930081711453,
+      "logProbFailures": 0,
+      "tarpAt68": 0.655,
+      "tarpAt95": 0.9649999999999996
+    },
+    {
+      "architecture": "npeMixedEnsemble3",
+      "task": "quijoteJoint",
+      "seed": 1,
+      "trainSeconds": 286.7,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 1.6,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.0484243433899674,
+        3.0581456108327294,
+        3.1133752161739796
+      ],
+      "r2": [
+        0.8303494453430176,
+        0.7009027004241943
+      ],
+      "coverage68": [
+        0.695,
+        0.635
+      ],
+      "coverage95": [
+        0.96,
+        0.925
+      ],
+      "logProbTruth": 3.2148341047158726,
+      "logProbFailures": 0,
+      "tarpAt68": 0.5859999999999999,
+      "tarpAt95": 0.9299999999999995
+    },
+    {
+      "architecture": "npeMixedEnsemble3",
+      "task": "quijoteJoint",
+      "seed": 2,
+      "trainSeconds": 261.5,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 1.7,
+      "nParameters": 0,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.1097362611922748,
+        3.1106062871546833,
+        3.103493950849662
+      ],
+      "r2": [
+        0.7725239396095276,
+        0.7421832084655762
+      ],
+      "coverage68": [
+        0.655,
+        0.705
+      ],
+      "coverage95": [
+        0.915,
+        0.94
+      ],
+      "logProbTruth": 3.1678474592707637,
+      "logProbFailures": 0,
+      "tarpAt68": 0.686,
+      "tarpAt95": 0.9599999999999999
+    },
+    {
+      "architecture": "lampeMaf",
+      "task": "quijoteJoint",
+      "seed": 0,
+      "trainSeconds": 26.3,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 0.8,
+      "nParameters": 20520,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        2.9240713337905535
+      ],
+      "r2": [
+        0.8382529020309448,
+        0.7422792315483093
+      ],
+      "coverage68": [
+        0.645,
+        0.685
+      ],
+      "coverage95": [
+        0.915,
+        0.93
+      ],
+      "logProbTruth": 3.1958072750863535,
+      "logProbFailures": 0,
+      "tarpAt68": 0.6250000000000001,
+      "tarpAt95": 0.9149999999999999
+    },
+    {
+      "architecture": "lampeMaf",
+      "task": "quijoteJoint",
+      "seed": 1,
+      "trainSeconds": 26.2,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 0.8,
+      "nParameters": 20520,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        2.9637072847089696
+      ],
+      "r2": [
+        0.8245421648025513,
+        0.6830718517303467
+      ],
+      "coverage68": [
+        0.64,
+        0.595
+      ],
+      "coverage95": [
+        0.955,
+        0.9
+      ],
+      "logProbTruth": 3.151192859088178,
+      "logProbFailures": 0,
+      "tarpAt68": 0.5459999999999999,
+      "tarpAt95": 0.9099999999999996
+    },
+    {
+      "architecture": "lampeMaf",
+      "task": "quijoteJoint",
+      "seed": 2,
+      "trainSeconds": 35.7,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 0.8,
+      "nParameters": 20520,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        2.9797903745229006
+      ],
+      "r2": [
+        0.7708404064178467,
+        0.7410658597946167
+      ],
+      "coverage68": [
+        0.625,
+        0.62
+      ],
+      "coverage95": [
+        0.93,
+        0.94
+      ],
+      "logProbTruth": 3.125346962980475,
+      "logProbFailures": 0,
+      "tarpAt68": 0.5989999999999999,
+      "tarpAt95": 0.9449999999999996
+    },
+    {
+      "architecture": "lampeNsf",
+      "task": "quijoteJoint",
+      "seed": 0,
+      "trainSeconds": 74.7,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 2.0,
+      "nParameters": 31230,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.002705301765267
+      ],
+      "r2": [
+        0.8415413498878479,
+        0.7458181381225586
+      ],
+      "coverage68": [
+        0.685,
+        0.745
+      ],
+      "coverage95": [
+        0.93,
+        0.945
+      ],
+      "logProbTruth": 3.2468745597468427,
+      "logProbFailures": 0,
+      "tarpAt68": 0.685,
+      "tarpAt95": 0.955
+    },
+    {
+      "architecture": "lampeNsf",
+      "task": "quijoteJoint",
+      "seed": 1,
+      "trainSeconds": 77.4,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 2.0,
+      "nParameters": 31230,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        2.977555835520038
+      ],
+      "r2": [
+        0.8210193514823914,
+        0.6847934126853943
+      ],
+      "coverage68": [
+        0.68,
+        0.655
+      ],
+      "coverage95": [
+        0.955,
+        0.92
+      ],
+      "logProbTruth": 3.14219540274842,
+      "logProbFailures": 0,
+      "tarpAt68": 0.619,
+      "tarpAt95": 0.9349999999999998
+    },
+    {
+      "architecture": "lampeNsf",
+      "task": "quijoteJoint",
+      "seed": 2,
+      "trainSeconds": 77.3,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 1.9,
+      "nParameters": 31230,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.0688584655295803
+      ],
+      "r2": [
+        0.7739158868789673,
+        0.7373201847076416
+      ],
+      "coverage68": [
+        0.695,
+        0.715
+      ],
+      "coverage95": [
+        0.935,
+        0.94
+      ],
+      "logProbTruth": 3.1376830143549057,
+      "logProbFailures": 0,
+      "tarpAt68": 0.6890000000000001,
+      "tarpAt95": 0.955
+    },
+    {
+      "architecture": "lampeGf",
+      "task": "quijoteJoint",
+      "seed": 0,
+      "trainSeconds": 67.4,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 4.4,
+      "nParameters": 27176,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        2.883269098878817
+      ],
+      "r2": [
+        0.8374505639076233,
+        0.7551031112670898
+      ],
+      "coverage68": [
+        0.68,
+        0.715
+      ],
+      "coverage95": [
+        0.93,
+        0.935
+      ],
+      "logProbTruth": 2.9844800303559236,
+      "logProbFailures": 0,
+      "tarpAt68": 0.669,
+      "tarpAt95": 0.9449999999999998
+    },
+    {
+      "architecture": "lampeGf",
+      "task": "quijoteJoint",
+      "seed": 1,
+      "trainSeconds": 48.3,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 4.5,
+      "nParameters": 27176,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        2.9413596582776718
+      ],
+      "r2": [
+        0.8335257172584534,
+        0.7029662132263184
+      ],
+      "coverage68": [
+        0.63,
+        0.6
+      ],
+      "coverage95": [
+        0.955,
+        0.915
+      ],
+      "logProbTruth": 3.2573184528445664,
+      "logProbFailures": 0,
+      "tarpAt68": 0.5989999999999999,
+      "tarpAt95": 0.9149999999999997
+    },
+    {
+      "architecture": "lampeGf",
+      "task": "quijoteJoint",
+      "seed": 2,
+      "trainSeconds": 68.5,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 4.5,
+      "nParameters": 27176,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        2.94405377802958
+      ],
+      "r2": [
+        0.767361044883728,
+        0.7366719245910645
+      ],
+      "coverage68": [
+        0.675,
+        0.71
+      ],
+      "coverage95": [
+        0.93,
+        0.925
+      ],
+      "logProbTruth": 3.151274457513747,
+      "logProbFailures": 0,
+      "tarpAt68": 0.6659999999999999,
+      "tarpAt95": 0.9549999999999998
+    },
+    {
+      "architecture": "lampeCnf",
+      "task": "quijoteJoint",
+      "seed": 0,
+      "trainSeconds": 7279.6,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 38.4,
+      "nParameters": 4502,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.1775554627862594
+      ],
+      "r2": [
+        0.8404091000556946,
+        0.7463600635528564
+      ],
+      "coverage68": [
+        0.71,
+        0.715
+      ],
+      "coverage95": [
+        0.92,
+        0.94
+      ],
+      "logProbTruth": 3.257513440493351,
+      "logProbFailures": 0,
+      "tarpAt68": 0.6849999999999999,
+      "tarpAt95": 0.9499999999999996
+    },
+    {
+      "architecture": "lampeCnf",
+      "task": "quijoteJoint",
+      "seed": 1,
+      "trainSeconds": 6364.0,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 47.1,
+      "nParameters": 4502,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.148716677600191
+      ],
+      "r2": [
+        0.8286364078521729,
+        0.6894516944885254
+      ],
+      "coverage68": [
+        0.7,
+        0.63
+      ],
+      "coverage95": [
+        0.955,
+        0.91
+      ],
+      "logProbTruth": 3.157753397728098,
+      "logProbFailures": 0,
+      "tarpAt68": 0.5989999999999999,
+      "tarpAt95": 0.9249999999999996
+    },
+    {
+      "architecture": "lampeCnf",
+      "task": "quijoteJoint",
+      "seed": 2,
+      "trainSeconds": 9384.0,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 42.7,
+      "nParameters": 4502,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.1465376759303436
+      ],
+      "r2": [
+        0.7665073871612549,
+        0.7410522699356079
+      ],
+      "coverage68": [
+        0.69,
+        0.685
+      ],
+      "coverage95": [
+        0.94,
+        0.94
+      ],
+      "logProbTruth": 3.157215773531326,
+      "logProbFailures": 0,
+      "tarpAt68": 0.6770000000000002,
+      "tarpAt95": 0.9600000000000001
+    },
+    {
+      "architecture": "lampeNcsf",
+      "task": "quijoteJoint",
+      "seed": 0,
+      "trainSeconds": 73.9,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 2.2,
+      "nParameters": 31230,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.062513045682252
+      ],
+      "r2": [
+        0.8428184986114502,
+        0.7416754961013794
+      ],
+      "coverage68": [
+        0.67,
+        0.74
+      ],
+      "coverage95": [
+        0.935,
+        0.94
+      ],
+      "logProbTruth": 3.2832206229137277,
+      "logProbFailures": 0,
+      "tarpAt68": 0.6789999999999999,
+      "tarpAt95": 0.9549999999999998
+    },
+    {
+      "architecture": "lampeNcsf",
+      "task": "quijoteJoint",
+      "seed": 1,
+      "trainSeconds": 94.5,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 2.0,
+      "nParameters": 31230,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.0127091036498093
+      ],
+      "r2": [
+        0.8256998062133789,
+        0.6771867275238037
+      ],
+      "coverage68": [
+        0.695,
+        0.585
+      ],
+      "coverage95": [
+        0.96,
+        0.895
+      ],
+      "logProbTruth": 3.094060245144595,
+      "logProbFailures": 0,
+      "tarpAt68": 0.6200000000000001,
+      "tarpAt95": 0.9349999999999996
+    },
+    {
+      "architecture": "lampeNcsf",
+      "task": "quijoteJoint",
+      "seed": 2,
+      "trainSeconds": 96.9,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 2.0,
+      "nParameters": 31230,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.079584066376431
+      ],
+      "r2": [
+        0.7711064219474792,
+        0.7339450716972351
+      ],
+      "coverage68": [
+        0.69,
+        0.72
+      ],
+      "coverage95": [
+        0.945,
+        0.945
+      ],
+      "logProbTruth": 3.119981100994896,
+      "logProbFailures": 0,
+      "tarpAt68": 0.694,
+      "tarpAt95": 0.9649999999999997
+    },
+    {
+      "architecture": "lampeNaf",
+      "task": "quijoteJoint",
+      "seed": 0,
+      "trainSeconds": 131.3,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 77.4,
+      "nParameters": 81430,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        2.8811545801526717
+      ],
+      "r2": [
+        0.8320813775062561,
+        0.74393630027771
+      ],
+      "coverage68": [
+        0.68,
+        0.755
+      ],
+      "coverage95": [
+        0.94,
+        0.945
+      ],
+      "logProbTruth": 3.221736852150942,
+      "logProbFailures": 0,
+      "tarpAt68": 0.6619999999999998,
+      "tarpAt95": 0.9599999999999997
+    },
+    {
+      "architecture": "lampeNaf",
+      "task": "quijoteJoint",
+      "seed": 1,
+      "trainSeconds": 131.4,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 76.4,
+      "nParameters": 81430,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        2.6652056744990458
+      ],
+      "r2": [
+        0.81537926197052,
+        0.6584007740020752
+      ],
+      "coverage68": [
+        0.725,
+        0.63
+      ],
+      "coverage95": [
+        0.96,
+        0.89
+      ],
+      "logProbTruth": 3.1115148697326345,
+      "logProbFailures": 0,
+      "tarpAt68": 0.6370000000000001,
+      "tarpAt95": 0.9349999999999999
+    },
+    {
+      "architecture": "lampeNaf",
+      "task": "quijoteJoint",
+      "seed": 2,
+      "trainSeconds": 157.4,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 72.0,
+      "nParameters": 81430,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        3.0296875
+      ],
+      "r2": [
+        0.7683066129684448,
+        0.7360415458679199
+      ],
+      "coverage68": [
+        0.645,
+        0.71
+      ],
+      "coverage95": [
+        0.91,
+        0.945
+      ],
+      "logProbTruth": 3.124452248952401,
+      "logProbFailures": 0,
+      "tarpAt68": 0.614,
+      "tarpAt95": 0.9549999999999995
+    },
+    {
+      "architecture": "lampeSospf",
+      "task": "quijoteJoint",
+      "seed": 0,
+      "trainSeconds": 51.8,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 25.0,
+      "nParameters": 27660,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        -273.66226145038166
+      ],
+      "r2": [
+        0.8405396938323975,
+        0.7461358308792114
+      ],
+      "coverage68": [
+        0.675,
+        0.71
+      ],
+      "coverage95": [
+        0.91,
+        0.93
+      ],
+      "logProbTruth": 3.2582438163935423,
+      "logProbFailures": 0,
+      "tarpAt68": 0.6749999999999999,
+      "tarpAt95": 0.9399999999999998
+    },
+    {
+      "architecture": "lampeSospf",
+      "task": "quijoteJoint",
+      "seed": 1,
+      "trainSeconds": 50.2,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 24.9,
+      "nParameters": 27660,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        -566.480963740458
+      ],
+      "r2": [
+        0.8300211429595947,
+        0.6966233253479004
+      ],
+      "coverage68": [
+        0.67,
+        0.61
+      ],
+      "coverage95": [
+        0.96,
+        0.91
+      ],
+      "logProbTruth": 3.195229578651606,
+      "logProbFailures": 0,
+      "tarpAt68": 0.5979999999999999,
+      "tarpAt95": 0.9199999999999998
+    },
+    {
+      "architecture": "lampeSospf",
+      "task": "quijoteJoint",
+      "seed": 2,
+      "trainSeconds": 58.4,
+      "pretrainSeconds": 0.0,
+      "evalSeconds": 24.7,
+      "nParameters": 27660,
+      "nEvalPoints": 200,
+      "nDraws": 1000,
+      "sampleMethod": "direct",
+      "finalValLogProb": [
+        2.8896767652671755
+      ],
+      "r2": [
+        0.7724233865737915,
+        0.7272020578384399
+      ],
+      "coverage68": [
+        0.665,
+        0.68
+      ],
+      "coverage95": [
+        0.925,
+        0.925
+      ],
+      "logProbTruth": 3.1087251880362725,
+      "logProbFailures": 0,
+      "tarpAt68": 0.6479999999999999,
+      "tarpAt95": 0.94
+    }
+  ],
+  "aggregate": [
+    {
+      "architecture": "npeMaf",
+      "task": "quijoteJoint",
+      "nSeeds": 3,
+      "r2": [
+        0.8091,
+        0.7251
+      ],
+      "r2Std": [
+        0.035,
+        0.0234
+      ],
+      "coverage68": [
+        0.6583,
+        0.6617
+      ],
+      "coverage68Std": [
+        0.017,
+        0.0165
+      ],
+      "coverage95": [
+        0.9333,
+        0.9183
+      ],
+      "coverage95Std": [
+        0.0189,
+        0.0103
+      ],
+      "logProbTruth": 3.1983,
+      "logProbTruthStd": 0.0464,
+      "trainSeconds": 73.3333,
+      "trainSecondsStd": 9.522,
+      "tarpAt68": 0.6327,
+      "tarpAt68Std": 0.0264,
+      "tarpAt95": 0.935,
+      "tarpAt95Std": 0.0071,
+      "nParameters": 0
+    },
+    {
+      "architecture": "npeNsf",
+      "task": "quijoteJoint",
+      "nSeeds": 3,
+      "r2": [
+        0.8099,
+        0.7291
+      ],
+      "r2Std": [
+        0.0375,
+        0.0197
+      ],
+      "coverage68": [
+        0.6833,
+        0.7017
+      ],
+      "coverage68Std": [
+        0.0272,
+        0.0437
+      ],
+      "coverage95": [
+        0.93,
+        0.9417
+      ],
+      "coverage95Std": [
+        0.0268,
+        0.0047
+      ],
+      "logProbTruth": 3.167,
+      "logProbTruthStd": 0.0592,
+      "trainSeconds": 181.7667,
+      "trainSecondsStd": 11.1416,
+      "tarpAt68": 0.6553,
+      "tarpAt68Std": 0.0241,
+      "tarpAt95": 0.9583,
+      "tarpAt95Std": 0.0131,
+      "nParameters": 0
+    },
+    {
+      "architecture": "npeMdn",
+      "task": "quijoteJoint",
+      "nSeeds": 3,
+      "r2": [
+        0.8103,
+        0.7272
+      ],
+      "r2Std": [
+        0.0326,
+        0.0216
+      ],
+      "coverage68": [
+        0.6667,
+        0.6583
+      ],
+      "coverage68Std": [
+        0.0103,
+        0.037
+      ],
+      "coverage95": [
+        0.925,
+        0.9317
+      ],
+      "coverage95Std": [
+        0.0108,
+        0.0062
+      ],
+      "logProbTruth": 3.2026,
+      "logProbTruthStd": 0.0656,
+      "trainSeconds": 26.4667,
+      "trainSecondsStd": 1.6337,
+      "tarpAt68": 0.6213,
+      "tarpAt68Std": 0.0365,
+      "tarpAt95": 0.9217,
+      "tarpAt95Std": 0.0189,
+      "nParameters": 0
+    },
+    {
+      "architecture": "npeMafEnsemble4",
+      "task": "quijoteJoint",
+      "nSeeds": 3,
+      "r2": [
+        0.8131,
+        0.7279
+      ],
+      "r2Std": [
+        0.0303,
+        0.0206
+      ],
+      "coverage68": [
+        0.6667,
+        0.6633
+      ],
+      "coverage68Std": [
+        0.0103,
+        0.047
+      ],
+      "coverage95": [
+        0.94,
+        0.925
+      ],
+      "coverage95Std": [
+        0.0147,
+        0.0082
+      ],
+      "logProbTruth": 3.2139,
+      "logProbTruthStd": 0.0451,
+      "trainSeconds": 324.7333,
+      "trainSecondsStd": 11.8728,
+      "tarpAt68": 0.6277,
+      "tarpAt68Std": 0.0352,
+      "tarpAt95": 0.935,
+      "tarpAt95Std": 0.0227,
+      "nParameters": 0
+    },
+    {
+      "architecture": "npeMade",
+      "task": "quijoteJoint",
+      "nSeeds": 3,
+      "r2": [
+        0.0008,
+        0.6934
+      ],
+      "r2Std": [
+        0.0045,
+        0.0458
+      ],
+      "coverage68": [
+        0.6,
+        0.6383
+      ],
+      "coverage68Std": [
+        0.0782,
+        0.0368
+      ],
+      "coverage95": [
+        0.8983,
+        0.9083
+      ],
+      "coverage95Std": [
+        0.0189,
+        0.0201
+      ],
+      "logProbTruth": 2.2928,
+      "logProbTruthStd": 0.067,
+      "trainSeconds": 48.8,
+      "trainSecondsStd": 4.0431,
+      "tarpAt68": 0.5937,
+      "tarpAt68Std": 0.0502,
+      "tarpAt95": 0.9117,
+      "tarpAt95Std": 0.0193,
+      "nParameters": 0
+    },
+    {
+      "architecture": "npeMafEnsemble2",
+      "task": "quijoteJoint",
+      "nSeeds": 3,
+      "r2": [
+        0.8088,
+        0.723
+      ],
+      "r2Std": [
+        0.0344,
+        0.0299
+      ],
+      "coverage68": [
+        0.6683,
+        0.6667
+      ],
+      "coverage68Std": [
+        0.0103,
+        0.0573
+      ],
+      "coverage95": [
+        0.9333,
+        0.9233
+      ],
+      "coverage95Std": [
+        0.0155,
+        0.0131
+      ],
+      "logProbTruth": 3.1811,
+      "logProbTruthStd": 0.0569,
+      "trainSeconds": 172.4667,
+      "trainSecondsStd": 8.8973,
+      "tarpAt68": 0.6263,
+      "tarpAt68Std": 0.0353,
+      "tarpAt95": 0.94,
+      "tarpAt95Std": 0.0108,
+      "nParameters": 0
+    },
+    {
+      "architecture": "npeMafEnsemble8",
+      "task": "quijoteJoint",
+      "nSeeds": 3,
+      "r2": [
+        0.8147,
+        0.7256
+      ],
+      "r2Std": [
+        0.0313,
+        0.0237
+      ],
+      "coverage68": [
+        0.68,
+        0.6767
+      ],
+      "coverage68Std": [
+        0.0147,
+        0.0403
+      ],
+      "coverage95": [
+        0.9367,
+        0.93
+      ],
+      "coverage95Std": [
+        0.017,
+        0.0108
+      ],
+      "logProbTruth": 3.2104,
+      "logProbTruthStd": 0.0404,
+      "trainSeconds": 711.6,
+      "trainSecondsStd": 22.4352,
+      "tarpAt68": 0.636,
+      "tarpAt68Std": 0.0411,
+      "tarpAt95": 0.9417,
+      "tarpAt95Std": 0.0125,
+      "nParameters": 0
+    },
+    {
+      "architecture": "npeMdnEnsemble4",
+      "task": "quijoteJoint",
+      "nSeeds": 3,
+      "r2": [
+        0.8132,
+        0.7301
+      ],
+      "r2Std": [
+        0.0343,
+        0.0194
+      ],
+      "coverage68": [
+        0.6833,
+        0.6733
+      ],
+      "coverage68Std": [
+        0.0189,
+        0.0347
+      ],
+      "coverage95": [
+        0.9433,
+        0.93
+      ],
+      "coverage95Std": [
+        0.0125,
+        0.0071
+      ],
+      "logProbTruth": 3.2033,
+      "logProbTruthStd": 0.0603,
+      "trainSeconds": 106.5333,
+      "trainSecondsStd": 3.6234,
+      "tarpAt68": 0.6307,
+      "tarpAt68Std": 0.0318,
+      "tarpAt95": 0.9433,
+      "tarpAt95Std": 0.0094,
+      "nParameters": 0
+    },
+    {
+      "architecture": "npeMixedEnsemble3",
+      "task": "quijoteJoint",
+      "nSeeds": 3,
+      "r2": [
+        0.8157,
+        0.73
+      ],
+      "r2Std": [
+        0.031,
+        0.0206
+      ],
+      "coverage68": [
+        0.68,
+        0.69
+      ],
+      "coverage68Std": [
+        0.0178,
+        0.0402
+      ],
+      "coverage95": [
+        0.935,
+        0.9333
+      ],
+      "coverage95Std": [
+        0.0187,
+        0.0062
+      ],
+      "logProbTruth": 3.2213,
+      "logProbTruthStd": 0.0465,
+      "trainSeconds": 280.9333,
+      "trainSecondsStd": 14.1148,
+      "tarpAt68": 0.6423,
+      "tarpAt68Std": 0.0418,
+      "tarpAt95": 0.9517,
+      "tarpAt95Std": 0.0155,
+      "nParameters": 0
+    },
+    {
+      "architecture": "lampeMaf",
+      "task": "quijoteJoint",
+      "nSeeds": 3,
+      "r2": [
+        0.8112,
+        0.7221
+      ],
+      "r2Std": [
+        0.0291,
+        0.0276
+      ],
+      "coverage68": [
+        0.6367,
+        0.6333
+      ],
+      "coverage68Std": [
+        0.0085,
+        0.0379
+      ],
+      "coverage95": [
+        0.9333,
+        0.9233
+      ],
+      "coverage95Std": [
+        0.0165,
+        0.017
+      ],
+      "logProbTruth": 3.1574,
+      "logProbTruthStd": 0.0291,
+      "trainSeconds": 29.4,
+      "trainSecondsStd": 4.455,
+      "tarpAt68": 0.59,
+      "tarpAt68Std": 0.0329,
+      "tarpAt95": 0.9233,
+      "tarpAt95Std": 0.0155,
+      "nParameters": 20520
+    },
+    {
+      "architecture": "lampeNsf",
+      "task": "quijoteJoint",
+      "nSeeds": 3,
+      "r2": [
+        0.8122,
+        0.7226
+      ],
+      "r2Std": [
+        0.0283,
+        0.027
+      ],
+      "coverage68": [
+        0.6867,
+        0.705
+      ],
+      "coverage68Std": [
+        0.0062,
+        0.0374
+      ],
+      "coverage95": [
+        0.94,
+        0.935
+      ],
+      "coverage95Std": [
+        0.0108,
+        0.0108
+      ],
+      "logProbTruth": 3.1756,
+      "logProbTruthStd": 0.0504,
+      "trainSeconds": 76.4667,
+      "trainSecondsStd": 1.2499,
+      "tarpAt68": 0.6643,
+      "tarpAt68Std": 0.0321,
+      "tarpAt95": 0.9483,
+      "tarpAt95Std": 0.0094,
+      "nParameters": 31230
+    },
+    {
+      "architecture": "lampeGf",
+      "task": "quijoteJoint",
+      "nSeeds": 3,
+      "r2": [
+        0.8128,
+        0.7316
+      ],
+      "r2Std": [
+        0.0322,
+        0.0216
+      ],
+      "coverage68": [
+        0.6617,
+        0.675
+      ],
+      "coverage68Std": [
+        0.0225,
+        0.0531
+      ],
+      "coverage95": [
+        0.9383,
+        0.925
+      ],
+      "coverage95Std": [
+        0.0118,
+        0.0082
+      ],
+      "logProbTruth": 3.131,
+      "logProbTruthStd": 0.1123,
+      "trainSeconds": 61.4,
+      "trainSecondsStd": 9.274,
+      "tarpAt68": 0.6447,
+      "tarpAt68Std": 0.0323,
+      "tarpAt95": 0.9383,
+      "tarpAt95Std": 0.017,
+      "nParameters": 27176
+    },
+    {
+      "architecture": "lampeCnf",
+      "task": "quijoteJoint",
+      "nSeeds": 3,
+      "r2": [
+        0.8119,
+        0.7256
+      ],
+      "r2Std": [
+        0.0324,
+        0.0257
+      ],
+      "coverage68": [
+        0.7,
+        0.6767
+      ],
+      "coverage68Std": [
+        0.0082,
+        0.0352
+      ],
+      "coverage95": [
+        0.9383,
+        0.93
+      ],
+      "coverage95Std": [
+        0.0143,
+        0.0141
+      ],
+      "logProbTruth": 3.1908,
+      "logProbTruthStd": 0.0472,
+      "trainSeconds": 7675.8667,
+      "trainSecondsStd": 1264.3498,
+      "tarpAt68": 0.6537,
+      "tarpAt68Std": 0.0388,
+      "tarpAt95": 0.945,
+      "tarpAt95Std": 0.0147,
+      "nParameters": 4502
+    },
+    {
+      "architecture": "lampeNcsf",
+      "task": "quijoteJoint",
+      "nSeeds": 3,
+      "r2": [
+        0.8132,
+        0.7176
+      ],
+      "r2Std": [
+        0.0306,
+        0.0288
+      ],
+      "coverage68": [
+        0.685,
+        0.6817
+      ],
+      "coverage68Std": [
+        0.0108,
+        0.0688
+      ],
+      "coverage95": [
+        0.9467,
+        0.9267
+      ],
+      "coverage95Std": [
+        0.0103,
+        0.0225
+      ],
+      "logProbTruth": 3.1658,
+      "logProbTruthStd": 0.0837,
+      "trainSeconds": 88.4333,
+      "trainSecondsStd": 10.3232,
+      "tarpAt68": 0.6643,
+      "tarpAt68Std": 0.0319,
+      "tarpAt95": 0.9517,
+      "tarpAt95Std": 0.0125,
+      "nParameters": 31230
+    },
+    {
+      "architecture": "lampeNaf",
+      "task": "quijoteJoint",
+      "nSeeds": 3,
+      "r2": [
+        0.8053,
+        0.7128
+      ],
+      "r2Std": [
+        0.027,
+        0.0386
+      ],
+      "coverage68": [
+        0.6833,
+        0.6983
+      ],
+      "coverage68Std": [
+        0.0327,
+        0.0517
+      ],
+      "coverage95": [
+        0.9367,
+        0.9267
+      ],
+      "coverage95Std": [
+        0.0205,
+        0.0259
+      ],
+      "logProbTruth": 3.1526,
+      "logProbTruthStd": 0.0492,
+      "trainSeconds": 140.0333,
+      "trainSecondsStd": 12.2802,
+      "tarpAt68": 0.6377,
+      "tarpAt68Std": 0.0196,
+      "tarpAt95": 0.95,
+      "tarpAt95Std": 0.0108,
+      "nParameters": 81430
+    },
+    {
+      "architecture": "lampeSospf",
+      "task": "quijoteJoint",
+      "nSeeds": 3,
+      "r2": [
+        0.8143,
+        0.7233
+      ],
+      "r2Std": [
+        0.0299,
+        0.0204
+      ],
+      "coverage68": [
+        0.67,
+        0.6667
+      ],
+      "coverage68Std": [
+        0.0041,
+        0.0419
+      ],
+      "coverage95": [
+        0.9317,
+        0.9217
+      ],
+      "coverage95Std": [
+        0.0209,
+        0.0085
+      ],
+      "logProbTruth": 3.1874,
+      "logProbTruthStd": 0.0613,
+      "trainSeconds": 53.4667,
+      "trainSecondsStd": 3.549,
+      "tarpAt68": 0.6403,
+      "tarpAt68Std": 0.0319,
+      "tarpAt95": 0.9333,
+      "tarpAt95Std": 0.0094,
+      "nParameters": 27660
+    }
+  ]
+}

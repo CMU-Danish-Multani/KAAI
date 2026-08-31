@@ -44,9 +44,8 @@ class DeepSets(nn.Module):
     def __init__(self, n_points: int, n_features: int = 3, hidden: int = 64,
                  out_features: int = 32, pooling: str = "mean"):
         super().__init__()
-        if pooling not in ("mean", "sum", "max"):
-            raise ValueError(f"pooling must be mean, sum or max, got {pooling}")
-        self.n_points, self.n_features, self.pooling = n_points, n_features, pooling
+        self.n_points, self.n_features = n_points, n_features
+        self.pooling = _check_pooling(pooling)
         self.per_point = _mlp((n_features, hidden, hidden))
         self.head = _mlp((hidden, hidden, out_features))
 
@@ -76,7 +75,8 @@ class PointNetLite(nn.Module):
     def __init__(self, n_points: int, n_features: int = 3, hidden: int = 64,
                  out_features: int = 32, pooling: str = "mean"):
         super().__init__()
-        self.n_points, self.n_features, self.pooling = n_points, n_features, pooling
+        self.n_points, self.n_features = n_points, n_features
+        self.pooling = _check_pooling(pooling)
         self.encode = _mlp((n_features, hidden, hidden))
         self.mix = _mlp((2 * hidden, hidden, hidden))
         self.head = _mlp((hidden, hidden, out_features))
@@ -86,7 +86,7 @@ class PointNetLite(nn.Module):
             return h.mean(dim=1)
         if self.pooling == "sum":
             return h.sum(dim=1) / self.n_points
-        return h.max(dim=1).values
+        return h.max(dim=1).values          # "max", the only value left
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = x.view(-1, self.n_points, self.n_features)
@@ -117,28 +117,62 @@ EMBEDDINGS = {"deepSets": DeepSets, "pointNetLite": PointNetLite,
               "flattenMlp": FlattenMlp}
 
 
-def _to_unit_box(x: torch.Tensor) -> torch.Tensor:
-    """Rescale a batch of clouds so the box side is 1 again.
+# Positions are stored scaled to [0, 1] by box side. Allow a little slack for float
+# error in the cache, and nothing like enough to hide a z-scored input, which lands
+# near +/- 3.5.
+_UNIT_BOX_TOLERANCE = 1e-3
 
-    We hand sbi positions already in [0, 1], but sbi z-scores x before the embedding
-    ever sees it, and ltu-ili's argument validation will not let `z_score_x='none'`
-    through. Because galaxies have no preferred location in a periodic box, every
-    coordinate has roughly the same mean and spread, so that z-scoring is close to a
-    single global affine map: the geometry survives but the box side becomes about
-    3.46 instead of 1.
 
-    That matters because the minimum image wrap below is only correct for side 1.
-    Measured: feeding z-scored positions straight through dropped a held out probe for
-    Omega_m from +0.2386 to +0.0598.
+POOLINGS = ("mean", "sum", "max")
 
-    The side is therefore inferred from the batch rather than assumed. With 32 clouds
-    of 512 points the extremes sit essentially on the box corners. This does make the
-    output depend weakly on the batch, which is the price of not being able to switch
-    the framework's scaling off.
+
+def _check_pooling(pooling: str) -> str:
+    """Reject an unknown pooling instead of falling through to one.
+
+    DeepSets validated and the other two did not, so a typo or an unsupported value
+    silently trained a max pooled network while the catalogue recorded whatever string
+    was asked for. That is the worst kind of defect for a zoo: the entry is not the
+    thing its own config says it is. Mean is the default everywhere because sum and
+    max were measured to recover log N at probe R2 +0.914 and +0.897 while mean gives
+    -0.662, so they can leak the point count.
     """
-    lo = x.amin(dim=(0, 1), keepdim=True)
-    hi = x.amax(dim=(0, 1), keepdim=True)
-    return (x - lo) / (hi - lo).clamp_min(1e-8)
+    if pooling not in POOLINGS:
+        raise ValueError(f"pooling must be one of {POOLINGS}, got {pooling!r}")
+    return pooling
+
+
+def _to_unit_box(x: torch.Tensor) -> torch.Tensor:
+    """Check the cloud is already in the unit box, and pass it through unchanged.
+
+    SUPERSEDED 2026-08-30. This used to rescale by the batch minimum and maximum,
+    because sbi z-scored x before the embedding saw it and ltu-ili would not pass
+    `z_score_x='none'` through. sweep.build now calls sbi's posterior_nn factory
+    directly with `z_score_x="none"`, so positions arrive in [0, 1] as stored and
+    there is nothing left to undo.
+
+    The rescale had to go because it read the extremes over the batch as well as over
+    the points, which made the geometry depend on what else was in the batch. Training
+    pooled extremes over 32 clouds and evaluation saw one cloud at a time, so a cloud
+    was scaled differently in the two, by a factor of 1.003 to 1.006 per coordinate.
+
+    That sounds negligible and is not, because the neighbour graph is discrete.
+    Measured on camelsCloud: the k=16 neighbour sets differ for 32 of 32 clouds
+    between batch-of-32 and batch-of-1 scaling, 6.7 per cent of neighbour slots flip
+    to a different galaxy, and the edge vectors move by a relative L2 of 0.47. A
+    negligible continuous perturbation produced a large discrete one.
+
+    Raising rather than clamping is deliberate. If the framework ever starts scaling x
+    again, the wrap below is silently wrong and the failure is invisible in the
+    numbers, so it should stop the cell instead.
+    """
+    lo, hi = float(x.amin()), float(x.amax())
+    if lo < -_UNIT_BOX_TOLERANCE or hi > 1.0 + _UNIT_BOX_TOLERANCE:
+        raise ValueError(
+            f"positions must arrive scaled to [0, 1], got [{lo:.4f}, {hi:.4f}]. The "
+            f"periodic wrap in _periodic_offsets is only correct for a box of side 1, "
+            f"so something upstream is rescaling x. Check that the estimator is built "
+            f"with z_score_x='none'.")
+    return x
 
 
 def _periodic_offsets(x: torch.Tensor, k: int) -> torch.Tensor:
@@ -177,7 +211,10 @@ class PairwiseGnn(nn.Module):
             raise ValueError("PairwiseGnn reads 3D positions, so n_features must be 3")
         if not 1 <= k < n_points:
             raise ValueError(f"k must be between 1 and n_points-1, got {k}")
-        self.n_points, self.n_features, self.k, self.pooling = n_points, 3, k, pooling
+        self.n_points, self.n_features, self.k = n_points, 3, k
+        # Without this, pooling="sum" silently trained a max pooled network while the
+        # catalogue recorded "sum". Same defect DeepSets already guarded against.
+        self.pooling = _check_pooling(pooling)
         # Edge input is the offset and its length, so the network gets the scalar
         # separation directly rather than having to learn a norm.
         self.edge = _mlp((4, hidden, hidden))
@@ -190,7 +227,12 @@ class PairwiseGnn(nn.Module):
         r = off.pow(2).sum(-1, keepdim=True).clamp_min(1e-12).sqrt()
         h = self.edge(torch.cat([off, r], dim=-1)).mean(dim=2)   # aggregate neighbours
         h = self.node(h)
-        h = h.mean(dim=1) if self.pooling == "mean" else h.max(dim=1).values
+        if self.pooling == "mean":
+            h = h.mean(dim=1)
+        elif self.pooling == "sum":
+            h = h.sum(dim=1) / self.n_points
+        else:
+            h = h.max(dim=1).values
         return self.head(h)
 
 

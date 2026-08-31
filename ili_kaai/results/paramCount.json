@@ -2,41 +2,197 @@
   "npeMaf": {
     "camelsJoint": 33770,
     "camelsOmega": 33010,
-    "camelsSamJoint": 33770
+    "camelsSamJoint": 33770,
+    "quijoteAll": 35800,
+    "quijoteJoint": 33520
   },
   "npeNsf": {
     "camelsJoint": 78175,
     "camelsOmega": 26645,
-    "camelsSamJoint": 78175
+    "camelsSamJoint": 78175,
+    "quijoteAll": 89727,
+    "quijoteJoint": 77425
   },
   "npeMdn": {
     "camelsJoint": 7930,
     "camelsOmega": 7165,
-    "camelsSamJoint": 7930
+    "camelsSamJoint": 7930,
+    "quijoteAll": 11705,
+    "quijoteJoint": 7880
   },
   "npeMafEnsemble4": {
     "camelsJoint": 135080,
     "camelsOmega": 132040,
-    "camelsSamJoint": 135080
+    "camelsSamJoint": 135080,
+    "quijoteAll": 143200,
+    "quijoteJoint": 134080
   },
   "nleMaf": {
     "camelsJoint": 45500,
     "camelsOmega": 45250,
-    "camelsSamJoint": 45500
+    "camelsSamJoint": 45500,
+    "quijoteAll": 45490,
+    "quijoteJoint": 44740
   },
   "nleMdn": {
     "camelsJoint": 94755,
     "camelsOmega": 94705,
-    "camelsSamJoint": 94755
+    "camelsSamJoint": 94755,
+    "quijoteAll": 88275,
+    "quijoteJoint": 88125
   },
   "nreMlp": {
     "camelsJoint": 4201,
     "camelsOmega": 4151,
-    "camelsSamJoint": 4201
+    "camelsSamJoint": 4201,
+    "quijoteAll": 4301,
+    "quijoteJoint": 4151
   },
   "nreResnet": {
     "camelsJoint": 16751,
     "camelsOmega": 16701,
-    "camelsSamJoint": 16751
+    "camelsSamJoint": 16751,
+    "quijoteAll": 16851,
+    "quijoteJoint": 16701
+  },
+  "lampeMaf": {
+    "camelsJoint": 20770,
+    "camelsOmega": 19760,
+    "camelsSamJoint": 20770,
+    "quijoteAll": 22800,
+    "quijoteJoint": 20520
+  },
+  "lampeNsf": {
+    "camelsJoint": 31480,
+    "camelsOmega": 25115,
+    "camelsSamJoint": 31480,
+    "quijoteAll": 49575,
+    "quijoteJoint": 31230
+  },
+  "lampeGf": {
+    "camelsJoint": 27426,
+    "camelsOmega": 23334,
+    "camelsSamJoint": 27426,
+    "quijoteAll": 39500,
+    "quijoteJoint": 27176
+  },
+  "lampeCnf": {
+    "camelsJoint": 4552,
+    "camelsOmega": 4451,
+    "camelsSamJoint": 4552,
+    "quijoteAll": 4805,
+    "quijoteJoint": 4502
+  },
+  "npeMade": {
+    "camelsJoint": 36510,
+    "camelsOmega": 34930,
+    "camelsSamJoint": 36510,
+    "quijoteAll": 40950,
+    "quijoteJoint": 36210
+  },
+  "nreLinear": {
+    "camelsJoint": 28,
+    "camelsOmega": 27,
+    "camelsSamJoint": 28,
+    "quijoteAll": 30,
+    "quijoteJoint": 27
+  },
+  "lampeNcsf": {
+    "camelsJoint": 31480,
+    "camelsOmega": 25115,
+    "camelsSamJoint": 31480,
+    "quijoteAll": 49575,
+    "quijoteJoint": 31230
+  },
+  "lampeNaf": {
+    "camelsJoint": 81680,
+    "camelsOmega": 50215,
+    "camelsSamJoint": 81680,
+    "quijoteAll": 175075,
+    "quijoteJoint": 81430
+  },
+  "lampeSospf": {
+    "camelsJoint": 27910,
+    "camelsOmega": 23330,
+    "camelsSamJoint": 27910,
+    "quijoteAll": 40650,
+    "quijoteJoint": 27660
+  },
+  "lampeUnaf": {
+    "camelsJoint": 82190,
+    "camelsOmega": 50470,
+    "camelsSamJoint": 82190,
+    "quijoteAll": 176350,
+    "quijoteJoint": 81940
+  },
+  "nleMade": {
+    "camelsJoint": 65950,
+    "camelsOmega": 65650,
+    "camelsSamJoint": 65950,
+    "quijoteAll": 65270,
+    "quijoteJoint": 64370
+  },
+  "npeMafEnsemble2": {
+    "camelsJoint": 67540,
+    "camelsOmega": 66020,
+    "camelsSamJoint": 67540,
+    "quijoteAll": 71600,
+    "quijoteJoint": 67040
+  },
+  "npeMafEnsemble8": {
+    "camelsJoint": 270160,
+    "camelsOmega": 264080,
+    "camelsSamJoint": 270160,
+    "quijoteAll": 286400,
+    "quijoteJoint": 268160
+  },
+  "npeMdnEnsemble4": {
+    "camelsJoint": 31720,
+    "camelsOmega": 28660,
+    "camelsSamJoint": 31720,
+    "quijoteAll": 46820,
+    "quijoteJoint": 31520
+  },
+  "npeMixedEnsemble3": {
+    "camelsJoint": 119875,
+    "camelsOmega": 66820,
+    "camelsSamJoint": 119875,
+    "quijoteAll": 137232,
+    "quijoteJoint": 118825
+  },
+  "npeMafDeepSets": {
+    "camelsCloud": 46176,
+    "camelsSamCloud": 46176,
+    "camelsCloudAll": 49216
+  },
+  "npeMafPointNet": {
+    "camelsCloud": 58592,
+    "camelsSamCloud": 58592,
+    "camelsCloudAll": 61632
+  },
+  "npeMafFlatten": {
+    "camelsCloud": 252896,
+    "camelsSamCloud": 252896,
+    "camelsCloudAll": 255936
+  },
+  "npeMdnDeepSets": {
+    "camelsCloud": 18936,
+    "camelsSamCloud": 18936,
+    "camelsCloudAll": 24546
+  },
+  "npeMafPairwiseGnn": {
+    "camelsCloud": 54560,
+    "camelsSamCloud": 54560,
+    "camelsCloudAll": 57600
+  },
+  "npeMdnPairwiseGnn": {
+    "camelsCloud": 27320,
+    "camelsSamCloud": 27320,
+    "camelsCloudAll": 32930
+  },
+  "npeMafPairwiseGnnPretrained": {
+    "camelsCloud": 54560,
+    "camelsSamCloud": 54560,
+    "camelsCloudAll": 57600
   }
 }

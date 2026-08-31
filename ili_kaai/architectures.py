@@ -143,10 +143,24 @@ ZOO: Dict[str, Architecture] = {a.key: a for a in [
         model_args={"hidden_features": HIDDEN, "num_transforms": 5},
         summary="The same masked autoregressive flow as npeMaf, built through the "
                 "lampe backend instead of sbi. Paired with npeMaf it isolates the "
-                "backend, holding the flow type fixed.",
+                "backend, holding the NOMINAL flow settings fixed. Measured "
+                "2026-08-30: it does NOT hold the network fixed, see failure modes.",
         known_failure_modes=[
             "lampe is posterior estimation only. No likelihood or ratio engines.",
-            "Shares the autoregressive ordering weakness of any MAF."]),
+            "Shares the autoregressive ordering weakness of any MAF.",
+            "MEASURED 2026-08-30, and it undermines the naive reading of this "
+            "pair. At identical hidden_features and num_transforms, lampe builds "
+            "20,770 trainable weights against sbi's 33,770, so 62 per cent. For the "
+            "spline flow pair, lampeNsf 31,480 against npeNsf 78,175, so 40 per cent. "
+            "The config strings match and the networks do not, so this pair measures "
+            "'what those settings build in each library' rather than 'which framework "
+            "is better'. Any backend benchmark at equal config strings has the same "
+            "problem.",
+            "MEASURED the accuracy difference is task dependent and flips sign. "
+            "Omega_m against npeMaf: camelsJoint -0.037, camelsOmega -0.026, "
+            "camelsSamJoint +0.022. Smaller and worse on CAMELS, smaller and better "
+            "on CAMELS-SAM, which is consistent with the larger net overfitting there. "
+            "That last clause is an untested explanation, not a measurement."]),
     Architecture(
         key="lampeNsf", engine="NPE", model="nsf", family="normalising_flow",
         repeats=1, backend="lampe",
@@ -188,7 +202,25 @@ ZOO: Dict[str, Architecture] = {a.key: a for a in [
         known_failure_modes=[
             "A single autoregressive pass, so less expressive than a stack of MAF "
             "transforms at the same width.",
-            "Imposes a parameter ordering, like any autoregressive model."]),
+            "Imposes a parameter ordering, like any autoregressive model.",
+            "MEASURED 2026-08-30, and it is the parameter ordering that bites. This "
+            "entry works at dim(theta) 1 and loses a whole parameter at dim(theta) 2. "
+            "camelsOmega Omega_m R2 +0.870, matching npeMaf's +0.864. camelsJoint "
+            "Omega_m +0.312, sigma_8 +0.075. camelsSamJoint Omega_m -0.008 while "
+            "sigma_8 reaches +0.824, so it recovers the second parameter as well as a "
+            "MAF does and the first not at all. Three seeds, spread 0.007 on the dead "
+            "one, so it is reliably dead rather than noisy.",
+            "VERIFIED from sbi source, and the config defect and the accuracy failure "
+            "are one root cause. build_maf stacks num_transforms blocks with a "
+            "RandomPermutation inside each, so no parameter stays first. build_made "
+            "sets transform = IdentityTransform() and its docstring says extra kwargs "
+            "'are not relevant for mades and are therefore ignored', so the "
+            "num_transforms=5 above is silently dropped. One pass, one fixed ordering, "
+            "nothing to undo it. The permutation between stacked transforms is what "
+            "makes a MAF work, and this entry is the measurement that shows it.",
+            "So do not read this as 'MADE is weak'. Read it as 'a single "
+            "autoregressive pass is unusable above one parameter', which is a "
+            "statement about every architecture in this family."]),
     Architecture(
         key="nreLinear", engine="NRE", model="linear", family="ratio_estimator",
         repeats=1, model_args={},
@@ -330,8 +362,11 @@ ZOO: Dict[str, Architecture] = {a.key: a for a in [
                 "permutation invariance buys nothing here and the zoo should say so "
                 "rather than assume the inductive bias helps.",
         known_failure_modes=[
-            "Twenty times the parameters of DeepSets, because it cannot share weights "
-            "across points.",
+            "Twenty times the EMBEDDING parameters of DeepSets, because it cannot "
+            "share weights across points. Measured: 217,376 against 10,656, so 20.4x. "
+            "Note the catalogue's nParameters field is the embedding plus the density "
+            "estimator, where the shared 33,770 flow dilutes this to 5.7x, so the two "
+            "numbers are consistent and describe different things.",
             "Depends on the order galaxies happen to sit in the file, which is sorted "
             "by mass. Reordering the catalogue would change its answer."]),
     Architecture(
